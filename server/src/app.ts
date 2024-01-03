@@ -1,8 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import express, { Request, Response, NextFunction } from 'express';
+import express, { Request, Response } from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import config from './app/config';
+import globalErrorHandler from './app/middleware/globalHandler';
+import notFound from './app/middleware/notFound';
+import httpStatus from 'http-status';
 const app = express();
 
 //body parser
@@ -20,17 +23,16 @@ app.use(
 
 //testing api
 app.get('/test', (req: Request, res: Response) => {
-  res.status(200).json({
+  res.status(httpStatus.OK).json({
     success: true,
     message: 'API IS WORKING',
   });
 });
 
+//golobal Error handler
+app.use(globalErrorHandler);
+
 //unkown route
-app.all('*', (req: Request, res: Response, next: NextFunction) => {
-  const err = new Error(`Route ${req.originalUrl} not found`) as any;
-  err.statusCode = 404;
-  next(err);
-});
+app.all('*', notFound);
 
 export default app;
