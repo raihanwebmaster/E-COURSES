@@ -33,6 +33,11 @@ export type IActivationToken = {
   activationCode: string;
 };
 
+export type IActivationRequest = {
+  activation_token: string;
+  activation_code: string;
+};
+
 export interface UserModel extends Model<IUser> {
   isPasswordMatched(
     plainTextPassword: string,

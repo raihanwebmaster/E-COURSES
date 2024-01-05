@@ -17,6 +17,17 @@ const createRegistrationUser = catchAsync(async (req, res, next) => {
   });
 });
 
+const createRegisterUserActivation = catchAsync(async (req, res, next) => {
+const result = await UserServices.registerUserActivation(req.body);
+sendReponse(res, {
+  statusCode: httpStatus.OK,
+  success: true,
+  message: `User Successfully Activated`,
+  data: result,
+});
+})
+
 export const UserControllers = {
   createRegistrationUser,
+  createRegisterUserActivation,
 };

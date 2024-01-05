@@ -11,4 +11,10 @@ router.post(
   UserControllers.createRegistrationUser,
 );
 
+router.post(
+  '/activation',
+  validateRequest(UserValidation.registrationZodValidationSchema),
+  UserControllers.createRegisterUserActivation,
+);
+
 export const UserRoutes = router;
