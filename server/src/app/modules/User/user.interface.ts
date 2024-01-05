@@ -1,8 +1,8 @@
 import { Model, Types } from 'mongoose';
 
 export interface ICourse {
-    courseId: Types.ObjectId;
-  }
+  courseId: Types.ObjectId;
+}
 
 export interface IUser {
   name: string;
@@ -14,12 +14,24 @@ export interface IUser {
     public_id: string;
     url: string;
   };
-  role: 'admin' | 'user' ;
+  role: 'admin' | 'user';
   status: 'in-progress' | 'blocked';
   isVerified: boolean;
   courses: Array<ICourse>;
   isDeleted: boolean;
 }
+
+export type IRegistration = {
+  name: string;
+  email: string;
+  password: string;
+  avatar?: string;
+};
+
+export type IActivationToken = {
+  token: string;
+  activationCode: string;
+};
 
 export interface UserModel extends Model<IUser> {
   isPasswordMatched(

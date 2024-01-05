@@ -6,6 +6,7 @@ import config from './app/config';
 import globalErrorHandler from './app/middleware/globalHandler';
 import notFound from './app/middleware/notFound';
 import httpStatus from 'http-status';
+import router from './app/router';
 const app = express();
 
 //body parser
@@ -20,6 +21,7 @@ app.use(
     origin: config.origin,
   }),
 );
+app.use('/api/v1', router)
 
 //testing api
 app.get('/test', (req: Request, res: Response) => {
