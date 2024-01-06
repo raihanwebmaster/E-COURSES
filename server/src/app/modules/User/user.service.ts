@@ -20,8 +20,8 @@ const registrationUser = async (payload: IUser) => {
     subject: 'Activate your account',
     template: 'activation-mail.ejs',
     data: {
-      payload,
-      activationToken,
+      user: payload,
+      activationCode: activationToken.activationCode
     },
   });
 
