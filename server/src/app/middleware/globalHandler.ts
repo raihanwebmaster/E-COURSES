@@ -44,16 +44,24 @@ const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
     statusCode = simplifiedError.statusCode;
     message = simplifiedError.message;
     errorSources = simplifiedError.errorSources;
-  } else if (err.name === 'jsonWebTokenError') {
-    // const simplifiedError = handleJwtError(err);
-    // statusCode = simplifiedError.statusCode;
-    // message = simplifiedError.message;
-    // errorSources = simplifiedError.errorSources;
-  } else if (err.name === 'TokenExpireError') {
-    // const simplifiedError = handleJwtError(err);
-    // statusCode = simplifiedError.statusCode;
-    // message = simplifiedError.message;
-    // errorSources = simplifiedError.errorSources;
+  } else if (err.name === 'JsonWebTokenError') {
+    statusCode = 401;
+    message = 'Unauthorized! ';
+    errorSources = [
+      {
+        path: '',
+        message: "jwt malformed"
+      }
+    ];
+  } else if (err.name == 'TokenExpiredError') {
+    statusCode = 401;
+    message = 'Unauthorized! ';
+    errorSources = [
+      {
+        path: '',
+        message: "Access Token was expired!"
+      }
+    ];
   } else if (err instanceof AppError) {
     statusCode = err.statusCode;
     message = err.message;
