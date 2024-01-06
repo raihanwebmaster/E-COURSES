@@ -1,12 +1,12 @@
 import httpStatus from 'http-status';
 import AppError from '../../errors/AppError';
-import { IActivationRequest, IRegistration } from './user.interface';
+import { IActivationRequest, IUser } from './user.interface';
 import { User } from './user.model';
 import { createActivationCode, verifyToken } from './user.utils';
 import { sendMail } from '../../utils/sendMail';
 import config from '../../config';
 
-const registrationUser = async (payload: IRegistration) => {
+const registrationUser = async (payload: IUser) => {
   // checking if the user is exist
   const { email } = payload;
   const isEmailExist = await User.findOne({ email });

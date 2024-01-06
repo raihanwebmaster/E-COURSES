@@ -1,5 +1,5 @@
 import config from '../../config';
-import { IActivationToken, IRegistration } from './user.interface';
+import { IActivationToken, IUser } from './user.interface';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 
 export const createToken = (
@@ -16,7 +16,7 @@ export const verifyToken = (token: string, secret: string) => {
   return jwt.verify(token, secret) as JwtPayload;
 };
 
-export const createActivationCode = (user: IRegistration): IActivationToken => {
+export const createActivationCode = (user: IUser): IActivationToken => {
   const activationCode = Math.floor(1000 + Math.random() * 9000).toString();
   const jwtPayload = {
     name: user.name,

@@ -21,12 +21,12 @@ export interface IUser {
   isDeleted: boolean;
 }
 
-export type IRegistration = {
-  name: string;
-  email: string;
-  password: string;
-  avatar?: string;
-};
+// export type IRegistration = {
+//   name: string;
+//   email: string;
+//   password: string;
+//   avatar?: string;
+// };
 
 export type IActivationToken = {
   token: string;

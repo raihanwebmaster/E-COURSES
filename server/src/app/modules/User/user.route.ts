@@ -7,13 +7,13 @@ const router = express.Router();
 
 router.post(
   '/registration',
-  validateRequest(UserValidation.registrationZodValidationSchema),
+  validateRequest(UserValidation.userZodValidationSchema),
   UserControllers.createRegistrationUser,
 );
 
 router.post(
   '/activation',
-  validateRequest(UserValidation.registrationZodValidationSchema),
+  validateRequest(UserValidation.registrationActiveZodValidationSchema),
   UserControllers.createRegisterUserActivation,
 );
 

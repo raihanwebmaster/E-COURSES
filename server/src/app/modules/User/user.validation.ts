@@ -20,10 +20,12 @@ const userCreateSchema = z.object({
           'Password must include at least one lowercase letter, one uppercase letter, one digit, and one special character.',
       }),
     needsPasswordChange: z.boolean().optional(),
-    avatar: z.object({
-      public_id: z.string(),
-      url: z.string(),
-    }),
+    avatar: z
+      .object({
+        public_id: z.string(),
+        url: z.string(),
+      })
+      .optional(),
     role: z.enum(['user', 'admin']).optional(),
     status: z.enum(['in-progress', 'blocked']).optional(),
     isVerified: z.boolean().optional(),
@@ -31,22 +33,14 @@ const userCreateSchema = z.object({
   }),
 });
 
-const userRegistrationSchema = z.object({
+const userRegistrationActiveSchema = z.object({
   body: z.object({
-    name: z.string().min(1),
-    email: z.string().email(),
-    password: z
-      .string()
-      .min(8, 'Password must be at least 8 characters')
-      .refine((password) => isStrongPassword(password), {
-        message:
-          'Password must include at least one lowercase letter, one uppercase letter, one digit, and one special character.',
-      }),
-    avatar: z.string().optional(),
+    activation_token: z.string(),
+    activation_code: z.string(),
   }),
 });
 
 export const UserValidation = {
   userZodValidationSchema: userCreateSchema,
-  registrationZodValidationSchema: userRegistrationSchema,
+  registrationActiveZodValidationSchema: userRegistrationActiveSchema,
 };
