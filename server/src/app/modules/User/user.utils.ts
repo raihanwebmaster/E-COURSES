@@ -3,7 +3,7 @@ import { IActivationToken, IUser } from './user.interface';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 
 export const createToken = (
-  jwtPayload: { activationCode: string },
+  jwtPayload: { id?: string; activationCode?: string; password?: string },
   secret: string,
   expiresIn: string,
 ) => {

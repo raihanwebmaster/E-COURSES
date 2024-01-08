@@ -17,4 +17,15 @@ router.post(
   UserControllers.createRegisterUserActivation,
 );
 
+router.post(
+  '/login',
+  validateRequest(UserValidation.loginZodValidationSchema),
+  UserControllers.loginUser,
+);
+router.get(
+  '/logout',
+  validateRequest(UserValidation.logoutZodValidationSchema),
+  UserControllers.logout,
+);
+
 export const UserRoutes = router;

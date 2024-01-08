@@ -5,6 +5,7 @@ export interface ICourse {
 }
 
 export interface IUser {
+  _id: Types.ObjectId,
   name: string;
   email: string;
   password: string;
@@ -21,12 +22,10 @@ export interface IUser {
   isDeleted: boolean;
 }
 
-// export type IRegistration = {
-//   name: string;
-//   email: string;
-//   password: string;
-//   avatar?: string;
-// };
+export type ILoginUser = {
+  email: string;
+  password: string;
+}
 
 export type IActivationToken = {
   token: string;
@@ -39,6 +38,7 @@ export type IActivationRequest = {
 };
 
 export interface UserModel extends Model<IUser> {
+  isUserExistsByEmail(email: string): Promise<IUser>;
   isPasswordMatched(
     plainTextPassword: string,
     hashedPassword: string,

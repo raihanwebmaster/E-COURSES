@@ -40,7 +40,27 @@ const userRegistrationActiveSchema = z.object({
   }),
 });
 
+const loginValidationSchema = z.object({
+  body: z.object({
+    email: z.string().email(),
+    password: z.string({ required_error: 'Password is required' }),
+  }),
+});
+
+const logoutValidationSchema = z.object({
+  cookies: z.object({
+    refreshToken: z.string({
+      required_error: 'Refresh token is required!',
+    }),
+    accessToken: z.string({
+      required_error: 'AccessToken token is required!',
+    }),
+  }),
+});
+
 export const UserValidation = {
   userZodValidationSchema: userCreateSchema,
   registrationActiveZodValidationSchema: userRegistrationActiveSchema,
+  loginZodValidationSchema : loginValidationSchema,
+  logoutZodValidationSchema: logoutValidationSchema,
 };
