@@ -8,6 +8,7 @@ import { createActivationCode, createToken, verifyToken } from './user.utils';
 import { sendMail } from '../../utils/sendMail';
 import config from '../../config';
 import { redis } from '../../utils/redis';
+import { JwtPayload } from 'jsonwebtoken';
 
 const registrationUser = async (payload: IUser) => {
   // checking if the user is exist
@@ -110,8 +111,14 @@ const loginUser = async (payload: ILoginUser) => {
   };
 };
 
-const logout = async (refreshToken: string, accessToken: string) => {
-  verifyToken(refreshToken, config.jwt_refresh_secret as string);
+const logout = async (
+  user: JwtPayload,
+  refreshToken: string,
+  accessToken: string,
+) => {
+  // verifyToken(refreshToken, config.jwt_refresh_secret as string);
+  const userId = user.id;
+  redis.del(userId)
   return null;
 };
 

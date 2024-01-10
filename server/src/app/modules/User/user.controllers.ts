@@ -70,7 +70,7 @@ const loginUser = catchAsync(async (req, res) => {
 
 const logout = catchAsync(async (req, res) => {
   const { refreshToken, accessToken } = req.cookies;
-  await UserServices.logout(refreshToken, accessToken);
+  await UserServices.logout(req.user, refreshToken, accessToken);
   res.cookie('accessToken', '', {
     maxAge: 1,
   });
