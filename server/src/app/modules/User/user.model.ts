@@ -6,7 +6,7 @@ const emailRegexPattern: RegExp =
   /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
 const courseSchema = new Schema<ICourse>({
-  courseId: { type: Schema.Types.ObjectId, unique: true, ref: 'Courses' },
+  courseId: { type: Schema.Types.ObjectId, ref: 'Courses' },
 });
 
 const userSchema = new Schema<IUser, UserModel>(

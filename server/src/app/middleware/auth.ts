@@ -1,17 +1,18 @@
 import { NextFunction, Request, Response } from 'express';
 import httpStatus from 'http-status';
-import jwt, { JwtPayload } from 'jsonwebtoken';
+import { JwtPayload } from 'jsonwebtoken';
 import config from '../config';
 import AppError from '../errors/AppError';
 import catchAsync from '../utils/catchAsync';
 import { redis } from '../utils/redis';
-import { TUserRole } from '../modules/User/user.interface';
 import { User } from '../modules/User/user.model';
+import { TUserRole } from '../modules/Auth/auth.interface';
+import { verifyToken } from '../modules/Auth/auth.utils';
 
 // authenticated user
 const auth = (...requiredRoles: TUserRole[]) => {
   return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    const token = req.headers.authorization;
+    const token = req.cookies.accessToken;
 
     // checking if the token is missing
     if (!token) {
@@ -19,10 +20,7 @@ const auth = (...requiredRoles: TUserRole[]) => {
     }
 
     // checking if the given token is valid
-    const decoded = jwt.verify(
-      token,
-      config.jwt_access_secret as string,
-    ) as JwtPayload;
+    const decoded = verifyToken(token, config.jwt_access_secret as string)
 
     const { role, iat, id } = decoded;
 

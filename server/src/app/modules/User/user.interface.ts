@@ -1,5 +1,4 @@
 import { Model, Types } from 'mongoose';
-import { USER_ROLE } from './user.constant';
 
 export interface ICourse {
   courseId: Types.ObjectId;
@@ -22,23 +21,6 @@ export interface IUser {
   courses: Array<ICourse>;
   isDeleted: boolean;
 }
-
-export type ILoginUser = {
-  email: string;
-  password: string;
-}
-
-export type IActivationToken = {
-  token: string;
-  activationCode: string;
-};
-
-export type IActivationRequest = {
-  activation_token: string;
-  activation_code: string;
-};
-
-export type TUserRole = keyof typeof USER_ROLE;
 
 export interface UserModel extends Model<IUser> {
   isUserExistsByEmail(email: string): Promise<IUser>;

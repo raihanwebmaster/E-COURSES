@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-const isStrongPassword = (password: string): boolean => {
+export const isStrongPassword = (password: string): boolean => {
   // Customize this function based on your password requirements
   // For example, you can enforce a minimum length, uppercase, lowercase, digits, and special characters
   const strongPasswordRegex =
@@ -33,21 +33,7 @@ const userCreateSchema = z.object({
   }),
 });
 
-const userRegistrationActiveSchema = z.object({
-  body: z.object({
-    activation_token: z.string(),
-    activation_code: z.string(),
-  }),
-});
-
-const loginValidationSchema = z.object({
-  body: z.object({
-    email: z.string().email(),
-    password: z.string({ required_error: 'Password is required' }),
-  }),
-});
-
-const logoutValidationSchema = z.object({
+const getMeValidationSchema = z.object({
   cookies: z.object({
     refreshToken: z.string({
       required_error: 'Refresh token is required!',
@@ -60,7 +46,5 @@ const logoutValidationSchema = z.object({
 
 export const UserValidation = {
   userZodValidationSchema: userCreateSchema,
-  registrationActiveZodValidationSchema: userRegistrationActiveSchema,
-  loginZodValidationSchema : loginValidationSchema,
-  logoutZodValidationSchema: logoutValidationSchema,
+  getMeZodValidationSchema: getMeValidationSchema
 };
