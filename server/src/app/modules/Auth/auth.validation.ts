@@ -49,10 +49,30 @@ const socialAuthValidationSchema = z.object({
   }),
 });
 
+const changePasswordValidationSchema = z.object({
+  body: z.object({
+    oldPassword: z.string({
+      required_error: 'Old password is required',
+    }),
+    newPassword: z
+    .string({
+      required_error: 'New password is required',
+    })
+    .min(8, 'Password must be at least 8 characters')
+    .refine((password) => isStrongPassword(password), {
+      message:
+        'Password must include at least one lowercase letter, one uppercase letter, one digit, and one special character.',
+    }),
+  }),
+});
+
+
 export const AuthValidation = {
   registrationActiveZodValidationSchema: userRegistrationActiveSchema,
   loginZodValidationSchema: loginValidationSchema,
   logoutZodValidationSchema: logoutValidationSchema,
   accessTokenValidationSchema: updateAccessTokenValidationSchema,
-  socialAuthZodValidationSchema: socialAuthValidationSchema
+  socialAuthZodValidationSchema: socialAuthValidationSchema,
+  changePasswordZodValidationSchema: changePasswordValidationSchema,
+
 };

@@ -9,28 +9,30 @@ export const isStrongPassword = (password: string): boolean => {
 };
 
 const userCreateSchema = z.object({
-  body: z.object({
-    name: z.string().min(1),
-    email: z.string().email(),
-    password: z
-      .string()
-      .min(8, 'Password must be at least 8 characters')
-      .refine((password) => isStrongPassword(password), {
-        message:
-          'Password must include at least one lowercase letter, one uppercase letter, one digit, and one special character.',
-      }),
-    needsPasswordChange: z.boolean().optional(),
-    avatar: z
-      .object({
-        public_id: z.string(),
-        url: z.string(),
-      })
-      .optional(),
-    role: z.enum(['user', 'admin']).optional(),
-    status: z.enum(['in-progress', 'blocked']).optional(),
-    isVerified: z.boolean().optional(),
-    courses: z.array(z.object({ courseId: z.string() })).optional(),
-  }),
+  body: z
+    .object({
+      name: z.string().min(1),
+      email: z.string().email(),
+      password: z
+        .string()
+        .min(8, 'Password must be at least 8 characters')
+        .refine((password) => isStrongPassword(password), {
+          message:
+            'Password must include at least one lowercase letter, one uppercase letter, one digit, and one special character.',
+        }),
+      needsPasswordChange: z.boolean().optional(),
+      avatar: z
+        .object({
+          public_id: z.string(),
+          url: z.string(),
+        })
+        .optional(),
+      role: z.enum(['user', 'admin']).optional(),
+      status: z.enum(['in-progress', 'blocked']).optional(),
+      isVerified: z.boolean().optional(),
+      courses: z.array(z.object({ courseId: z.string() })).optional(),
+    })
+    .strict(),
 });
 
 const getMeValidationSchema = z.object({
@@ -44,7 +46,48 @@ const getMeValidationSchema = z.object({
   }),
 });
 
+const userUpdateValidationSchema = z.object({
+  cookies: z.object({
+    refreshToken: z.string({
+      required_error: 'Refresh token is required!',
+    }),
+    accessToken: z.string({
+      required_error: 'AccessToken token is required!',
+    }),
+  }),
+  body: z
+    .object({
+      name: z.string().min(1).optional(),
+      email: z.string().email().optional(),
+      avatar: z
+        .object({
+          public_id: z.string(),
+          url: z.string(),
+        })
+        .optional(),
+    })
+    .strict(),
+});
+
+const userAvatarUpdateValidationSchema = z.object({
+  cookies: z.object({
+    refreshToken: z.string({
+      required_error: 'Refresh token is required!',
+    }),
+    accessToken: z.string({
+      required_error: 'AccessToken token is required!',
+    }),
+  }),
+  body: z
+    .object({
+      avatar: z.string(),
+    })
+    .strict(),
+});
+
 export const UserValidation = {
   userZodValidationSchema: userCreateSchema,
-  getMeZodValidationSchema: getMeValidationSchema
+  getMeZodValidationSchema: getMeValidationSchema,
+  userUpdateZodValidationSchema: userUpdateValidationSchema,
+  userAvatarUpdateZodValidationSchema: userAvatarUpdateValidationSchema,
 };

@@ -90,6 +90,19 @@ const socialAuth = catchAsync(async (req, res) => {
   });
 });
 
+
+const changePassword = catchAsync(async (req, res) => {
+  const { ...passwordData } = req.body;
+
+  const result = await AuthServices.changePassword(req.user, passwordData);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Password is updated succesfully!',
+    data: result,
+  });
+});
+
 export const AuthControllers = {
   createRegistrationUser,
   createRegisterUserActivation,
@@ -97,4 +110,5 @@ export const AuthControllers = {
   logoutUser,
   updateAccessToken,
   socialAuth,
+  changePassword
 };

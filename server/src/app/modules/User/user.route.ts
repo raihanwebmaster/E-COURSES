@@ -14,4 +14,18 @@ router.get(
   UserControllers.getUserById,
 );
 
+router.put(
+  '/update-info',
+  auth(USER_ROLE.user, USER_ROLE.admin),
+  validateRequest(UserValidation.userUpdateZodValidationSchema),
+  UserControllers.updateUserInfo,
+);
+
+router.put(
+  '/update-avatar',
+  auth(USER_ROLE.user, USER_ROLE.admin),
+  validateRequest(UserValidation.userAvatarUpdateZodValidationSchema),
+  UserControllers.updateProfilePicture,
+);
+
 export const UserRoutes = router;
