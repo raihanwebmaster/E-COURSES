@@ -230,7 +230,7 @@ const changePassword = async (
 
   await redis.set(userData.id, JSON.stringify(updateUser));
 
-  return null;
+  return updateUser;
 };
 
 export const AuthServices = {
