@@ -3,13 +3,14 @@ import { Types } from "mongoose"
 export interface IComment {
     user: Types.ObjectId,
     comment: string,
+    // commentReplies?: IComment[]
 }
 
 export interface IReview {
     user: Types.ObjectId,
     rating: number,
     comments: string,
-    commentReplies: IComment[]
+    commentReplies?: IComment[]
 }
 
 export interface ILink {
@@ -23,6 +24,7 @@ export interface ICourseData {
     videoUrl: string,
     videoThumbnail: string,
     videoSection: string,
+    videoLength: number,
     videoPlayer: string,
     links: ILink[],
     suggestion: string,

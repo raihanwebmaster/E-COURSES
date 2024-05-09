@@ -1,0 +1,65 @@
+import { z } from 'zod';
+import { Types } from 'mongoose';
+
+// Utility to convert a Mongoose ObjectId to a Zod validation schema
+const objectId = () => z.instanceof(Types.ObjectId).transform((val) => val.toString());
+
+const ICommentSchema = z.object({
+    user: objectId(),
+    comment: z.string(),
+    // commentReplies: z.array(z.lazy(() => ICommentSchema)).optional(),
+});
+
+const IReviewSchema = z.object({
+    user: objectId(),
+    rating: z.number().min(1).max(5),
+    comments: z.string(),
+    commentReplies: z.array(ICommentSchema).optional(),
+});
+
+const ILinkSchema = z.object({
+    title: z.string(),
+    url: z.string().url(),
+});
+
+const ICourseDataSchema = z.object({
+    title: z.string(),
+    description: z.string(),
+    videoUrl: z.string().url(),
+    videoThumbnail: z.string(),
+    videoSection: z.string(),
+    videoLength: z.number().positive(),
+    videoPlayer: z.string(),
+    links: z.array(ILinkSchema),
+    suggestion: z.string(),
+    questions: z.array(ICommentSchema),
+});
+
+const IThumbnailSchema = z.object({
+    public_id: z.string(),
+    url: z.string().url(),
+});
+
+const createCourseValidateionSchema = z.object({
+    body: z.object({
+        name: z.string(),
+        description: z.string(),
+        price: z.number().positive(),
+        estimatePrice: z.number().positive().optional(),
+        thumbnail: IThumbnailSchema,
+        tags: z.string(),
+        level: z.string(),
+        demoUrl: z.string().url(),
+        benefits: z.array(z.object({ title: z.string() })),
+        prerequisites: z.array(z.object({ title: z.string() })),
+        reviews: z.array(IReviewSchema),
+        courseData: z.array(ICourseDataSchema),
+        ratings: z.number().min(0).max(5).optional(),
+        purchased: z.number().nonnegative().optional(),
+    })
+});
+
+export const CourseValidation = {
+    createCourseValidateionSchema
+}
+
