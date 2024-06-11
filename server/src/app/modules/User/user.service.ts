@@ -37,7 +37,7 @@ const updateProfilePictureIntoDB = async (user: JwtPayload, avatar: string) => {
   if (UserAvatar?.public_id) {
     await cloudinary.uploader.destroy(UserAvatar?.public_id);
   }
-  const { secure_url, public_id } = (await sendImageToCloudinary(avatar)) as {
+  const { secure_url, public_id } = (await sendImageToCloudinary(avatar,"avatars", 150 )) as {
     secure_url: string;
     public_id: string;
   };

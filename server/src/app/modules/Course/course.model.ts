@@ -26,7 +26,6 @@ const CourseDataSchema = new Schema<ICourseData>({
     title: { type: String, required: true },
     description: { type: String, required: true },
     videoUrl: { type: String, required: true },
-    videoThumbnail: { type: String, required: true },
     videoSection: { type: String, required: true },
     videoLength: { type: Number, required: true },
     videoPlayer: { type: String, required: true },

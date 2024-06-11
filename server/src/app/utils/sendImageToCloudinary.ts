@@ -7,13 +7,13 @@ cloudinary.config({
   api_secret: config.cloudinary_api_secret,
 });
 
-export const sendImageToCloudinary = (path: string) => {
+export const sendImageToCloudinary = (path: string, folderName: string, width?: number) => {
   return new Promise((resolve, reject) => {
     cloudinary.uploader.upload(
       path,
       {
-        folder: 'avatars',
-        width: 150,
+        folder: folderName || 'avatars' ,
+        ...(width ? { width } : {}),
       },
       function (error, result) {
         if (error) {

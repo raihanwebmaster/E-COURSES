@@ -22,7 +22,6 @@ export interface ICourseData {
     title: string,
     description: string,
     videoUrl: string,
-    videoThumbnail: string,
     videoSection: string,
     videoLength: number,
     videoPlayer: string,
