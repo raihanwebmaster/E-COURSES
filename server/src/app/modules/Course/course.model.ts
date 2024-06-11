@@ -4,14 +4,14 @@ import { IReview, ICourse, IComment, ICourseData, ILink } from './course.interfa
 const CommentSchema: Schema<IComment> = new Schema({
     user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     comment: { type: String, required: true },
-    // commentReplies: [{ type: Schema.Types.ObjectId, ref: 'Comment' }]
+    commentReplies: [{ type: Schema.Types.ObjectId, ref: 'Comment' }]
 });
 
 // Review Schema
 const ReviewSchema = new Schema<IReview>({
     user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     rating: { type: Number, default: 0, required: true },
-    comments: { type: String, required: true },
+    comment: { type: String, required: true },
     commentReplies: [CommentSchema]
 });
 
@@ -30,7 +30,7 @@ const CourseDataSchema = new Schema<ICourseData>({
     videoLength: { type: Number, required: true },
     videoPlayer: { type: String, required: true },
     links: [LinkSchema],
-    suggestion: { type: String, required: true },
+    suggestion: { type: String, required: false },
     questions: [CommentSchema]
 });
 
@@ -41,8 +41,8 @@ const CourseSchema = new Schema<ICourse>({
     price: { type: Number, required: true },
     estimatePrice: { type: Number },
     thumbnail: {
-        public_id: { type: String, required: true },
-        url: { type: String, required: true }
+        public_id: { type: String, required: false },
+        url: { type: String, required: false }
     },
     tags: { type: String, required: true },
     level: { type: String, required: true },

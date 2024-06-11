@@ -3,13 +3,13 @@ import { Types } from "mongoose"
 export interface IComment {
     user: Types.ObjectId,
     comment: string,
-    // commentReplies?: IComment[]
+    commentReplies?: IComment[]
 }
 
 export interface IReview {
     user: Types.ObjectId,
     rating: number,
-    comments: string,
+    comment: string,
     commentReplies?: IComment[]
 }
 

@@ -1,13 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import httpStatus from 'http-status';
-import AppError from '../../errors/AppError';
-import { redis } from '../../utils/redis';
-import { JwtPayload } from 'jsonwebtoken';
 import { sendImageToCloudinary } from '../../utils/sendImageToCloudinary';
-import { ICourse } from './course.interface';
-import { v2 as cloudinary } from 'cloudinary';
 import { Course } from './course.model';
 
 const createCourseIntoDB = async (course: any) => {
