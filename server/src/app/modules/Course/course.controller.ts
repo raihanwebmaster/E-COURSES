@@ -50,9 +50,23 @@ const getAllCoursesWithOutPurchaseing = catchAsync(async (req, res) => {
 });
 
 
+export const getCourseByUser = catchAsync(async (req, res) => {
+  const userCourseList = req.user?.courses;
+  const courseId = req.params.id;
+  const courses = await CourseServices.getCourseByUserFromDB(courseId, userCourseList);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Courses are fetched succesfully',
+    data: courses,
+  });
+});
+
+
 export const CourseControllers = {
   uploadCourse,
   updateCourse,
   getCourseWithOutPurchaseing,
-  getAllCoursesWithOutPurchaseing
+  getAllCoursesWithOutPurchaseing,
+  getCourseByUser
 };

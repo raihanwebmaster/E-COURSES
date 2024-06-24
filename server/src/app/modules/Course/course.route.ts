@@ -33,4 +33,11 @@ router.get(
   CourseControllers.getAllCoursesWithOutPurchaseing,
 )
 
+router.get(
+  '/get-course-by-user/:id',
+  auth(USER_ROLE.user, USER_ROLE.admin),
+  CourseControllers.getCourseByUser,
+)
+
+
 export const CourseRoutes = router;

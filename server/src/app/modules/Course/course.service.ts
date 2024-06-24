@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import httpStatus from 'http-status';
+import AppError from '../../errors/AppError';
 import { destroyImage } from '../../utils/deleteImageIntoCloudinary';
 import { redis } from '../../utils/redis';
 import { sendImageToCloudinary } from '../../utils/sendImageToCloudinary';
 import { Course } from './course.model';
-import cloudinary from 'cloudinary';
 
 const createCourseIntoDB = async (course: any) => {
     const thumbnail = course.thumbnail
@@ -59,11 +60,22 @@ const getAllCoursesWithOutPurchaseingFromDB = async () => {
     return courses;
 };
 
+const getCourseByUserFromDB = async (courseId: string, userCourseList: string[]) => {
+    const courseExist = userCourseList?.find((course: any) => course.courseId.toString() === courseId);
+    if (!courseExist) {
+        throw new AppError(httpStatus.NOT_FOUND, 'You are not eligible to access this course');
+    }
+    const course = await Course.findById(courseId);
+    const content = course?.courseData;
+    return content;
+};
+
 
 
 export const CourseServices = {
     createCourseIntoDB,
     updateCourseFromDB,
     getCourseWithOutPurchaseingFromDB,
-    getAllCoursesWithOutPurchaseingFromDB
+    getAllCoursesWithOutPurchaseingFromDB,
+    getCourseByUserFromDB
 };

@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
 import httpStatus from 'http-status';
-import { JwtPayload } from 'jsonwebtoken';
 import config from '../config';
 import AppError from '../errors/AppError';
 import catchAsync from '../utils/catchAsync';
@@ -63,7 +62,11 @@ const auth = (...requiredRoles: TUserRole[]) => {
       );
     }
 
-    req.user = decoded as JwtPayload;
+    // Combine decoded and parsedUser into one object and attach to req.user
+    req.user = {
+      ...decoded,
+      ...parsedUser,
+    };
     next();
   });
 };

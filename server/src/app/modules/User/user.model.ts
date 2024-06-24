@@ -7,7 +7,7 @@ const emailRegexPattern: RegExp =
 
 const courseSchema = new Schema<ICourse>({
   courseId: { type: Schema.Types.ObjectId, ref: 'Courses' },
-});
+}, { _id: false });
 
 const userSchema = new Schema<IUser, UserModel>(
   {
