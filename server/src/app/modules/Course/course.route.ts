@@ -9,9 +9,16 @@ const router = express.Router();
 
 router.post(
   '/create-course',
-  auth(USER_ROLE.user, USER_ROLE.admin),
+  auth(USER_ROLE.admin),
   validateRequest(CourseValidation.createCourseValidateionSchema),
   CourseControllers.uploadCourse,
 );
+
+router.put(
+  '/update-course/:id',
+  auth(USER_ROLE.admin),
+  validateRequest(CourseValidation.updateCourseValidationSchema),
+  CourseControllers.updateCourse,
+)
 
 export const CourseRoutes = router;

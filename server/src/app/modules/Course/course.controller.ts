@@ -8,19 +8,20 @@ import { CourseServices } from './course.service';
 const uploadCourse = catchAsync(async (req, res) => {
   const course  = await CourseServices.createCourseIntoDB(req.body);
   sendResponse(res, {
-    statusCode: httpStatus.OK,
+    statusCode: httpStatus.CREATED,
     success: true,
-    message: 'User is retrieved succesfully',
+    message: 'Course is uploaded succesfully',
     data: course,
   });
 });
 
 const updateCourse = catchAsync(async (req, res) => {
-  const course  = await CourseServices.updateCourseFromDB(req.body);
+  const courseId = req.params.id;
+  const course  = await CourseServices.updateCourseFromDB(courseId, req.body);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'User is retrieved succesfully',
+    message: 'Course is updated succesfully',
     data: course,
   });
 });

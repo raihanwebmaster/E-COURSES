@@ -62,6 +62,28 @@ const createCourseValidateionSchema = z.object({
   }),
 });
 
+const updateCourseValidationSchema = z.object({
+  body: z.object({
+    name: z.string().optional(),
+    description: z.string().optional(),
+    price: z.number().positive().optional(),
+    estimatePrice: z.number().positive().optional(),
+    thumbnail: IThumbnailSchema.optional(),
+    tags: z.string().optional(),
+    level: z.string().optional(),
+    demoUrl: z.string().url().optional(),
+    benefits: z.array(z.object({ title: z.string() })).optional(),
+    prerequisites: z.array(z.object({ title: z.string() })).optional(),
+    reviews: z.array(IReviewSchema).optional(),
+    courseData: z.array(ICourseDataSchema).optional(),
+    ratings: z.number().min(0).max(5).optional(),
+    purchased: z.number().nonnegative().optional(),
+  }),
+});
+
+
+
 export const CourseValidation = {
   createCourseValidateionSchema,
+  updateCourseValidationSchema
 };
