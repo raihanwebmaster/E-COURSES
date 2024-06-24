@@ -38,7 +38,21 @@ const updateCourseFromDB = async (couserId: string, course: any) => {
     return uploadCourse;
 };
 
+const getCourseWithOutPurchaseingFromDB = async (courseId: string) => {
+    const courses = await Course.findById(courseId).select("-courseData.videoUrl  -courseData.videoPlayer -courseData.links -courseData.suggestion -courseData.questions");
+    return courses;
+};
+
+const getAllCoursesWithOutPurchaseingFromDB = async () => {
+    const courses = await Course.find().select("-courseData.videoUrl  -courseData.videoPlayer -courseData.links -courseData.suggestion -courseData.questions");
+    return courses;
+};
+
+
+
 export const CourseServices = {
     createCourseIntoDB,
-    updateCourseFromDB
+    updateCourseFromDB,
+    getCourseWithOutPurchaseingFromDB,
+    getAllCoursesWithOutPurchaseingFromDB
 };

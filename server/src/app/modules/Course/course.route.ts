@@ -21,4 +21,16 @@ router.put(
   CourseControllers.updateCourse,
 )
 
+router.get(
+  '/get-course/:id',
+  // auth(USER_ROLE.user, USER_ROLE.admin),
+  CourseControllers.getCourseWithOutPurchaseing,
+)
+
+router.get(
+  '/get-all-courses',
+  // auth(USER_ROLE.user, USER_ROLE.admin),
+  CourseControllers.getAllCoursesWithOutPurchaseing,
+)
+
 export const CourseRoutes = router;
