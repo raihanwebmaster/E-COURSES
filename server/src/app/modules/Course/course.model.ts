@@ -1,10 +1,22 @@
 import { Schema, model, } from 'mongoose';
-import { IReview, ICourse, IComment, ICourseData, ILink } from './course.interface';
+import { IReview, ICourse, IComment, ICourseData, ILink, IQuestion, IReply } from './course.interface';
 
 const CommentSchema: Schema<IComment> = new Schema({
     user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     comment: { type: String, required: true },
     commentReplies: [{ type: Schema.Types.ObjectId, ref: 'Comment' }]
+});
+
+const ReplySchema: Schema<IReply> = new Schema({
+    user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    answer: { type: String, required: true }
+});
+
+const QuestionSchema: Schema<IQuestion> = new Schema({
+    user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    question: { type: String, required: true },
+    questionReplies: [ReplySchema]
+
 });
 
 // Review Schema
@@ -31,7 +43,7 @@ const CourseDataSchema = new Schema<ICourseData>({
     videoPlayer: { type: String, required: true },
     links: [LinkSchema],
     suggestion: { type: String, required: false },
-    questions: [CommentSchema]
+    questions: [QuestionSchema]
 });
 
 // Course Schema

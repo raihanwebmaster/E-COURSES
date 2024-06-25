@@ -39,5 +39,19 @@ router.get(
   CourseControllers.getCourseByUser,
 )
 
+router.put(
+  '/add-question',
+  auth(USER_ROLE.user, USER_ROLE.admin),
+  validateRequest(CourseValidation.addQuestionValidationSchema),
+  CourseControllers.addQuestion,
+)
+
+router.put(
+  '/add-answer',
+  auth(USER_ROLE.user, USER_ROLE.admin),
+  validateRequest(CourseValidation.addAnswerValidationSchema),
+  CourseControllers.addAnswer,
+)
+
 
 export const CourseRoutes = router;

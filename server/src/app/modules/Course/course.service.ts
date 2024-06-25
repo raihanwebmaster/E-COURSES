@@ -7,6 +7,11 @@ import { destroyImage } from '../../utils/deleteImageIntoCloudinary';
 import { redis } from '../../utils/redis';
 import { sendImageToCloudinary } from '../../utils/sendImageToCloudinary';
 import { Course } from './course.model';
+import { JwtPayload } from 'jsonwebtoken';
+import { IAddAnswerData, IAddQuestionData } from './course.interface';
+import { title } from 'process';
+import { sendMail } from '../../utils/sendMail';
+import { IUser } from '../User/user.interface';
 
 const createCourseIntoDB = async (course: any) => {
     const thumbnail = course.thumbnail
@@ -70,6 +75,67 @@ const getCourseByUserFromDB = async (courseId: string, userCourseList: string[])
     return content;
 };
 
+const addQuestionIntoCourse = async (user: JwtPayload, questionData: IAddQuestionData) => {
+    const { courseId, contentId, question } = questionData;
+    const course = await Course.findById(courseId);
+    const courseContent = course?.courseData?.find((content: any) => content._id.toString() === contentId);
+    if (!courseContent) {
+        throw new AppError(httpStatus.BAD_REQUEST, 'Course content not found');
+    }
+    const newQuestion = {
+        user: user.id,
+        question,
+        questionReplies: []
+    }
+    courseContent.questions.push(newQuestion);
+    await course?.save();
+    return course;
+
+};
+
+const addAnswerIntoCourse = async (user: JwtPayload, questionData: IAddAnswerData) => {
+    const { courseId, contentId, questionId, answer } = questionData;
+    const course = await Course.findById(courseId).populate({
+        path: 'courseData.questions.user',
+        model: 'User'
+    }).exec();
+    const courseContent = course?.courseData?.find((content: any) => content._id.toString() === contentId);
+    if (!courseContent) {
+        throw new AppError(httpStatus.BAD_REQUEST, 'Course content not found');
+    }
+    const question = courseContent.questions.find((question: any) => question._id.toString() === questionId);
+    if (!question) {
+        throw new AppError(httpStatus.BAD_REQUEST, 'Question not found');
+    }
+    const newAnswer = {
+        user: user._id,
+        answer,
+    }
+
+    question.questionReplies ??= [];
+    question.questionReplies.push(newAnswer);
+    const questionUser = question.user as unknown as IUser;
+
+    await course?.save();
+    if (user.id === question.user._id.toString()) {
+        // create a notification
+
+    } else {
+        const data = {
+            name: questionUser?.name,
+            title: question.question,
+        }
+        await sendMail({
+            email: questionUser.email,
+            subject: 'Question Reply',
+            template: 'question-reply.ejs',
+            data
+        });
+    }
+    return course
+
+};
+
 
 
 export const CourseServices = {
@@ -77,5 +143,7 @@ export const CourseServices = {
     updateCourseFromDB,
     getCourseWithOutPurchaseingFromDB,
     getAllCoursesWithOutPurchaseingFromDB,
-    getCourseByUserFromDB
+    getCourseByUserFromDB,
+    addQuestionIntoCourse,
+    addAnswerIntoCourse
 };

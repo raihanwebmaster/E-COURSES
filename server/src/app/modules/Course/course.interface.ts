@@ -6,6 +6,17 @@ export interface IComment {
     commentReplies?: IComment[]
 }
 
+export interface IReply {
+    user: Types.ObjectId,
+    answer: string
+}
+
+export interface IQuestion {
+    user: Types.ObjectId,
+    question: string,
+    questionReplies?: IReply[]
+}
+
 export interface IReview {
     user: Types.ObjectId,
     rating: number,
@@ -27,7 +38,7 @@ export interface ICourseData {
     videoPlayer: string,
     links: ILink[],
     suggestion: string,
-    questions: IComment[]
+    questions: IQuestion[]
 }
 
 export interface ICourse {
@@ -45,4 +56,17 @@ export interface ICourse {
     courseData: ICourseData[],
     ratings?: number,
     purchased?: number
+}
+
+export interface IAddQuestionData{
+    question: string;
+    courseId: string;
+    contentId: string;
+}
+
+export interface IAddAnswerData{
+    answer: string;
+    questionId: string;
+    contentId: string;
+    courseId: string;
 }

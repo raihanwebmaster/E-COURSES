@@ -13,6 +13,17 @@ const ICommentSchema: ZodSchema = z.lazy(() =>
   }),
 );
 
+const IReplySchema: ZodSchema = z.object({
+  user: objectId(),
+  answer: z.string(),
+});
+
+const IQuestionSchema: ZodSchema = z.object({
+  user: objectId(),
+  question: z.string(),
+  questionReplies: z.array(IReplySchema).optional(),
+});
+
 const IReviewSchema = z.object({
   user: objectId(),
   rating: z.number().min(1).max(5),
@@ -35,7 +46,7 @@ const ICourseDataSchema = z.object({
   videoPlayer: z.string(),
   links: z.array(ILinkSchema),
   suggestion: z.string().optional(),
-  questions: z.array(ICommentSchema).optional(),
+  questions: z.array(IQuestionSchema).optional(),
 });
 
 const IThumbnailSchema = z.object({
@@ -81,9 +92,28 @@ const updateCourseValidationSchema = z.object({
   }),
 });
 
+const addQuestionValidationSchema = z.object({
+  body: z.object({
+    courseId: z.string(),
+    contentId: z.string(),
+    question: z.string(),
+  }),
+});
+
+const addAnswerValidationSchema = z.object({
+  body: z.object({
+    courseId: z.string(),
+    contentId: z.string(),
+    questionId: z.string(),
+    answer: z.string(),
+  }),
+});
+
 
 
 export const CourseValidation = {
   createCourseValidateionSchema,
-  updateCourseValidationSchema
+  updateCourseValidationSchema,
+  addQuestionValidationSchema,
+  addAnswerValidationSchema
 };

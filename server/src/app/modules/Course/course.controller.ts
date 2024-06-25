@@ -50,7 +50,7 @@ const getAllCoursesWithOutPurchaseing = catchAsync(async (req, res) => {
 });
 
 
-export const getCourseByUser = catchAsync(async (req, res) => {
+const getCourseByUser = catchAsync(async (req, res) => {
   const userCourseList = req.user?.courses;
   const courseId = req.params.id;
   const courses = await CourseServices.getCourseByUserFromDB(courseId, userCourseList);
@@ -62,11 +62,37 @@ export const getCourseByUser = catchAsync(async (req, res) => {
   });
 });
 
+const addQuestion = catchAsync(async (req, res) => {
+  const user = req.user;
+  const questionData = req.body;
+  const course = await CourseServices.addQuestionIntoCourse(user, questionData);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Question is added succesfully',
+    data: course,
+  });
+});
+
+const addAnswer = catchAsync(async (req, res) => {
+  const user = req.user;
+  const answerData = req.body;
+  const course = await CourseServices.addAnswerIntoCourse(user, answerData);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Answer is added succesfully',
+    data: course,
+  });
+});
+
 
 export const CourseControllers = {
   uploadCourse,
   updateCourse,
   getCourseWithOutPurchaseing,
   getAllCoursesWithOutPurchaseing,
-  getCourseByUser
+  getCourseByUser,
+  addQuestion,
+  addAnswer,
 };
