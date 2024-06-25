@@ -5,14 +5,6 @@ import { Types } from 'mongoose';
 const objectId = () => z.instanceof(Types.ObjectId).transform((val) => val.toString());
 
 
-const ICommentSchema: ZodSchema = z.lazy(() =>
-  z.object({
-    user: objectId(),
-    comment: z.string(),
-    commentReplies: z.array(ICommentSchema).optional(),
-  }),
-);
-
 const IReplySchema: ZodSchema = z.object({
   user: objectId(),
   answer: z.string(),
@@ -27,8 +19,8 @@ const IQuestionSchema: ZodSchema = z.object({
 const IReviewSchema = z.object({
   user: objectId(),
   rating: z.number().min(1).max(5),
-  comments: z.string(),
-  commentReplies: z.array(ICommentSchema).optional(),
+  comment: z.string(),
+  commentReplies: z.array(IReplySchema).optional(),
 });
 
 const ILinkSchema = z.object({
@@ -109,11 +101,28 @@ const addAnswerValidationSchema = z.object({
   }),
 });
 
+const addReviewValidationSchema = z.object({
+  body: z.object({
+    rating: z.number().min(1).max(5),
+    review: z.string(),
+  }),
+});
+
+const addReplyReviewValidationSchema = z.object({
+  body: z.object({
+    reviewId: z.string(),
+    comment: z.string(),
+    courseId: z.string(),
+  }),
+ });
+
 
 
 export const CourseValidation = {
   createCourseValidateionSchema,
   updateCourseValidationSchema,
   addQuestionValidationSchema,
-  addAnswerValidationSchema
+  addAnswerValidationSchema,
+  addReviewValidationSchema,
+  addReplyReviewValidationSchema
 };

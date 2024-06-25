@@ -1,10 +1,5 @@
 import { Types } from "mongoose"
 
-export interface IComment {
-    user: Types.ObjectId,
-    comment: string,
-    commentReplies?: IComment[]
-}
 
 export interface IReply {
     user: Types.ObjectId,
@@ -21,7 +16,7 @@ export interface IReview {
     user: Types.ObjectId,
     rating: number,
     comment: string,
-    commentReplies?: IComment[]
+    commentReplies?: IReply[]
 }
 
 export interface ILink {
@@ -68,5 +63,16 @@ export interface IAddAnswerData{
     answer: string;
     questionId: string;
     contentId: string;
+    courseId: string;
+}
+
+export interface IAddReviewData{
+    review: string;
+    rating: number;
+}
+
+export interface IAddReplyReviewData{
+    comment: string;
+    reviewId: string;
     courseId: string;
 }

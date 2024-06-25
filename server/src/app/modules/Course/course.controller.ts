@@ -86,6 +86,31 @@ const addAnswer = catchAsync(async (req, res) => {
   });
 });
 
+const addReview = catchAsync(async (req, res) => {
+  const user = req.user;
+  const reviewData = req.body;
+  const courseId = req.params.id;
+  const course = await CourseServices.addReviewIntoCourse(user, courseId, reviewData);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Review is added succesfully',
+    data: course,
+  });
+});
+
+const addReplyReview = catchAsync(async (req, res) => {
+  const user = req.user;
+  const replyData = req.body;
+  const course = await CourseServices.addReplyReviewIntoCourse(user,replyData);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Reply is added succesfully',
+    data: course,
+  });
+});
+
 
 export const CourseControllers = {
   uploadCourse,
@@ -95,4 +120,6 @@ export const CourseControllers = {
   getCourseByUser,
   addQuestion,
   addAnswer,
+  addReview,
+  addReplyReview
 };

@@ -53,5 +53,19 @@ router.put(
   CourseControllers.addAnswer,
 )
 
+router.put(
+  '/add-review/:id',
+  auth(USER_ROLE.user, USER_ROLE.admin),
+  validateRequest(CourseValidation.addReviewValidationSchema),
+  CourseControllers.addReview,
+)
+
+router.put(
+  '/add-reply-review',
+  auth(USER_ROLE.admin),
+  validateRequest(CourseValidation.addReplyReviewValidationSchema),
+  CourseControllers.addReplyReview,
+)
+
 
 export const CourseRoutes = router;

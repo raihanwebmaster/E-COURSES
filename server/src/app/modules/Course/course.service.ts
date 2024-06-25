@@ -8,7 +8,7 @@ import { redis } from '../../utils/redis';
 import { sendImageToCloudinary } from '../../utils/sendImageToCloudinary';
 import { Course } from './course.model';
 import { JwtPayload } from 'jsonwebtoken';
-import { IAddAnswerData, IAddQuestionData } from './course.interface';
+import { IAddAnswerData, IAddQuestionData, IAddReplyReviewData, IAddReviewData } from './course.interface';
 import { title } from 'process';
 import { sendMail } from '../../utils/sendMail';
 import { IUser } from '../User/user.interface';
@@ -112,7 +112,7 @@ const addAnswerIntoCourse = async (user: JwtPayload, questionData: IAddAnswerDat
         answer,
     }
 
-    question.questionReplies ??= [];
+    question.questionReplies = question.questionReplies ?? [];
     question.questionReplies.push(newAnswer);
     const questionUser = question.user as unknown as IUser;
 
@@ -137,6 +137,65 @@ const addAnswerIntoCourse = async (user: JwtPayload, questionData: IAddAnswerDat
 };
 
 
+const addReviewIntoCourse = async (user: JwtPayload, courseId: string, reviewData:IAddReviewData ) => {
+    const userCourseList = user.courses;
+    const courseExist = userCourseList?.find((course: any) => course.courseId.toString() === courseId);
+    if (!courseExist) {
+        throw new AppError(httpStatus.NOT_FOUND, 'You are not eligible to access this course');
+    }
+    const course = await Course.findById(courseId);
+    if (!course) {
+        throw new AppError(httpStatus.NOT_FOUND, 'Course not found');
+    }
+    const { rating, review } = reviewData;
+    const newReview = {
+        user: user.id,
+        rating,
+        comment: review,
+    }
+
+    course?.reviews.push(newReview);
+
+    let avg = 0;
+    course?.reviews.forEach((review: any) => {
+        avg += review.rating;
+    });
+    course.ratings = avg / (course?.reviews.length ?? 0);
+
+
+    await course?.save();
+
+    const notification = {
+        title: 'New Review Received',
+        message: `${user.name} has given a review in ${course.name} course`,
+    
+    }
+    // create a notification
+
+    return course;
+}
+
+const addReplyReviewIntoCourse = async (user: JwtPayload,  replyData: IAddReplyReviewData) => {
+    const { courseId, reviewId, comment } = replyData;
+    const course = await Course.findById(courseId);
+    if (!course) {
+        throw new AppError(httpStatus.NOT_FOUND, 'Course not found');
+    }
+    const review = course.reviews.find((review: any) => review._id.toString() === reviewId);
+    if (!review) {
+        throw new AppError(httpStatus.NOT_FOUND, 'Review not found');
+    }
+    const newReply = {
+        user: user.id,
+        answer: comment,
+    }
+    review.commentReplies = review.commentReplies ?? [];
+    review.commentReplies.push(newReply);
+    await course?.save();
+    return course;
+};
+
+
 
 export const CourseServices = {
     createCourseIntoDB,
@@ -145,5 +204,7 @@ export const CourseServices = {
     getAllCoursesWithOutPurchaseingFromDB,
     getCourseByUserFromDB,
     addQuestionIntoCourse,
-    addAnswerIntoCourse
+    addAnswerIntoCourse,
+    addReviewIntoCourse,
+    addReplyReviewIntoCourse
 };
