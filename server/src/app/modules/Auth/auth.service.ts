@@ -153,6 +153,8 @@ const updateAccessToken = async (refreshToken: string) => {
     config.jwt_access_secret as string,
     config.jwt_access_expires_in as string,
   );
+  const updateUser = await User.findById(user._id);
+  redis.set(user._id.toString(), JSON.stringify(updateUser) as string);
   return {
     access_Token,
   };

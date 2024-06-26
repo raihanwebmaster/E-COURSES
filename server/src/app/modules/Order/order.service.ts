@@ -44,7 +44,10 @@ const createOderIntoDB = async (user: JwtPayload, orderData: IOrder) => {
         const newOrder = await Order.create([courseOrder], { session });
 
         isExistUser.courses.push({ courseId: course._id });
-        const updateUser = await User.findByIdAndUpdate(user.id, { courses: isExistUser.courses }, { session });
+        const updateUser = await User.findByIdAndUpdate(user.id, { courses: isExistUser.courses }, {
+            new: true,
+            runValidators: true, session
+        });
         await redis.set(user.id, JSON.stringify(updateUser));
 
         // Pass the session to the create operation
