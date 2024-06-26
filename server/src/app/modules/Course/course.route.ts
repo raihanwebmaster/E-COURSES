@@ -41,21 +41,21 @@ router.get(
 
 router.put(
   '/add-question',
-  auth(USER_ROLE.user, USER_ROLE.admin),
+  auth(USER_ROLE.user),
   validateRequest(CourseValidation.addQuestionValidationSchema),
   CourseControllers.addQuestion,
 )
 
 router.put(
   '/add-answer',
-  auth(USER_ROLE.user, USER_ROLE.admin),
+  auth(USER_ROLE.admin),
   validateRequest(CourseValidation.addAnswerValidationSchema),
   CourseControllers.addAnswer,
 )
 
 router.put(
   '/add-review/:id',
-  auth(USER_ROLE.user, USER_ROLE.admin),
+  auth(USER_ROLE.user),
   validateRequest(CourseValidation.addReviewValidationSchema),
   CourseControllers.addReview,
 )
