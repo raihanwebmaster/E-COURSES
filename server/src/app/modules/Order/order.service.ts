@@ -14,15 +14,21 @@ import mongoose from 'mongoose';
 import { IOrder } from './order.interface';
 
 const createOderIntoDB = async (user: JwtPayload, orderData: IOrder) => {
-    const isEmailExist = await User.isUserExistsByEmail(user.email);
-    const courseExistInUser = isEmailExist?.courses?.find((course: any) => course.courseId.toString() === orderData.courseId);
+    const isExistUser = await User.isUserExistsByEmail(user.email);
+    if (!isExistUser) {
+        throw new AppError(httpStatus.NOT_FOUND, 'User not found');
+    }
+
+    const courseExistInUser = isExistUser?.courses?.find((course: any) => course.courseId.toString() === orderData.courseId);
     if (courseExistInUser) {
         throw new AppError(httpStatus.FORBIDDEN, 'Course already purchased');
     }
+
     const course = await Course.findById(orderData.courseId);
     if (!course) {
         throw new AppError(httpStatus.NOT_FOUND, 'Course not found');
     }
+
     // Start a session
     const session = await mongoose.startSession();
     try {
@@ -37,8 +43,9 @@ const createOderIntoDB = async (user: JwtPayload, orderData: IOrder) => {
         // Pass the session to the create operation
         const newOrder = await Order.create([courseOrder], { session });
 
-        user.courses.push({ courseId: course._id });
-        await User.findByIdAndUpdate(user.id, { courses: user.courses }, { session });
+        isExistUser.courses.push({ courseId: course._id });
+        const updateUser = await User.findByIdAndUpdate(user.id, { courses: isExistUser.courses }, { session });
+        await redis.set(user.id, JSON.stringify(updateUser));
 
         // Pass the session to the create operation
         await Notification.create([{
@@ -48,6 +55,10 @@ const createOderIntoDB = async (user: JwtPayload, orderData: IOrder) => {
         }], { session });
 
         // Commit the transaction
+        course.purchased = (course.purchased ?? 0) + 1;
+
+        await course.save({ session });
+
         await session.commitTransaction();
 
         const mailData = {
@@ -67,7 +78,6 @@ const createOderIntoDB = async (user: JwtPayload, orderData: IOrder) => {
 
         // End the session
         await session.endSession();
-
         return newOrder;
     } catch (error) {
         // Abort the transaction in case of error
