@@ -9,9 +9,10 @@ import { sendImageToCloudinary } from '../../utils/sendImageToCloudinary';
 import { Course } from './course.model';
 import { JwtPayload } from 'jsonwebtoken';
 import { IAddAnswerData, IAddQuestionData, IAddReplyReviewData, IAddReviewData } from './course.interface';
-import { title } from 'process';
 import { sendMail } from '../../utils/sendMail';
 import { IUser } from '../User/user.interface';
+import { Notification } from '../Notification/notification.model';
+import mongoose from 'mongoose';
 
 const createCourseIntoDB = async (course: any) => {
     const thumbnail = course.thumbnail
@@ -78,18 +79,36 @@ const getCourseByUserFromDB = async (courseId: string, userCourseList: string[])
 const addQuestionIntoCourse = async (user: JwtPayload, questionData: IAddQuestionData) => {
     const { courseId, contentId, question } = questionData;
     const course = await Course.findById(courseId);
+    if (!course) {
+        throw new AppError(httpStatus.BAD_REQUEST, 'Course not found');
+    }
     const courseContent = course?.courseData?.find((content: any) => content._id.toString() === contentId);
     if (!courseContent) {
         throw new AppError(httpStatus.BAD_REQUEST, 'Course content not found');
     }
-    const newQuestion = {
-        user: user.id,
-        question,
-        questionReplies: []
+    const session = await mongoose.startSession();
+    try {
+        session.startTransaction();
+        const newQuestion = {
+            user: user.id,
+            question,
+            questionReplies: []
+        };
+        courseContent.questions.push(newQuestion);
+        await course.save({ session });
+        await Notification.create([{
+            user: user.id,
+            message: `You have a new queston from ${user.name} for ${courseContent.title} course content`,
+            title: 'New Question Received',
+        }], { session });
+        await session.commitTransaction();
+        return course;
+    } catch (error) {
+        await session.abortTransaction();
+        throw new AppError(httpStatus.BAD_REQUEST, 'Question failed');
+    } finally {
+        session.endSession();
     }
-    courseContent.questions.push(newQuestion);
-    await course?.save();
-    return course;
 
 };
 
@@ -99,6 +118,10 @@ const addAnswerIntoCourse = async (user: JwtPayload, questionData: IAddAnswerDat
         path: 'courseData.questions.user',
         model: 'User'
     }).exec();
+    if (!course) {
+        throw new AppError(httpStatus.BAD_REQUEST, 'Course not found');
+    }
+
     const courseContent = course?.courseData?.find((content: any) => content._id.toString() === contentId);
     if (!courseContent) {
         throw new AppError(httpStatus.BAD_REQUEST, 'Course content not found');
@@ -114,30 +137,47 @@ const addAnswerIntoCourse = async (user: JwtPayload, questionData: IAddAnswerDat
 
     question.questionReplies = question.questionReplies ?? [];
     question.questionReplies.push(newAnswer);
-    const questionUser = question.user as unknown as IUser;
 
-    await course?.save();
-    if (user.id === question.user._id.toString()) {
-        // create a notification
+    const session = await mongoose.startSession();
 
-    } else {
-        const data = {
-            name: questionUser?.name,
-            title: question.question,
+    try {
+        session.startTransaction();
+        await course.save({ session });
+        if (user.id !== question.user._id.toString()) {
+            const questionUser = question.user as unknown as IUser;
+            // Assuming sendMail does not interact with MongoDB and thus does not need to be part of the transaction
+            // If it does interact with MongoDB, you would need to include those operations within the transaction as well
+            const data = {
+                name: questionUser?.name,
+                title: question.question,
+            };
+            await sendMail({
+                email: questionUser.email,
+                subject: 'Question Reply',
+                template: 'question-reply.ejs',
+                data
+            });
+        } else {
+            await Notification.create([{
+                user: user.id,
+                message: `You have a new answer from ${user.name} for ${courseContent.title} course content`,
+                title: 'New Question Received',
+            }], { session });
         }
-        await sendMail({
-            email: questionUser.email,
-            subject: 'Question Reply',
-            template: 'question-reply.ejs',
-            data
-        });
+
+        await session.commitTransaction();
+        return course;
+    } catch (error) {
+        await session.abortTransaction();
+        throw new AppError(httpStatus.BAD_REQUEST, "answer failed");
+    } finally {
+        session.endSession();
     }
-    return course
 
 };
 
 
-const addReviewIntoCourse = async (user: JwtPayload, courseId: string, reviewData:IAddReviewData ) => {
+const addReviewIntoCourse = async (user: JwtPayload, courseId: string, reviewData: IAddReviewData) => {
     const userCourseList = user.courses;
     const courseExist = userCourseList?.find((course: any) => course.courseId.toString() === courseId);
     if (!courseExist) {
@@ -162,20 +202,28 @@ const addReviewIntoCourse = async (user: JwtPayload, courseId: string, reviewDat
     });
     course.ratings = avg / (course?.reviews.length ?? 0);
 
+    const session = await mongoose.startSession();
 
-    await course?.save();
+    try {
+        session.startTransaction();
+        await course?.save({ session });
+        await Notification.create([{
+            user: user.id,
+            message: `${user.name} has given a review in ${course.name} course`,
+            title: 'New Review Received',
+        }], { session });
+        await session.commitTransaction();
+        return course;
 
-    const notification = {
-        title: 'New Review Received',
-        message: `${user.name} has given a review in ${course.name} course`,
-    
+    } catch (error) {
+        await session.abortTransaction();
+        throw new AppError(httpStatus.BAD_REQUEST, 'Review failed');
+    } finally {
+        session.endSession();
     }
-    // create a notification
-
-    return course;
 }
 
-const addReplyReviewIntoCourse = async (user: JwtPayload,  replyData: IAddReplyReviewData) => {
+const addReplyReviewIntoCourse = async (user: JwtPayload, replyData: IAddReplyReviewData) => {
     const { courseId, reviewId, comment } = replyData;
     const course = await Course.findById(courseId);
     if (!course) {
