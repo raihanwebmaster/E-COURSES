@@ -121,6 +121,17 @@ const getAllCourses = catchAsync(async (req, res) => {
   });
 });
 
+const deleteCourse = catchAsync(async (req, res) => {
+  const courseId = req.params.id;
+  const course = await CourseServices.deleteCourseFromDB(courseId);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Course is deleted succesfully',
+    data: course
+  });
+});  
+
 
 export const CourseControllers = {
   uploadCourse,
@@ -132,5 +143,6 @@ export const CourseControllers = {
   addAnswer,
   addReview,
   addReplyReview,
-  getAllCourses
+  getAllCourses,
+  deleteCourse
 };

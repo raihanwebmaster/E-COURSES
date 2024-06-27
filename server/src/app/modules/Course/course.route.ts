@@ -73,5 +73,7 @@ router.get(
   CourseControllers.getAllCourses,
 )
 
+router.delete('/delete-course/:id', auth(USER_ROLE.admin), CourseControllers.deleteCourse);
+
 
 export const CourseRoutes = router;

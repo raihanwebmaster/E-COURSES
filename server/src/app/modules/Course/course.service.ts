@@ -250,6 +250,22 @@ const getAllCoursesFromDB = async () => {
 };
 
 
+const deleteCourseFromDB = async (courseId: string) => {
+    const course = await Course.findById(courseId);
+    if (!course) {
+        throw new AppError(httpStatus.NOT_FOUND, 'Course not found');
+    }
+
+    if (course.purchased !== 0) {
+        throw new AppError(httpStatus.BAD_REQUEST, 'Cannot delete a course that has been purchased');
+    }
+
+    await Course.findByIdAndDelete(courseId);
+    await redis.del(courseId);
+
+    return course;
+};
+
 
 export const CourseServices = {
     createCourseIntoDB,
@@ -261,5 +277,6 @@ export const CourseServices = {
     addAnswerIntoCourse,
     addReviewIntoCourse,
     addReplyReviewIntoCourse,
-    getAllCoursesFromDB
+    getAllCoursesFromDB,
+    deleteCourseFromDB
 };

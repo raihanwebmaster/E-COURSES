@@ -70,10 +70,20 @@ const updateUserRoleIntoDB = async (userId: string, role: string) => {
   return updateUser;
 };
 
+const deleteUserFromDB = async (userId: string) => {
+   const user = await User.findByIdAndDelete(userId);
+   if (!user) {
+     throw new AppError(httpStatus.NOT_FOUND, 'User not found');
+   }
+   await redis.del(userId);
+   return user;
+}
+
 export const UserServices = {
   getUserByIdFromDB,
   updateUserInfoIntoDB,
   updateProfilePictureIntoDB,
   getAllUsersFromDB,
   updateUserRoleIntoDB,
+  deleteUserFromDB,
 };
