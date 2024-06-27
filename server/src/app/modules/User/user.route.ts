@@ -34,4 +34,11 @@ router.get(
   UserControllers.getAllUsers,
 );
 
+router.put(
+  '/update-role',
+  auth(USER_ROLE.admin),
+  validateRequest(UserValidation.userRoleUpdateZodValidationSchema),
+  UserControllers.updateUserRole,
+);
+
 export const UserRoutes = router;

@@ -85,9 +85,18 @@ const userAvatarUpdateValidationSchema = z.object({
     .strict(),
 });
 
+const userRoleUpdateZodValidationSchema = z.object({
+  body: z.object({
+    id: z.string().min(1),
+    role: z.enum(['user', 'admin']),
+  }),
+
+});
+
 export const UserValidation = {
   userZodValidationSchema: userCreateSchema,
   getMeZodValidationSchema: getMeValidationSchema,
   userUpdateZodValidationSchema: userUpdateValidationSchema,
   userAvatarUpdateZodValidationSchema: userAvatarUpdateValidationSchema,
+  userRoleUpdateZodValidationSchema: userRoleUpdateZodValidationSchema,
 };
