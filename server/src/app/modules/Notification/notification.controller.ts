@@ -14,6 +14,18 @@ const getNotifications = catchAsync(async (req, res) => {
     });
 });
 
+const updateNotification = catchAsync(async (req, res) => {
+    const { id } = req.params;
+    const notifications = await NotificationServices.updateNotificationIntoDB(id);
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: 'Notification updated successfully',
+        data: notifications,
+    });
+});
+
 export const NotificationControllers = {
-    getNotifications
+    getNotifications,
+    updateNotification
 };
