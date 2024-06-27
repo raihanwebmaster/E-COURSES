@@ -67,5 +67,11 @@ router.put(
   CourseControllers.addReplyReview,
 )
 
+router.get(
+  '/get-all-courses',
+  auth(USER_ROLE.admin),
+  CourseControllers.getAllCourses,
+)
+
 
 export const CourseRoutes = router;

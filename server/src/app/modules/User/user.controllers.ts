@@ -39,8 +39,19 @@ const updateProfilePicture = catchAsync(async (req, res) => {
   });
 });
 
+const getAllUsers = catchAsync(async (req, res) => {
+  const users = await UserServices.getAllUsersFromDB();
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'All users are retrieved successfully',
+    data: users,
+  });
+});
+
 export const UserControllers = {
   getUserById,
   updateUserInfo,
-  updateProfilePicture
+  updateProfilePicture,
+  getAllUsers,
 };

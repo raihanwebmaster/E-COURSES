@@ -111,6 +111,16 @@ const addReplyReview = catchAsync(async (req, res) => {
   });
 });
 
+const getAllCourses = catchAsync(async (req, res) => {
+  const courses = await CourseServices.getAllCoursesFromDB();
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Courses are fetched succesfully',
+    data: courses,
+  });
+});
+
 
 export const CourseControllers = {
   uploadCourse,
@@ -121,5 +131,6 @@ export const CourseControllers = {
   addQuestion,
   addAnswer,
   addReview,
-  addReplyReview
+  addReplyReview,
+  getAllCourses
 };

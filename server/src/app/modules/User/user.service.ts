@@ -59,8 +59,15 @@ const updateProfilePictureIntoDB = async (user: JwtPayload, avatar: string) => {
   return result;
 };
 
+
+const getAllUsersFromDB = async () => {
+  const users = await User.find().sort({ createdAt: -1 });
+  return users;
+};
+
 export const UserServices = {
   getUserByIdFromDB,
   updateUserInfoIntoDB,
   updateProfilePictureIntoDB,
+  getAllUsersFromDB
 };

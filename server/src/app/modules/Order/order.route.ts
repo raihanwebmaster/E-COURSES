@@ -13,5 +13,10 @@ router.post("/create-order",
     OderControllers.createOder
 );
 
+router.get("/all-orders",
+    auth(USER_ROLE.admin),
+    OderControllers.getAllOrders
+);
+
 
 export const OrderRoutes = router;

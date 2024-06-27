@@ -90,6 +90,13 @@ const createOderIntoDB = async (user: JwtPayload, orderData: IOrder) => {
     }
 };
 
+const getAllOrdersFromDB = async () => {
+    const orders = await Order.find().sort({ createdAt: -1 });
+    return orders;
+
+}
+
 export const OrderServices = {
-    createOderIntoDB
+    createOderIntoDB,
+    getAllOrdersFromDB
 };

@@ -244,6 +244,12 @@ const addReplyReviewIntoCourse = async (user: JwtPayload, replyData: IAddReplyRe
 };
 
 
+const getAllCoursesFromDB = async () => {
+    const courses = await Course.find().sort({ createdAt: -1 });
+    return courses;
+};
+
+
 
 export const CourseServices = {
     createCourseIntoDB,
@@ -254,5 +260,6 @@ export const CourseServices = {
     addQuestionIntoCourse,
     addAnswerIntoCourse,
     addReviewIntoCourse,
-    addReplyReviewIntoCourse
+    addReplyReviewIntoCourse,
+    getAllCoursesFromDB
 };
