@@ -75,8 +75,18 @@ const editLayoutIntoDB = async (layout: any) => {
     }
 }
 
+
+const getLayoutFromDB = async (type: string) => {
+    const layout = await Layout.findOne({ type });
+    if (!layout) {
+        throw new AppError(httpStatus.NOT_FOUND, 'Layout not found')
+    }
+    return layout;
+}
+
 export const LayoutServices = {
     createLayoutIntoDB,
-    editLayoutIntoDB
+    editLayoutIntoDB,
+    getLayoutFromDB
 
 }

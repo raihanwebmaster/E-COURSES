@@ -26,7 +26,20 @@ const editLayout = catchAsync(async (req, res) => {
     });
 });
 
+
+const getLayout = catchAsync(async (req, res) => {
+    const { type } = req.body;
+    const result = await LayoutServices.getLayoutFromDB(type);
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: 'Layout is fetched successfully',
+        data: result,
+    });
+});
+
 export const LayoutControllers = {
     createLayout,
-    editLayout
+    editLayout,
+    getLayout
 }
