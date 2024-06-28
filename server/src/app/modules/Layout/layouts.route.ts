@@ -7,7 +7,8 @@ import { layoutsValidation } from './layouts.validation';
 const router = express.Router();
 
 
-router.post('/create', auth(USER_ROLE.admin),validateRequest(layoutsValidation.createLayoutZodSchema), LayoutControllers.createLayout)
+router.post('/create', auth(USER_ROLE.admin), validateRequest(layoutsValidation.createLayoutZodSchema), LayoutControllers.createLayout)
+router.put('/update', auth(USER_ROLE.admin), validateRequest(layoutsValidation.updateLayoutZodSchema), LayoutControllers.editLayout)
 
 
 

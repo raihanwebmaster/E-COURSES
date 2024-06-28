@@ -15,6 +15,18 @@ const createLayout = catchAsync(async (req, res) => {
     });
 });
 
+const editLayout = catchAsync(async (req, res) => {
+    const layout = req.body;
+    const result = await LayoutServices.editLayoutIntoDB(layout);
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: 'Layout is updated successfully',
+        data: result,
+    });
+});
+
 export const LayoutControllers = {
-    createLayout
+    createLayout,
+    editLayout
 }

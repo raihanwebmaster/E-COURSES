@@ -26,6 +26,7 @@ const createLayoutZodSchema = z.object({
 
 
 export const layoutsValidation = {
-    createLayoutZodSchema
+    createLayoutZodSchema,
+    updateLayoutZodSchema: createLayoutZodSchema
 
 }
