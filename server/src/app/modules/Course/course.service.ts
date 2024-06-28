@@ -43,6 +43,7 @@ const updateCourseFromDB = async (couserId: string, course: any) => {
         }
     }
     const uploadCourse = await Course.findByIdAndUpdate(couserId, course, { new: true });
+    await redis.set(couserId, JSON.stringify(uploadCourse), 'EX', 60 * 60 * 24 * 7);
     return uploadCourse;
 };
 
@@ -52,7 +53,7 @@ const getCourseWithOutPurchaseingFromDB = async (courseId: string) => {
         return JSON.parse(isCacheExist);
     }
     const courses = await Course.findById(courseId).select("-courseData.videoUrl  -courseData.videoPlayer -courseData.links -courseData.suggestion -courseData.questions");
-    await redis.set(courseId, JSON.stringify(courses));
+    await redis.set(courseId, JSON.stringify(courses), 'EX', 60 * 60 * 24 * 7); // 7 days
     return courses;
 };
 

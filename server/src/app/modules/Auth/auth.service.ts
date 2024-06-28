@@ -154,7 +154,7 @@ const updateAccessToken = async (refreshToken: string) => {
     config.jwt_access_expires_in as string,
   );
   const updateUser = await User.findById(user._id);
-  redis.set(user._id.toString(), JSON.stringify(updateUser) as string);
+  redis.set(user._id.toString(), JSON.stringify(updateUser) as string, 'EX', 60 * 60 * 24 * 7); // 7 days
   return {
     access_Token,
   };
