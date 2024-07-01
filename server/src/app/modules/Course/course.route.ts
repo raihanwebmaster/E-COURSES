@@ -22,13 +22,13 @@ router.put(
 )
 
 router.get(
-  '/get-course/:id',
+  '/get-course-without-purchaseing/:id',
   // auth(USER_ROLE.user, USER_ROLE.admin),
   CourseControllers.getCourseWithOutPurchaseing,
 )
 
 router.get(
-  '/get-all-courses',
+  '/get-all-courses-without-purchaseing',
   // auth(USER_ROLE.user, USER_ROLE.admin),
   CourseControllers.getAllCoursesWithOutPurchaseing,
 )

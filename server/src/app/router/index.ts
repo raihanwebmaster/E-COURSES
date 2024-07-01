@@ -19,15 +19,15 @@ const modulesRoutes = [
     route: UserRoutes,
   },
   {
-    path: '/courses',
+    path: '/course',
     route: CourseRoutes,
   },
   {
-    path: '/orders',
+    path: '/order',
     route: OrderRoutes,
   },
   {
-    path: '/notifications',
+    path: '/notification',
     route: NotificationRoutes,
   },
   {
@@ -35,7 +35,7 @@ const modulesRoutes = [
     route: AnalyticsRoutes,
   },
   {
-    path: '/layouts',
+    path: '/layout',
     route: LayoutRoutes,
   },
 ];

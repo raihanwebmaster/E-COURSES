@@ -9,7 +9,7 @@ const router = express.Router();
 
 router.post('/create', auth(USER_ROLE.admin), validateRequest(layoutsValidation.createLayoutZodSchema), LayoutControllers.createLayout)
 router.put('/update', auth(USER_ROLE.admin), validateRequest(layoutsValidation.updateLayoutZodSchema), LayoutControllers.editLayout)
-router.get('/get', validateRequest(layoutsValidation.getLayoutZodSchema), LayoutControllers.getLayout)
+router.get('/get-layout', validateRequest(layoutsValidation.getLayoutZodSchema), LayoutControllers.getLayout)
 
 
 export const LayoutRoutes = router;
