@@ -27,7 +27,7 @@ const SignUp: FC<Props> = ({ setRoute }) => {
         },
         validationSchema: schema,
         onSubmit: async (values) => {
-            console.log(values, "values")
+            setRoute('Verification')
         }
     })
     const { errors, touched, values, handleChange, handleSubmit } = formik
