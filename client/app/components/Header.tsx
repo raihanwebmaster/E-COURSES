@@ -1,10 +1,12 @@
+"use client"
 import Link from 'next/link'
 import React, { FC, useState } from 'react'
 import NavItems from '../utils/NavItems'
 import ThemeSwitcher from '../utils/ThemeSwitcher'
 import { HiOutlineMenuAlt2, HiOutlineUserCircle } from 'react-icons/hi'
 import CustomModal from '../utils/CustomModal'
-import Login from './Auth/Login'
+import Login from './Auth/Login' 
+import SignUp from './Auth/SignUp'
 
 type Props = {
     open: boolean,
@@ -14,7 +16,7 @@ type Props = {
     setRoute: (route: string) => void
 }
 
-const Header: FC<Props> = ({ activeItem, open, setOpen, route }) => {
+const Header: FC<Props> = ({ activeItem, open, setOpen, route, setRoute }) => {
     const [active, setActive] = useState(false)
     const [openSidebar, setOpenSidebar] = useState(false)
     if (typeof window !== 'undefined') {
@@ -74,7 +76,14 @@ const Header: FC<Props> = ({ activeItem, open, setOpen, route }) => {
             {
                 route === "Login" && (
                     open && (
-                        <CustomModal open={open} setOpen={setOpen} activeItem={activeItem} route={route} component={Login} />
+                        <CustomModal open={open} setOpen={setOpen} setRoute={setRoute} activeItem={activeItem} route={route} component={Login} />
+                    )
+                )
+            }
+            {
+                route === "Sign-Up" && (
+                    open && (
+                        <CustomModal open={open} setOpen={setOpen} setRoute={setRoute} activeItem={activeItem} route={route} component={SignUp} />
                     )
                 )
             }
