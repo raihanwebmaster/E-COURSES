@@ -5,6 +5,7 @@ import * as Yup from 'yup'
 import { styles } from '../../../app/styles/styles'
 import { AiFillGithub, AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai'
 import { FcGoogle } from 'react-icons/fc'
+import { useTheme } from 'next-themes'
 
 type Props = {
     setRoute: (route: string) => void
@@ -19,6 +20,7 @@ const schema = Yup.object().shape({
 
 const SignUp: FC<Props> = ({ setRoute }) => {
     const [show, setShow] = useState(false)
+    const {theme, setTheme} = useTheme()
     const formik = useFormik({
         initialValues: {
             name: "",
@@ -114,11 +116,11 @@ const SignUp: FC<Props> = ({ setRoute }) => {
                 <FcGoogle size={30} className="cursor-pointer mr-2"
                 // onClick={() => signIn("google")}
                 />
-                <AiFillGithub size={30} className="cursor-pointer ml-2"
+                <AiFillGithub size={30} style={{ color: theme === 'dark' ? 'white' : 'black' }} className="cursor-pointer ml-2"
                 //  onClick={() => signIn("github")} 
                 />
             </div>
-            <h5 className="text-center pt-4 font-Poppins text-[14px]">
+            <h5 className="text-center pt-4 font-Poppins text-[14px] text-black dark:text-white">
                 Already have an account?{" "}
                 <span
                     className="text-[#2190ff] pl-1 cursor-pointer"

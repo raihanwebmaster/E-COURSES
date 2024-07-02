@@ -46,6 +46,12 @@ body {
   }
 }
 
+/* .scroll-lock {
+  overflow: hidden;
+  position: fixed;
+  width: 100%;
+} */
+
 
 @layer utilities {
   .text-balance {

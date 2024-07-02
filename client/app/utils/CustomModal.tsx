@@ -1,5 +1,6 @@
 import { Box, Modal } from '@mui/material'
-import React, { FC, useMemo } from 'react'
+import React, { FC, useEffect, useMemo } from 'react'
+import { disableScroll, enableScroll } from './scrollLock';
 
 type Props = {
     open: boolean,
@@ -15,6 +16,15 @@ const CustomModal: FC<Props> = ({ open, setOpen, activeItem, route, component: C
     const MemoizedComponent = useMemo(() => {
         return <Component setOpen={setOpen} open={open} setRoute={setRoute} />
     }, [Component, setOpen, open, setRoute])
+
+    // useEffect(() => {
+    //     if (open) {
+    //         disableScroll();
+    //     } else {
+    //         enableScroll();
+    //     }
+    //     return () => enableScroll();
+    // }, [open]);
 
     return (
         <Modal open={open} onClose={() => setOpen(false)} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
