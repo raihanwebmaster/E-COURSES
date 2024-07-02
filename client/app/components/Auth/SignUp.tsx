@@ -20,7 +20,7 @@ const schema = Yup.object().shape({
 
 const SignUp: FC<Props> = ({ setRoute }) => {
     const [show, setShow] = useState(false)
-    const {theme, setTheme} = useTheme()
+    const { theme, setTheme } = useTheme()
     const formik = useFormik({
         initialValues: {
             name: "",

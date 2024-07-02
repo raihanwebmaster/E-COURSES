@@ -7,7 +7,7 @@ import { HiOutlineMenuAlt2, HiOutlineUserCircle } from 'react-icons/hi'
 import CustomModal from '../utils/CustomModal'
 import Login from './Auth/Login'
 import SignUp from './Auth/SignUp'
-import Varification from './Auth/Varification'
+import Verification from './Auth/Verification'
 
 type Props = {
     open: boolean,
@@ -47,7 +47,7 @@ const Header: FC<Props> = ({ activeItem, open, setOpen, route, setRoute }) => {
             case 'Sign-Up':
                 return SignUp
             case 'Verification':
-                return Varification
+                return Verification
             default:
                 return null
         }
