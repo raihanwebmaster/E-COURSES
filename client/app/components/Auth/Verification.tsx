@@ -19,6 +19,30 @@ type VerifyNumber = {
 const Verification: FC<Props> = ({ setRoute }) => {
   const { token } = useSelector((state: any) => state.auth);
   const [activation, { isSuccess, error }] = useActivateMutation()
+  const [mounted, setMounted] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(300);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!mounted) return; // Ensure this runs only after the component has mounted
+
+    const timer = setInterval(() => {
+      setTimeLeft(prevTime => {
+        if (prevTime <= 1) {
+          clearInterval(timer);
+          setRoute("Login"); // Redirect to login after 5 minutes
+          toast.error("Verification code expired. Please request a new one.");
+          return 0;
+        }
+        return prevTime - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer); // Clear the timer when the component unmounts
+  }, [mounted, setRoute]);
+
   useEffect(() => {
     if (isSuccess) {
       toast.success("Account activated successfully")
@@ -122,6 +146,9 @@ const Verification: FC<Props> = ({ setRoute }) => {
         }
       </div>
       <br />
+      <div className={`text-center text-black dark:text-white ${timeLeft < 60 ? 'text-red-500' : ''}`}>
+        {`Time remaining: ${Math.floor(timeLeft / 60)}:${timeLeft % 60 < 10 ? '0' : ''}${timeLeft % 60} minutes`}
+      </div>
       <br />
       <div className="w-full flex justify-center">
         <button className={`${styles.button}`} onClick={verificationHandler}>
