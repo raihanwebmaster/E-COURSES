@@ -33,7 +33,7 @@ router.post(
   AuthControllers.logoutUser,
 );
 
-router.post(
+router.get(
   '/refresh-token',
   validateRequest(AuthValidation.accessTokenValidationSchema),
   AuthControllers.updateAccessToken,
