@@ -8,6 +8,9 @@ import CustomModal from '../utils/CustomModal'
 import Login from './Auth/Login'
 import SignUp from './Auth/SignUp'
 import Verification from './Auth/Verification'
+import { useSelector } from 'react-redux'
+import Image from 'next/image'
+import avatar from '../../public/assests/avatar.png'
 
 type Props = {
     open: boolean,
@@ -20,6 +23,7 @@ type Props = {
 const Header: FC<Props> = ({ activeItem, open, setOpen, route, setRoute }) => {
     const [active, setActive] = useState(false)
     const [openSidebar, setOpenSidebar] = useState(false)
+    const { user } = useSelector((state: any) => state.auth)
 
     useEffect(() => {
         const handleScroll = () => {
@@ -72,7 +76,18 @@ const Header: FC<Props> = ({ activeItem, open, setOpen, route, setRoute }) => {
                             <div className='800px:hidden'>
                                 <HiOutlineMenuAlt2 size={25} onClick={() => setOpenSidebar(true)} className='cursor-pointer dark:text-white text-black' />
                             </div>
-                            <HiOutlineUserCircle size={25} className='hidden 800px:block cursor-pointer dark:text-white text-black' onClick={() => setOpen(true)} />
+                            {
+                                user ? (
+                                    <Link href='/profile'>
+                                        <div className='cursor-pointer'>
+                                            <Image src={avatar} alt='avatar' width={25} height={25} className='rounded-full' />
+                                        </div>
+                                    </Link>
+                                ) : (
+
+                                    <HiOutlineUserCircle size={25} className='hidden 800px:block cursor-pointer dark:text-white text-black' onClick={() => setOpen(true)} />
+                                )
+                            }
                         </div>
                     </div>
                 </div>

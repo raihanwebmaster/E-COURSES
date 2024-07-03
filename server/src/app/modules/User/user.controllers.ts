@@ -12,7 +12,10 @@ const getUserById = catchAsync(async (req, res) => {
     statusCode: httpStatus.OK,
     success: true,
     message: 'User is retrieved succesfully',
-    data: user,
+    data: {
+      user,
+      accessToken: req.cookies.accessToken,
+    },
   });
 });
 
