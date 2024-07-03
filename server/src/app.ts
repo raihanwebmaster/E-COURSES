@@ -2,7 +2,6 @@
 import express, { Request, Response } from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
-import config from './app/config';
 import globalErrorHandler from './app/middleware/globalHandler';
 import notFound from './app/middleware/notFound';
 import httpStatus from 'http-status';
@@ -18,7 +17,8 @@ app.use(cookieParser());
 //cors => cross origin resource sharing
 app.use(
   cors({
-    origin: config.origin,
+    origin: ['http://localhost:3000'],
+    credentials: true,
   }),
 );
 app.use('/api/v1', router)

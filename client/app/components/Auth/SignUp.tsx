@@ -16,7 +16,12 @@ type Props = {
 const schema = Yup.object().shape({
     name: Yup.string().required("Please enter your name!"),
     email: Yup.string().email("Invalid email!").required("Please enter your email!"),
-    password: Yup.string().required("Please enter your password!").min(6, "Password must be at least 6 characters!")
+    password: Yup.string()
+        .required("Please enter your password!")
+        .matches(
+            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d!@#$%^&*()_+]{8,}$/,
+            "Password must be at least 8 characters long and include at least one lowercase letter, one uppercase letter, one number, and one special character (!@#$%^&*()_+)"
+        )
 
 })
 
