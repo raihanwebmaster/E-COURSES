@@ -2,6 +2,7 @@ import { apiSlice } from "../api/appSlice";
 import { userRegistration } from "./authSlice";
 
 type RegistrationResponse = {
+    success: boolean;
     message: string;
     data: {
         activationToken: string;
@@ -17,7 +18,40 @@ type RegistrationData = {
 type ActivationData = {
     activation_token: string;
     activation_code: string;
+}
 
+type LoginData = {
+    email: string;
+    password: string;
+}
+
+type LoginResponse = {
+    success: boolean;
+    message: string;
+    data: {
+        user: {
+            avatar: {
+                public_id: string;
+                url: string;
+            };
+            _id: string;
+            name: string;
+            email: string;
+            needsPasswordChange: boolean;
+            role: string;
+            status: string;
+            isVerified: boolean;
+            isDeleted: boolean;
+            courses: Array<{
+                courseId: string;
+            }>;
+            createdAt: string;
+            updatedAt: string;
+            __v: number;
+            passwordChangedAt: string;
+        };
+        accessToken: string;
+    };
 }
 
 export const authApi = apiSlice.injectEndpoints({
@@ -41,13 +75,21 @@ export const authApi = apiSlice.injectEndpoints({
                 }
              }
         }),
-        activate: builder.mutation<RegistrationResponse, ActivationData>({
+        activate: builder.mutation<any, ActivationData>({
             query: ({activation_token, activation_code}) => ({
                 url: '/auth/activation',
                 method: 'POST',
                 body: {activation_token, activation_code},
                 credentials: 'include' as const,
             }),
+        }),
+        login: builder.mutation<LoginResponse, LoginData>({
+            query: ({ email, password }) => ({
+                url: '/auth/login',
+                method: 'POST',
+                body: { email, password },
+                credentials: 'include' as const,
+            })
         }),
     }),
 });
