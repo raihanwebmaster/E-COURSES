@@ -28,6 +28,9 @@ export type ITokenOption = {
 export type TSocialAuth = {
   email: string;
   name: string;
-  avatar: string;
+  avatar: {
+    public_id: string;
+    url: string;
+  };
   password: string;
 }

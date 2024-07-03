@@ -28,7 +28,11 @@ type LoginData = {
 type SocialAuthData = {
     name: string;
     email: string;
-    avatar: string;
+    avatar: {
+        public_id: string;
+        url: string;
+    
+    };
 }
 
 type LoginResponse = {

@@ -38,7 +38,10 @@ const socialAuthValidationSchema = z.object({
   body: z.object({
     name: z.string().min(1),
     email: z.string().email(),
-    avatar: z.string(),
+    avatar: z.object({
+      public_id: z.string(),
+      url: z.string(),
+    }),
     password: z
     .string()
     .min(8, 'Password must be at least 8 characters')
