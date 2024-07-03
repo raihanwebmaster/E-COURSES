@@ -1,14 +1,17 @@
 "use client"
-import React, { FC, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import { styles } from '../../../app/styles/styles'
 import { AiFillGithub, AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai'
 import { FcGoogle } from 'react-icons/fc'
 import { useTheme } from 'next-themes'
+import { useLoginMutation } from '@/redux/features/auth/authApi'
+import toast from 'react-hot-toast'
 
 type Props = {
-    setRoute: (route: string) => void
+    setRoute: (route: string) => void,
+    setOpen: (open: boolean) => void
 }
 
 const schema = Yup.object().shape({
@@ -17,9 +20,10 @@ const schema = Yup.object().shape({
 
 })
 
-const Login: FC<Props> = ({ setRoute }) => {
+const Login: FC<Props> = ({ setRoute, setOpen }) => {
+    const [login, { isSuccess, error, data }] = useLoginMutation()
     const [show, setShow] = useState(false)
-    const {theme, setTheme} = useTheme()
+    const { theme, setTheme } = useTheme()
     const formik = useFormik({
         initialValues: {
             email: "",
@@ -27,9 +31,21 @@ const Login: FC<Props> = ({ setRoute }) => {
         },
         validationSchema: schema,
         onSubmit: async (values) => {
-            console.log(values, "values")
+            await login(values)
         }
     })
+    useEffect(() => {
+        if (isSuccess) {
+            setOpen(false)
+            toast.success("Login successful!")
+        }
+        if (error) {
+            if ('data' in error) {
+                const errorData = error as any;
+                toast.error(errorData.data.message)
+            }
+        }
+    }, [isSuccess, error, data])
     const { errors, touched, values, handleChange, handleSubmit } = formik
     return (
         <div className='w-full mt-2'>
@@ -97,7 +113,7 @@ const Login: FC<Props> = ({ setRoute }) => {
                 <FcGoogle size={30} className="cursor-pointer mr-2"
                 // onClick={() => signIn("google")}
                 />
-                <AiFillGithub  style={{ color: theme === 'dark' ? 'white' : 'black' }} size={30} className="cursor-pointer ml-2"
+                <AiFillGithub style={{ color: theme === 'dark' ? 'white' : 'black' }} size={30} className="cursor-pointer ml-2"
                 //  onClick={() => signIn("github")} 
                 />
             </div>
