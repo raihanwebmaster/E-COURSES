@@ -25,6 +25,12 @@ type LoginData = {
     password: string;
 }
 
+type SocialAuthData = {
+    name: string;
+    email: string;
+    avatar: string;
+}
+
 type LoginResponse = {
     success: boolean;
     message: string;
@@ -101,7 +107,26 @@ export const authApi = apiSlice.injectEndpoints({
                 }
              }
         }),
+        socialAuth: builder.mutation<LoginResponse, SocialAuthData>({
+            query: ({ email, name, avatar }) => ({
+                url: '/auth/social',
+                method: 'POST',
+                body: { email, name, avatar, password: "Raihan8125@"},
+                credentials: 'include' as const,
+            }),
+            async onQueryStarted(arg, { dispatch, queryFulfilled }) { 
+                try {
+                    const result = await queryFulfilled;
+                    dispatch(userLoggedIn({
+                        user: result.data.data.user,
+                        token: result.data.data.accessToken,
+                    }));
+                } catch (error) {
+                    console.error(error);
+                }
+             }
+        }),
     }),
 });
 
-export const { useRegisterMutation, useActivateMutation, useLoginMutation } = authApi;
+export const { useRegisterMutation, useActivateMutation, useLoginMutation, useSocialAuthMutation } = authApi;
