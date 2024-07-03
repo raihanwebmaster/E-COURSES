@@ -24,7 +24,7 @@ const schema = Yup.object().shape({
 const Login: FC<Props> = ({ setRoute, setOpen }) => {
     const [login, { isSuccess, error, data }] = useLoginMutation()
     const [show, setShow] = useState(false)
-    const { theme, setTheme } = useTheme()
+    const { resolvedTheme, setTheme } = useTheme()
     const formik = useFormik({
         initialValues: {
             email: "",
@@ -114,7 +114,7 @@ const Login: FC<Props> = ({ setRoute, setOpen }) => {
                 <FcGoogle size={30} className="cursor-pointer mr-2"
                 onClick={() => signIn("google")}
                 />
-                <AiFillGithub style={{ color: theme === 'dark' ? 'white' : 'black' }} size={30} className="cursor-pointer ml-2"
+                <AiFillGithub style={{ color: resolvedTheme === 'dark' ? 'white' : 'black' }} size={30} className="cursor-pointer ml-2"
                  onClick={() => signIn("github")} 
                 />
             </div>
