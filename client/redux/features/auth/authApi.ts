@@ -3,7 +3,9 @@ import { userRegistration } from "./authSlice";
 
 type RegistrationResponse = {
     message: string;
-    activationToken: string;
+    data: {
+        activationToken: string;
+    }
 }
 
 type RegistrationData = {
@@ -30,8 +32,9 @@ export const authApi = apiSlice.injectEndpoints({
             async onQueryStarted(arg, { dispatch, queryFulfilled }) { 
                 try {
                     const result = await queryFulfilled;
+                    console.log(result,'result')
                     dispatch(userRegistration({
-                        token: result.data.activationToken,
+                        token: result.data.data.activationToken,
                     }));
                 } catch (error) {
                     console.error(error);
@@ -40,7 +43,7 @@ export const authApi = apiSlice.injectEndpoints({
         }),
         activate: builder.mutation<RegistrationResponse, ActivationData>({
             query: ({activation_token, activation_code}) => ({
-                url: '/auth/activate',
+                url: '/auth/activation',
                 method: 'POST',
                 body: {activation_token, activation_code},
                 credentials: 'include' as const,
