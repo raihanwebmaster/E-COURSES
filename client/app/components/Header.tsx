@@ -35,7 +35,10 @@ const Header: FC<Props> = ({ activeItem, open, setOpen, route, setRoute }) => {
             socialAuth({
                 name: data?.user?.name as string,
                 email: data?.user?.email as string,
-                avatar: data?.user?.image as  string
+                avatar: {
+                    public_id: data?.user?.image as string,
+                    url: data?.user?.image as string
+                }
             })
 
         }
