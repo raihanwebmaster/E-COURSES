@@ -1,5 +1,4 @@
 import {createSlice} from '@reduxjs/toolkit';
-import { use } from 'react';
 
 const initialState = {
     user: null,
@@ -12,7 +11,6 @@ const authSlice = createSlice({
     reducers: {
         userRegistration: (state, action) => {
             state.token = action.payload.token;
-            state.user = action.payload.user;
         },
         userLoggedIn: (state, action) => {
             state.token = action.payload.accessToken;
