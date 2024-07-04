@@ -104,12 +104,12 @@ const Header: FC<Props> = ({ activeItem, open, setOpen, route, setRoute }) => {
                                 user ? (
                                     <Link href='/profile'>
                                         <div className='cursor-pointer'>
-                                            <Image src={user?.avatar ? user.avatar?.url : avatar} alt='avatar' width={25} height={25} className='rounded-full' style={{border: activeItem === 5 ? "2px solid #ffc107" : ""}}/>
+                                            <Image src={user?.avatar ? user.avatar?.url : avatar} alt='avatar' width={25} height={25} className='rounded-full' style={{border: activeItem === 5 ? "2px solid #37a39a" : ""}}/>
                                         </div>
                                     </Link>
                                 ) : (
 
-                                    <HiOutlineUserCircle size={25} className='hidden 800px:block cursor-pointer dark:text-white text-black' style={{border: activeItem === 5 ? "2px solid #ffc107" : ""}} onClick={() => setOpen(true)}  />
+                                    <HiOutlineUserCircle size={25} className='hidden 800px:block cursor-pointer dark:text-white text-black' style={{border: activeItem === 5 ? "2px solid #37a39a" : ""}} onClick={() => setOpen(true)}  />
                                 )
                             }
                         </div>
