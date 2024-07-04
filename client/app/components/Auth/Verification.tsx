@@ -1,10 +1,12 @@
-import { useActivateMutation } from '@/redux/features/auth/authApi'
+"use client"
+import { useActivateMutation, useRegisterMutation } from '@/redux/features/auth/authApi'
 import { styles } from '../../../app/styles/styles'
 import React, { FC, useEffect, useRef, useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { VscWorkspaceTrusted } from 'react-icons/vsc'
 import { useSelector } from 'react-redux'
-
+import { ImSpinner2 } from 'react-icons/im'
+import { jwtDecode } from 'jwt-decode'
 type Props = {
   setRoute: (route: string) => void
 }
@@ -18,30 +20,47 @@ type VerifyNumber = {
 
 const Verification: FC<Props> = ({ setRoute }) => {
   const { token } = useSelector((state: any) => state.auth);
-  const [activation, { isSuccess, error }] = useActivateMutation()
+  const [activation, { isSuccess, error, isLoading }] = useActivateMutation()
+  const [register, { data, error: RError, isSuccess: RIsSuccess, isLoading: RIsLoading }] = useRegisterMutation()
   const [mounted, setMounted] = useState(false);
   const [timeLeft, setTimeLeft] = useState(300);
+  const [user, setUser] = useState<any>(null);
+
   useEffect(() => {
     setMounted(true);
   }, []);
 
   useEffect(() => {
-    if (!mounted) return; // Ensure this runs only after the component has mounted
+    const decodeUser: { email: string, name: string, password: string } = jwtDecode(token);
+    setUser({
+      email: decodeUser.email,
+      name: decodeUser.name,
+      password: decodeUser.password
+    })
+  }, [user]);
+
+  useEffect(() => {
+    if (!mounted) return;
 
     const timer = setInterval(() => {
       setTimeLeft(prevTime => {
         if (prevTime <= 1) {
           clearInterval(timer);
-          setRoute("Login"); // Redirect to login after 5 minutes
-          toast.error("Verification code expired. Please request a new one.");
           return 0;
         }
         return prevTime - 1;
       });
     }, 1000);
+    return () => clearInterval(timer);
+  }, [mounted, timeLeft]);
 
-    return () => clearInterval(timer); // Clear the timer when the component unmounts
-  }, [mounted, setRoute]);
+
+  useEffect(() => {
+    if (timeLeft === 0) {
+      toast.error("Verification code expired. Please request a new one.");;
+    }
+  }, [timeLeft]);
+
 
   useEffect(() => {
     if (isSuccess) {
@@ -57,6 +76,7 @@ const Verification: FC<Props> = ({ setRoute }) => {
       }
     }
   }, [isSuccess, error])
+
   const [invalidError, setInvalidError] = useState(false)
   const [verifyNumber, setVerifyNumber] = useState<VerifyNumber>({
     "0": "",
@@ -72,8 +92,6 @@ const Verification: FC<Props> = ({ setRoute }) => {
   ]
 
   const verificationHandler = async () => {
-
-
     const verificationNumber = Object.values(verifyNumber).join("");
     if (verificationNumber.length !== 4) {
       setInvalidError(false);
@@ -82,6 +100,7 @@ const Verification: FC<Props> = ({ setRoute }) => {
     }
     await activation({ activation_token: token, activation_code: verificationNumber });
   }
+
 
   const handleInputChange = (index: number, value: string) => {
     if (value.match(/^[0-9]$/) || value === "") {
@@ -111,10 +130,38 @@ const Verification: FC<Props> = ({ setRoute }) => {
     e.preventDefault()
   }
 
+
+  /// Resend code handler
+  const resendCodeHandler = async () => {
+    await register(user)
+    setVerifyNumber({
+      "0": "",
+      "1": "",
+      "2": "",
+      "3": "",
+    });
+    inputRefs[0].current?.focus();
+  }
+
+  useEffect(() => {
+    if (RIsSuccess) {
+      const message = data?.message || "Registration successful!"
+      toast.success(message);
+      setTimeLeft(300)
+      setMounted(true)
+    }
+    if (RError) {
+      if ('data' in RError) {
+        const errorData = RError as any;
+        toast.error(errorData.data.message)
+      }
+    }
+  }, [RError, RIsSuccess, data, setRoute])
+
   return (
     <div>
       <h1 className={`${styles.title}`}>
-        Verification Your Account
+        Verify Your Account
       </h1>
       <br />
       <div className='w-full flex items-center justify-center mt-2'>
@@ -149,9 +196,25 @@ const Verification: FC<Props> = ({ setRoute }) => {
       </div>
       <br />
       <div className="w-full flex justify-center">
-        <button className={`${styles.button}`} onClick={verificationHandler}>
-          Verify OTP
-        </button>
+        {
+          timeLeft !== 0 ? (
+            <button onClick={verificationHandler} className={`${styles.button} ${isLoading ? 'cursor-not-allowed' : 'cursor-pointer'}`} disabled={isLoading}>
+              {isLoading ? (
+                <ImSpinner2 className="animate-spin text-white" size={24} />
+              ) : (
+                'Verify OTP'
+              )}
+            </button>
+          ) : (
+            <button onClick={resendCodeHandler} className={`${styles.button} ${RIsLoading ? 'cursor-not-allowed' : 'cursor-pointer'}`} disabled={RIsLoading}>
+              {RIsLoading ? (
+                <ImSpinner2 className="animate-spin text-white" size={24} />
+              ) : (
+                'Resend OTP'
+              )}
+            </button>
+          )
+        }
       </div>
       <br />
       <h5 className="text-center pt-4 font-Poppins text-[14px] text-black dark:text-white">

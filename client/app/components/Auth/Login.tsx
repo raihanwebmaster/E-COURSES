@@ -19,11 +19,11 @@ type Props = {
 const schema = Yup.object().shape({
     email: Yup.string().email("Invalid email!").required("Please enter your email!"),
     password: Yup.string()
-    .required("Please enter your password!")
-    .matches(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d!@#$%^&*()_+]{8,}$/,
-        "Password must be at least 8 characters long and include at least one lowercase letter, one uppercase letter, one number, and one special character (!@#$%^&*()_+)"
-    )
+        .required("Please enter your password!")
+        .matches(
+            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d!@#$%^&*()_+]{8,}$/,
+            "Password must be at least 8 characters long and include at least one lowercase letter, one uppercase letter, one number, and one special character (!@#$%^&*()_+)"
+        )
 
 })
 
@@ -109,7 +109,7 @@ const Login: FC<Props> = ({ setRoute, setOpen }) => {
                     )}
                 </div>
                 <div className='w-full mt-5'>
-                    <button type="submit" className={`${styles.button} ${isLoading ? 'cursor-not-allowed' : ''}`} disabled={isLoading}>
+                    <button type="submit" className={`${styles.button} ${isLoading ? 'cursor-not-allowed' : 'cursor-pointer'}`} disabled={isLoading}>
                         {isLoading ? (
                             <ImSpinner2 className="animate-spin text-white" size={24} />
                         ) : (

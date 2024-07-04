@@ -128,7 +128,7 @@ const SignUp: FC<Props> = ({ setRoute }) => {
                     )}
                 </div>
                 <div className='w-full mt-5'>
-                    <button type="submit" className={`${styles.button} ${isLoading ? 'cursor-not-allowed' : ''}`} disabled={isLoading}>
+                    <button type="submit" className={`${styles.button} ${isLoading ? 'cursor-not-allowed' : 'cursor-pointer'}`} disabled={isLoading}>
                         {isLoading ? (
                             <ImSpinner2 className="animate-spin text-white" size={24} />
                         ) : (
