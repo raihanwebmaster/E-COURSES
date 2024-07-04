@@ -22,9 +22,6 @@ const Profile: FC<Props> = ({ user }) => {
         const handleSignOut = async () => {
             if (isSuccess) {
                 await signOut();
-                redirect('/');
-            } else if (error) {
-                console.error(error);
             }
         };
         handleSignOut();
