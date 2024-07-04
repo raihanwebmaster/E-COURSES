@@ -2,17 +2,33 @@
 import React, { FC, useEffect } from 'react'
 import SidebarProfile from './SidebarProfile'
 import { useSelector } from 'react-redux'
+import { useLogOutMutation } from '@/redux/features/auth/authApi'
+import { signOut } from 'next-auth/react'
+import { redirect } from 'next/navigation'
 
 type Props = {
     user: any
 }
 
-const Profile: FC<Props> = ({user}) => {
+const Profile: FC<Props> = ({ user }) => {
     const [scroll, setScroll] = React.useState(false)
     const [avatar, setAvatar] = React.useState(null)
     const [active, setActive] = React.useState(1)
-    const logOutHandler = () => {
+    const [logOut, { isLoading, isSuccess, error, data }] = useLogOutMutation()
+    const logOutHandler = async () => {
+        await logOut()
     }
+    useEffect(() => {
+        const handleSignOut = async () => {
+            if (isSuccess) {
+                await signOut();
+                redirect('/');
+            } else if (error) {
+                console.error(error);
+            }
+        };
+        handleSignOut();
+    }, [isSuccess, error, data])
     useEffect(() => {
         window.addEventListener('scroll', () => {
             if (window.scrollY > 85) {
