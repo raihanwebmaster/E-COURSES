@@ -1,5 +1,4 @@
 "use client"
-
 import React , {FC, useState} from "react"
 import Heading from "./utils/Heading";
 import Header from "./components/Header";
