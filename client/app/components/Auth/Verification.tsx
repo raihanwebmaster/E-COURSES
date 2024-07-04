@@ -51,8 +51,6 @@ const Verification: FC<Props> = ({ setRoute }) => {
     if (error) {
       if ('data' in error) {
         const errorData = error as any;
-        setInvalidError(false);
-        setTimeout(() => setInvalidError(true), 0);
         toast.error(errorData.data.message)
       } else {
         toast.error("Something went wrong")
@@ -146,7 +144,7 @@ const Verification: FC<Props> = ({ setRoute }) => {
         }
       </div>
       <br />
-      <div className={`text-center text-black dark:text-white ${timeLeft < 60 ? 'text-red-500' : ''}`}>
+      <div className={`text-center  ${timeLeft < 60 ? 'text-red-500' : 'text-black dark:text-white'}`}>
         {`Time remaining: ${Math.floor(timeLeft / 60)}:${timeLeft % 60 < 10 ? '0' : ''}${timeLeft % 60} minutes`}
       </div>
       <br />
