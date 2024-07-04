@@ -27,22 +27,24 @@ const Header: FC<Props> = ({ activeItem, open, setOpen, route, setRoute }) => {
     const [active, setActive] = useState(false)
     const [openSidebar, setOpenSidebar] = useState(false)
     const { user } = useSelector((state: any) => state.auth)
-    const {data} = useSession()
-    const [socialAuth, {isSuccess, error}] = useSocialAuthMutation()
+    const { data } = useSession()
+    const [socialAuth, { isSuccess, error }] = useSocialAuthMutation()
 
     useEffect(() => {
-        if(!user && data){
-            socialAuth({
-                name: data?.user?.name as string,
-                email: data?.user?.email as string,
-                avatar: {
-                    public_id: data?.user?.image as string,
-                    url: data?.user?.image as string
-                }
-            })
+        if (!user) {
+            if (data) {
+                socialAuth({
+                    name: data?.user?.name as string,
+                    email: data?.user?.email as string,
+                    avatar: {
+                        public_id: data?.user?.image as string,
+                        url: data?.user?.image as string
+                    }
+                })
+            }
 
         }
-        if(isSuccess) {
+        if (isSuccess) {
             toast.success("Login successful!")
         }
     }, [data, user])
@@ -102,7 +104,7 @@ const Header: FC<Props> = ({ activeItem, open, setOpen, route, setRoute }) => {
                                 user ? (
                                     <Link href='/profile'>
                                         <div className='cursor-pointer'>
-                                            <Image src={avatar} alt='avatar' width={25} height={25} className='rounded-full' />
+                                            <Image src={user?.avatar ? user.avatar?.url : avatar} alt='avatar' width={25} height={25} className='rounded-full' />
                                         </div>
                                     </Link>
                                 ) : (
