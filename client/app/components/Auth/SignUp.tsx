@@ -8,6 +8,7 @@ import { FcGoogle } from 'react-icons/fc'
 import { useTheme } from 'next-themes'
 import { useRegisterMutation } from '@/redux/features/auth/authApi'
 import toast from 'react-hot-toast'
+import { ImSpinner2 } from 'react-icons/im'
 
 type Props = {
     setRoute: (route: string) => void
@@ -27,7 +28,7 @@ const schema = Yup.object().shape({
 
 const SignUp: FC<Props> = ({ setRoute }) => {
     const [show, setShow] = useState(false)
-    const [register, { data, error, isSuccess }] = useRegisterMutation()
+    const [register, { data, error, isSuccess, isLoading }] = useRegisterMutation()
     useEffect(() => {
         if (isSuccess) {
             const message = data?.message || "Registration successful!"
@@ -42,7 +43,7 @@ const SignUp: FC<Props> = ({ setRoute }) => {
         }
     }, [error, isSuccess, data, setRoute])
 
-    const { theme, setTheme } = useTheme()
+    const { resolvedTheme } = useTheme()
     const formik = useFormik({
         initialValues: {
             name: "",
@@ -127,7 +128,13 @@ const SignUp: FC<Props> = ({ setRoute }) => {
                     )}
                 </div>
                 <div className='w-full mt-5'>
-                    <input type="submit" value="Sign Up" className={`${styles.button}`} />
+                    <button type="submit" className={`${styles.button} ${isLoading ? 'cursor-not-allowed' : ''}`} disabled={isLoading}>
+                        {isLoading ? (
+                            <ImSpinner2 className="animate-spin text-white" size={24} />
+                        ) : (
+                            'Sign Up'
+                        )}
+                    </button>
                 </div>
             </form>
             <br />
@@ -138,7 +145,7 @@ const SignUp: FC<Props> = ({ setRoute }) => {
                 <FcGoogle size={30} className="cursor-pointer mr-2"
                 // onClick={() => signIn("google")}
                 />
-                <AiFillGithub size={30} style={{ color: theme === 'dark' ? 'white' : 'black' }} className="cursor-pointer ml-2"
+                <AiFillGithub size={30} style={{ color: resolvedTheme === 'dark' ? 'white' : 'black' }} className="cursor-pointer ml-2"
                 //  onClick={() => signIn("github")} 
                 />
             </div>

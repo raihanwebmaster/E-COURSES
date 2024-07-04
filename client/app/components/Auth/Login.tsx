@@ -9,6 +9,7 @@ import { useTheme } from 'next-themes'
 import { useLoginMutation } from '@/redux/features/auth/authApi'
 import toast from 'react-hot-toast'
 import { signIn } from 'next-auth/react'
+import { ImSpinner2 } from 'react-icons/im'
 
 type Props = {
     setRoute: (route: string) => void,
@@ -17,14 +18,19 @@ type Props = {
 
 const schema = Yup.object().shape({
     email: Yup.string().email("Invalid email!").required("Please enter your email!"),
-    password: Yup.string().required("Please enter your password!").min(6, "Password must be at least 6 characters!")
+    password: Yup.string()
+    .required("Please enter your password!")
+    .matches(
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d!@#$%^&*()_+]{8,}$/,
+        "Password must be at least 8 characters long and include at least one lowercase letter, one uppercase letter, one number, and one special character (!@#$%^&*()_+)"
+    )
 
 })
 
 const Login: FC<Props> = ({ setRoute, setOpen }) => {
-    const [login, { isSuccess, error, data }] = useLoginMutation()
+    const [login, { isSuccess, error, data, isLoading }] = useLoginMutation()
     const [show, setShow] = useState(false)
-    const { resolvedTheme, setTheme } = useTheme()
+    const { resolvedTheme } = useTheme()
     const formik = useFormik({
         initialValues: {
             email: "",
@@ -103,7 +109,13 @@ const Login: FC<Props> = ({ setRoute, setOpen }) => {
                     )}
                 </div>
                 <div className='w-full mt-5'>
-                    <input type="submit" value="Login" className={`${styles.button}`} />
+                    <button type="submit" className={`${styles.button} ${isLoading ? 'cursor-not-allowed' : ''}`} disabled={isLoading}>
+                        {isLoading ? (
+                            <ImSpinner2 className="animate-spin text-white" size={24} />
+                        ) : (
+                            'Login'
+                        )}
+                    </button>
                 </div>
             </form>
             <br />
@@ -112,10 +124,10 @@ const Login: FC<Props> = ({ setRoute, setOpen }) => {
             </h5>
             <div className="flex items-center justify-center my-3">
                 <FcGoogle size={30} className="cursor-pointer mr-2"
-                onClick={() => signIn("google")}
+                    onClick={() => signIn("google")}
                 />
                 <AiFillGithub style={{ color: resolvedTheme === 'dark' ? 'white' : 'black' }} size={30} className="cursor-pointer ml-2"
-                 onClick={() => signIn("github")} 
+                    onClick={() => signIn("github")}
                 />
             </div>
             <h5 className="text-center pt-4 font-Poppins text-[14px] text-black dark:text-white">
