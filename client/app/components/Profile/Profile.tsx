@@ -1,10 +1,9 @@
 "use client"
 import React, { FC, useEffect } from 'react'
 import SidebarProfile from './SidebarProfile'
-import { useSelector } from 'react-redux'
 import { useLogOutMutation } from '@/redux/features/auth/authApi'
 import { signOut } from 'next-auth/react'
-import { redirect } from 'next/navigation'
+import ProfileDetails from './ProfileDetails'
 
 type Props = {
     user: any
@@ -40,6 +39,13 @@ const Profile: FC<Props> = ({ user }) => {
             <div className={`w-[60px] 800px:w-[310px] h-[450px] dark:bg-slate-900 bg-white bg-opacity-90  dark:border-[#ffffff1d] border-[#00000014] rounded-[5px] shadow-xl dark:shadow-sm mt-[80px] mb-[80px] sticky ${scroll ? "top-[120px]" : "top-[30px]"} left-[30px] `}>
                 <SidebarProfile user={user} active={active} avatar={avatar} setActive={setActive} logOutHandler={logOutHandler} />
             </div>
+            {
+                active === 1 && (
+                    <div className='w-full h-full bg-transparent mt-[80px]'>
+                        <ProfileDetails user={user} avatar={avatar} />
+                    </div>
+                )
+            }
         </div>
     )
 }
