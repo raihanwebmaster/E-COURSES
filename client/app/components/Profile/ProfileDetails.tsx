@@ -14,11 +14,9 @@ type Props = {
 
 const ProfileDetails: FC<Props> = ({ avatar, user }) => {
   const [name, setName] = useState(user && user.name);
-  const [updateAvatar, { isSuccess, error }] = useUpdateAvatarMutation();
-  const [editProfile, { isSuccess: success, error: updateError }] =
-    useEditProfileMutation();
-  const [loadUser, setLoadUser] = useState(false);
-  const {} = useLoadUserQuery(undefined, { skip: loadUser ? false : true });
+  const [updateAvatar, { isSuccess: isAvatarSuccess, error: avatarError }] = useUpdateAvatarMutation();
+  const [editProfile, { isSuccess: isProfileSuccess, error: profileError }] = useEditProfileMutation();
+  const { data: userData, refetch } = useLoadUserQuery(undefined, { skip: false });
 
   const imageHandler = async (e: any) => {
     const fileReader = new FileReader();
@@ -26,31 +24,26 @@ const ProfileDetails: FC<Props> = ({ avatar, user }) => {
     fileReader.onload = () => {
       if (fileReader.readyState === 2) {
         const avatar = fileReader.result;
-        updateAvatar({avatar});
+        updateAvatar({ avatar });
       }
     };
     fileReader.readAsDataURL(e.target.files[0]);
   };
 
   useEffect(() => {
-    if (isSuccess) {
-      setLoadUser(true);
-    }
-    if (error || updateError) {
-      console.log(error);
-    }
-    if(success){
+    if (isAvatarSuccess || isProfileSuccess) {
       toast.success("Profile updated successfully!");
-      setLoadUser(true);
+      refetch();
     }
-  }, [isSuccess, error,success, updateError]);
+    if (avatarError || profileError) {
+      console.log(avatarError || profileError);
+    }
+  }, [isAvatarSuccess, isProfileSuccess, avatarError, profileError, refetch]);
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     if (name !== "") {
-      await editProfile({
-        name: name,
-      });
+      await editProfile({ name });
     }
   };
 
