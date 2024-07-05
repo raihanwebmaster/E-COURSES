@@ -6,6 +6,7 @@ import { toast } from "react-hot-toast";
 import { styles } from "../../../app/styles/styles";
 import { useEditProfileMutation, useUpdateAvatarMutation } from "@/redux/features/user/userApi";
 import { useLoadUserQuery } from "@/redux/features/api/appSlice";
+import { ImSpinner2 } from "react-icons/im";
 
 type Props = {
   avatar: string | null;
@@ -15,7 +16,7 @@ type Props = {
 const ProfileDetails: FC<Props> = ({ avatar, user }) => {
   const [name, setName] = useState(user && user.name);
   const [updateAvatar, { isSuccess: isAvatarSuccess, error: avatarError }] = useUpdateAvatarMutation();
-  const [editProfile, { isSuccess: isProfileSuccess, error: profileError }] = useEditProfileMutation();
+  const [editProfile, { isSuccess: isProfileSuccess, error: profileError, isLoading }] = useEditProfileMutation();
   const { data: userData, refetch } = useLoadUserQuery(undefined, { skip: false });
 
   const imageHandler = async (e: any) => {
@@ -98,12 +99,14 @@ const ProfileDetails: FC<Props> = ({ avatar, user }) => {
                 value={user?.email}
               />
             </div>
-            <input
-              className={`w-full 800px:w-[250px] h-[40px] border border-[#37a39a] text-center dark:text-[#fff] text-black rounded-[3px] mt-8 cursor-pointer`}
-              required
-              value="Update"
-              type="submit"
-            />
+            <button className={`w-full 800px:w-[250px] h-[40px] border border-[#37a39a] text-center dark:text-[#fff] text-black rounded-[3px] mt-8 cursor-pointer`}>
+              {isLoading ? (
+                <ImSpinner2 className="animate-spin text-white m-auto" size={24} />
+              ) : (
+                'Sign Up'
+              )}
+            </button >
+
           </div>
         </form>
         <br />
