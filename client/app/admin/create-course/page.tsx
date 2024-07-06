@@ -1,13 +1,15 @@
-'use client'
-import React from 'react'
-import Heading from '../utils/Heading'
-import AdminSidebar from '../components/Admin/Sidebar/AdminSidebar'
-import AdminProtected from '../hooks/adminProtected'
-import DashboardHero from '../components/Admin/DashboardHero'
+"use client"
+import AdminProtected from '@/app/hooks/adminProtected'
+import Heading from '@/app/utils/Heading'
+import React, { useState } from 'react'
+import AdminSidebar from '../../../app/components/Admin/Sidebar/AdminSidebar'
+import DashboardHeader from '@/app/components/Admin/DashboardHeader'
+import CreateCourse from '@/app/components/Admin/Course/CreateCourse'
 
 type Props = {}
 
 const Page = (props: Props) => {
+  const [ open, setOpen ] = useState(false)
   return (
     <div>
       <AdminProtected>
@@ -17,7 +19,8 @@ const Page = (props: Props) => {
             <AdminSidebar />
           </div>
           <div className='w-[85%]' >
-            <DashboardHero />
+            <DashboardHeader open={open} setOpen={setOpen} />
+            <CreateCourse/>
           </div>
         </div>
       </AdminProtected>
