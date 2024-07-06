@@ -8,8 +8,10 @@ interface AdminProtectedProps {
 
 }
 
-export default function AdminProtected({children}: AdminProtectedProps) {
-   const {user} = useSelector((state: any) => state.auth);
-   const isAdmin = user && user.role === 'admin';
-    return isAdmin ? children : redirect('/')
+export default function AdminProtected({ children }: AdminProtectedProps) {
+    const { user } = useSelector((state: any) => state.auth);
+    if (user) {
+        const isAdmin = user && user.role === 'admin';
+        return isAdmin ? children : redirect('/')
+    }
 }
