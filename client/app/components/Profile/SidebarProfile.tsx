@@ -31,7 +31,7 @@ const SidebarProfile: FC<Props> = ({ user, active, avatar, setActive, logOutHand
         </h5>
       </div>
       <div
-        className={`w-full flex items-center px-3 py-4 cursor-pointer ${active === 2 ? "dark:bg-slate-800 bg-slate-100" : "bg-transparent"} `}
+        className={`w-full flex items-center px-3 py-4 cursor-pointer ${active === 2 ? "dark:bg-slate-800 bg-slate-100" : "bg-transparent"} hover:dark:bg-slate-800 hover:bg-slate-100`}
         onClick={() => setActive(2)}
       >
         <RiLockPasswordLine size={20} className='dark:text-white text-black' />
