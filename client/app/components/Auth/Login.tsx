@@ -93,13 +93,13 @@ const Login: FC<Props> = ({ setRoute, setOpen }) => {
                     />
                     {!show ? (
                         <AiOutlineEyeInvisible
-                            className={`absolute right-2 z-1 cursor-pointer ${errors.password && touched.password ? "bottom-10" : "bottom-3"}`}
+                            className={`absolute right-2 z-1 cursor-pointer ${errors.password && touched.password ? "bottom-10" : "bottom-3"} dark:text-white text-black`}
                             size={20}
                             onClick={() => setShow(true)}
                         />
                     ) : (
                         <AiOutlineEye
-                            className={`absolute right-2 z-1 cursor-pointer ${errors.password && touched.password ? "bottom-10" : "bottom-3"}`}
+                            className={`absolute right-2 z-1 cursor-pointer ${errors.password && touched.password ? "bottom-10" : "bottom-3"}  dark:text-white text-black`}
                             size={20}
                             onClick={() => setShow(false)}
                         />
