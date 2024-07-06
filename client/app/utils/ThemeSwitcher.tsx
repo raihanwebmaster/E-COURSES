@@ -17,9 +17,9 @@ const ThemeSwitcher: FC<Props> = (props) => {
         <div className='flex items-center justify-center mx-4'>
             {
                 resolvedTheme  === 'dark' ? (
-                    <BiSun onClick={() => setTheme('light')} className='cursor-pointer' size={25} />
+                    <BiSun onClick={() => setTheme('light')} className='cursor-pointer text-white' size={25} />
                 ) : (
-                    <BiMoon onClick={() => setTheme('dark')} className=' cursor-pointer' fill='black' size={25} />
+                    <BiMoon onClick={() => setTheme('dark')} className=' cursor-pointer text-black' size={25} />
                 )
             }
 
