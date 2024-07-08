@@ -17,6 +17,7 @@ const schema = Yup.object().shape({
   tags: Yup.string().required("Please enter the course tags!"),
   level: Yup.string().required("Please enter the course level!"),
   demoUrl: Yup.string().url().required("Please enter the course demo URL!"),
+  file: Yup.mixed().required("Please upload the course file!"),
 })
 
 const CourseInformation:FC<Props> = ({courseInfo, setCourseInfo, active, setActive}) => {
@@ -27,8 +28,14 @@ const CourseInformation:FC<Props> = ({courseInfo, setCourseInfo, active, setActi
   // }
   const formik = useFormik({
     initialValues: {
-        email: "",
-        password: ""
+      name: '',
+      description: '',
+      price: '',
+      estimatePrice: '',
+      tags: '',
+      level: '',
+      demoUrl: '',
+      file: ''
     },
     validationSchema: schema,
     onSubmit: async (values) => {
