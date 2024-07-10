@@ -7,15 +7,15 @@ import CourseData from './CourseData'
 type Props = {}
 
 const CreateCourse = (props: Props) => {
-  const [active, setActive] = React.useState(1)
+  const [active, setActive] = React.useState(0)
   const [courseInfo, setCourseInfo] = React.useState({
     name: '',
     description: '',
     price: 0,
-    estimatedPrice: 0,
+    estimatePrice: 0,
     tags: '',
     level: '',
-    dmeoUrl: '',
+    demoUrl: '',
     thumbnail: '',
   })
   const [benefits, setBenefits] = React.useState([{ title: '' }])

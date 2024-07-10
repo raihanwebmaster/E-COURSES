@@ -5,7 +5,17 @@ import React, { FC } from 'react'
 import * as Yup from 'yup'
 
 type Props = {
-  courseInfo: any;
+  courseInfo: {
+    name: string,
+    description: string,
+    price: number,
+    estimatePrice: number,
+    tags: string,
+    level: string,
+    demoUrl: string,
+    thumbnail: string
+  
+  };
   setCourseInfo: (courseInfo: any) => void;
   active: number;
   setActive: (active: number) => void;
@@ -27,18 +37,18 @@ const CourseInformation: FC<Props> = ({ courseInfo, setCourseInfo, active, setAc
 
   const formik = useFormik({
     initialValues: {
-      name: '',
-      description: '',
-      price: 0,
-      estimatePrice: 0,
-      tags: '',
-      level: '',
-      demoUrl: '',
-      thumbnail: ''
+      name: courseInfo.name || '',
+      description: courseInfo.description || '',
+      price: courseInfo.price || "",
+      estimatePrice: courseInfo.estimatePrice || "",
+      tags: courseInfo.tags || '',
+      level: courseInfo.level || '',
+      demoUrl: courseInfo.demoUrl || '',
+      thumbnail: courseInfo.thumbnail || ''
     },
     validationSchema: schema,
     onSubmit: async (values) => {
-      // setCourseInfo(values)
+      setCourseInfo(values)
       setActive(active + 1);
     }
   })
@@ -81,7 +91,7 @@ const CourseInformation: FC<Props> = ({ courseInfo, setCourseInfo, active, setAc
     }
   }
 
-  const { errors, touched, values, handleChange, handleSubmit, isValid, dirty } = formik
+  const { errors, touched, values, handleChange, handleSubmit, isValid } = formik
   return (
     <div className='w-[80%] m-auto mt-24 '>
       <form onSubmit={handleSubmit}>
@@ -219,8 +229,8 @@ const CourseInformation: FC<Props> = ({ courseInfo, setCourseInfo, active, setAc
           />
           <label
             htmlFor="thumbnail"
-            className={`w-full min-h-[10vh] dark:border-white border-[#00000026] p-3 border flex items-center justify-center ${dragging ? "bg-blue-500" : "bg-transparent"
-              }`}
+            className={`w-full min-h-[10vh]  p-3 border flex items-center justify-center ${dragging ? "bg-blue-500" : errors.thumbnail && touched.thumbnail ? 'border-red-500' : 'dark:border-white border-[#00000026]'
+            }`}
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
@@ -240,8 +250,8 @@ const CourseInformation: FC<Props> = ({ courseInfo, setCourseInfo, active, setAc
             )}
           </label>
         </div>
-        <div className="w-full flex items-center justify-end">
-          <button type="submit" className={`w-full 800px:w-[180px] h-[40px] text-center text-[#fff] rounded mt-8 cursor-pointer ${!(isValid && dirty) ? 'bg-gray-500 cursor-not-allowed' : 'bg-[#37a39a]'}`} disabled={!(isValid && dirty)}>
+        <div className="w-full flex items-center justify-end mb-5">
+          <button type="submit" className={`w-full 800px:w-[180px] flex items-center justify-center h-[40px] bg-[#37a39a] text-center text-[#fff] rounded mt-8 cursor-pointer`} >
             Next
           </button>
         </div>
