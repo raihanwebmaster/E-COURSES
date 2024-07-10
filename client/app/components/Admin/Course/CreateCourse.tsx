@@ -8,7 +8,7 @@ type Props = {}
 const CreateCourse = (props: Props) => {
   const [active, setActive] = React.useState(0)
   const [courseInfo, setCourseInfo] = React.useState({
-    title: '',
+    name: '',
     description: '',
     price: 0,
     estimatedPrice: 0,

@@ -103,7 +103,7 @@ const ProfileDetails: FC<Props> = ({ avatar, user }) => {
               {isLoading ? (
                 <ImSpinner2 className="animate-spin text-white m-auto" size={24} />
               ) : (
-                'Sign Up'
+                'Update'
               )}
             </button >
 

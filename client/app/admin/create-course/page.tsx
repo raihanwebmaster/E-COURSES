@@ -14,7 +14,7 @@ const Page = (props: Props) => {
     <div>
       <AdminProtected>
         <Heading title="ECourses - Admin" description="ECourses is a platform for students to learn and get help from teachers" keywords="Programming,MERN,Redux,Machine Learing" />
-        <div className='flex h-[200vh]' >
+        <div className='flex min-h-screen' >
           <div className='1500px:w-[16%] w-1/5 ' >
             <AdminSidebar />
           </div>
