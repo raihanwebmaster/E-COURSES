@@ -54,7 +54,7 @@ const Sidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [selected, setSelected] = useState("Dashboard");
   const [mounted, setMounted] = useState(false);
-  const { theme, setTheme } = useTheme();
+  const { resolvedTheme:theme, setTheme } = useTheme();
 
   useEffect(() => setMounted(true), []);
 
