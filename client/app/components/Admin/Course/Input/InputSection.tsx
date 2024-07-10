@@ -1,26 +1,27 @@
 
 import { styles } from '@/app/styles/styles';
 import React, { FC } from 'react'
-import { AiOutlinePlusCircle } from "react-icons/ai";
+import { AiOutlineMinusCircle, AiOutlinePlusCircle } from "react-icons/ai";
 
 type Props = {
     title: string;
     items: { title: string }[];
     onChange: (e: React.ChangeEvent<HTMLInputElement>, index: number) => void;
     onAdd: () => void;
+    onDelete: (index: number) => void;
     placeholder: string;
 }
 
-const InputSection: FC<Props> = ({ title, items, onChange, onAdd, placeholder }) => (
+const InputSection: FC<Props> = ({ title, items, onChange, onAdd, placeholder, onDelete }) => (
     <div>
         <label className={`${styles.label} text=[20px]`} htmlFor={title}>
             {title}
         </label>
         {
             items.map((item, index) => (
+                <div key={index} className="relative">
                 <input
                     type="text"
-                    key={index}
                     name={title}
                     placeholder={placeholder}
                     className={`${styles.input} my-2`}
@@ -28,6 +29,14 @@ const InputSection: FC<Props> = ({ title, items, onChange, onAdd, placeholder })
                     value={item.title}
                     onChange={(e) => onChange(e, index)}
                 />
+                {items.length > 1 && index === items.length - 1 && (
+                    <AiOutlineMinusCircle
+                        size="20px"
+                        style={{ position: "absolute", right: 10, top: "50%", transform: "translateY(-50%)", cursor: "pointer" }}
+                        onClick={() => onDelete(index)}
+                    />
+                )}
+            </div>
             ))
         }
         <AiOutlinePlusCircle

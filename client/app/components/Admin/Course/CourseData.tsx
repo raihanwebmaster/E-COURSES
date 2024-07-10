@@ -42,6 +42,11 @@ const CourseData: FC<Props> = ({ benefits, setBenefits, preRequisites, setPreReq
         }
     };
 
+    const handleDelete = (index: number, state: { title: string }[], setState: (state: { title: string }[]) => void) => {
+        const updatedState = state.filter((_, i) => i !== index);
+        setState(updatedState);
+    };
+
 
     return (
         <div className='w-[80%] m-auto mt-24 block  '>
@@ -50,6 +55,7 @@ const CourseData: FC<Props> = ({ benefits, setBenefits, preRequisites, setPreReq
                 items={benefits}
                 onChange={(e, index) => handleChange(e, index, benefits, setBenefits)}
                 onAdd={() => handleAdd(benefits, setBenefits)}
+                onDelete={(index) => handleDelete(index, benefits, setBenefits)}
                 placeholder="You will be able to build a full stack LMS Platform...."
             />
             <br />
@@ -58,6 +64,7 @@ const CourseData: FC<Props> = ({ benefits, setBenefits, preRequisites, setPreReq
                 items={preRequisites}
                 onChange={(e, index) => handleChange(e, index, preRequisites, setPreRequisites)}
                 onAdd={() => handleAdd(preRequisites, setPreRequisites)}
+                onDelete={(index) => handleDelete(index, preRequisites, setPreRequisites)}
                 placeholder="You need basic knowledge of software development...."
             />
             <div className="w-full flex items-center justify-between">
