@@ -70,9 +70,8 @@ const Sidebar = () => {
     <Box
       sx={{
         "& .pro-sidebar-inner": {
-          background: `${
-            theme === "dark" ? "#111C43 !important" : "#fff !important"
-          }`,
+          background: `${theme === "dark" ? "#111C43 !important" : "#fff !important"
+            }`,
         },
         "& .pro-icon-wrapper": {
           backgroundColor: "transparent !important",
@@ -100,15 +99,14 @@ const Sidebar = () => {
           top: 0,
           left: 0,
           height: "100vh",
-          zIndex:99999999999999,
+          zIndex: 99999999999999,
           width: isCollapsed ? "0%" : "16%",
         }}
       >
         <Menu iconShape="square">
           {/* LOGO AND MENU ICON */}
           <MenuItem
-            onClick={() => setIsCollapsed(!isCollapsed)}
-            icon={isCollapsed ? <ArrowForwardIosIcon /> : undefined}
+            icon={isCollapsed ? <ArrowForwardIosIcon onClick={() => setIsCollapsed(!isCollapsed)} /> : undefined}
             style={{
               margin: "10px 0 20px 0",
             }}
@@ -120,11 +118,11 @@ const Sidebar = () => {
                 alignItems="center"
                 ml="15px"
               >
-               <Link href="/" className="block">
-               <h3 className="text-[25px] font-Poppins uppercase dark:text-white text-black">
-                  ECourses
-                </h3>
-               </Link>
+                <Link href="/" className="block">
+                  <h3 className="text-[25px] font-Poppins uppercase dark:text-white text-black">
+                    ECourses
+                  </h3>
+                </Link>
                 <IconButton onClick={() => setIsCollapsed(!isCollapsed)} className="inline-block">
                   <ArrowBackIosIcon className="text-black dark:text-[#ffffffc1]" />
                 </IconButton>
