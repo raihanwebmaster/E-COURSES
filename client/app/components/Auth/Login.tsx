@@ -59,7 +59,7 @@ const Login: FC<Props> = ({ setRoute, setOpen }) => {
             <h1 className={`${styles.title}`}>
                 Login with ECourses
             </h1>
-            {/* <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit}>
                 <div>
                     <label className={`${styles.label}`} htmlFor='email' >
                         Enter your email
@@ -117,7 +117,7 @@ const Login: FC<Props> = ({ setRoute, setOpen }) => {
                         )}
                     </button>
                 </div>
-            </form> */}
+            </form>
             <br />
             <h5 className="text-center pt-4 font-Poppins text-[14px] text-black dark:text-white">
                 Or join with

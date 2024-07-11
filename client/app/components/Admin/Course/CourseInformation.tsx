@@ -48,6 +48,9 @@ const CourseInformation: FC<Props> = ({ courseInfo, setCourseInfo, active, setAc
     },
     validationSchema: schema,
     onSubmit: async (values) => {
+      if (values.estimatePrice === '') {
+        values.estimatePrice = 0;
+      }
       setCourseInfo(values)
       setActive(active + 1);
     }
