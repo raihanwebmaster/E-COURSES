@@ -1,7 +1,7 @@
 import { styles } from '@/app/styles/styles'
 import CoursePlayer from '@/app/utils/CoursePlayer'
 import Ratings from '@/app/utils/Ratings'
-import React, { FC } from 'react'
+import React, { FC, useEffect } from 'react'
 import { IoCheckmarkDoneOutline } from "react-icons/io5";
 
 type Props = {
@@ -29,6 +29,9 @@ const CoursePreview: FC<Props> = ({ active, setActive, courseData, handleCourseC
     const createCourse = () => {
         handleCourseCreate()
     }
+    useEffect(() => {
+        window.scrollTo(0, 0);
+      }, []);
     return (
         <div className="w-[90%] m-auto py-5 mb-5 " >
             <div className='w-full relative' >

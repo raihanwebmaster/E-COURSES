@@ -1,6 +1,6 @@
 "use client"
 import { styles } from '@/app/styles/styles';
-import React, { FC } from 'react'
+import React, { FC, useEffect } from 'react'
 import toast from 'react-hot-toast';
 import { AiOutlineDelete, AiOutlinePlusCircle } from 'react-icons/ai';
 import { BsLink45Deg, BsPencil } from 'react-icons/bs';
@@ -138,6 +138,11 @@ const CourseContent: FC<Props> = ({ courseContent, setCourseContent, active, set
             handleCourseSubmit();
         }
     };
+
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+      }, []);
 
 
     return (
