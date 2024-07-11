@@ -25,7 +25,7 @@ const CoursePlayer: FC<Props> = ({ videoUrl, title }) => {
             })
     }, [videoUrl])
     return (
-        <div style={{ paddingTop: "41%", position: "relative" }}>
+        <div style={{ paddingTop: "41%", position: "relative", minHeight: "300px" }}>
             {
                 videoData.otp && videoData.playbackInfo !== "" && (
                     <iframe
