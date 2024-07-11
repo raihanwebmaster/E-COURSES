@@ -11,7 +11,6 @@ type Props = {
 
 const DashboardHeader: FC<Props> = ({ open, setOpen }) => {
   const [notifications, setNotifications] = useState<any>([]);
-  console.log(open,'open')
   return (
     <div className="w-full flex items-center justify-end p-6 fixed top-5 right-0 z-[9999999]">
       <ThemeSwitcher />

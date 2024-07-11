@@ -1,7 +1,8 @@
 import { styles } from '@/app/styles/styles';
 import React, { FC } from 'react'
-import { AiOutlineDelete } from 'react-icons/ai';
-import { BsPencil } from 'react-icons/bs';
+import toast from 'react-hot-toast';
+import { AiOutlineDelete, AiOutlinePlusCircle } from 'react-icons/ai';
+import { BsLink45Deg, BsPencil } from 'react-icons/bs';
 import { MdOutlineKeyboardArrowDown } from 'react-icons/md';
 
 type Props = {
@@ -28,6 +29,103 @@ const CourseContent: FC<Props> = ({ courseContent, setCourseContent, active, set
         updatedData[contentIndex].links.splice(linkIndex, 1);
         setCourseContent(updatedData);
     }
+    const handleAddLink = (index: number) => {
+        const updatedData = [...courseContent];
+        updatedData[index].links.push({ title: "", url: "" });
+        setCourseContent(updatedData);
+    }
+    const handleRemoveContent = (index: number) => {
+        if (index > 0) {
+            const updatedContent = [...courseContent]
+            updatedContent.splice(index, 1)
+            setCourseContent(updatedContent)
+
+            const updatedCollapse = Array(updatedContent.length).fill(true)
+            if (updatedContent.length > 0) {
+                updatedCollapse[updatedContent.length - 1] = false
+            }
+            setIsCollapsed(updatedCollapse)
+            const uniqueSections = Array.from(new Set(updatedContent.map(content => content.videoSection)));
+            setActiveSection(uniqueSections.length);
+        }
+    }
+
+    const newContentHandler = (content: any) => {
+        const isContentInvalid = !content.title || !content.videoUrl || !content.description ||
+            (content.links && content.links.some((link: any) => !link.title || !link.url));
+        if (isContentInvalid) {
+            toast.error("Please fill the previous content")
+        }
+        else {
+            let newVideoSection = "Untitled Section";
+            if (courseContent.length > 0) {
+                newVideoSection = courseContent[courseContent.length - 1].videoSection;
+            }
+            const updatedData = [...courseContent];
+            updatedData.push({
+                videoUrl: "",
+                title: "",
+                description: "",
+                videoSection: newVideoSection,
+                links: [
+                    {
+                        title: "",
+                        url: ""
+                    }
+                ],
+                suggestion: ""
+            });
+            setCourseContent(updatedData)
+            setIsCollapsed(Array(updatedData.length - 1).fill(true).concat(false));
+
+        }
+    }
+    const addNewSection = () => {
+        const lastContent = courseContent[courseContent.length - 1];
+        const isContentInvalid = !lastContent.title || !lastContent.videoUrl || !lastContent.description ||
+            (lastContent.links && lastContent.links.some((link: any) => !link.title || !link.url));
+
+        if (isContentInvalid) {
+            toast.error("Please fill in all the fields of the last content before adding a new section");
+            return;
+        }
+        else {
+            setActiveSection(activeSection + 1)
+            const newContent = {
+                videoUrl: "",
+                title: "",
+                description: "",
+                videoSection: `Untitled Section ${activeSection}`,
+                links: [
+                    {
+                        title: "",
+                        url: ""
+                    }
+                ],
+                suggestion: ""
+            }
+            setCourseContent([...courseContent, newContent])
+        }
+    }
+    const prevButton = () => {
+        setActive(active - 1);
+    }
+
+    const handleOptions = () => {
+        if (courseContent.length > 0) {
+            const lastContent = courseContent[courseContent.length - 1];
+            const isContentInvalid = !lastContent.title || !lastContent.videoUrl || !lastContent.description ||
+                (lastContent.links && lastContent.links.some((link: any) => !link.title || !link.url));
+
+            if (isContentInvalid) {
+                toast.error("Please fill in all the fields of the last content before adding a new section");
+                return;
+            }
+        } else {
+            setActive(active - 1);
+            handleCourseSubmit();
+        }
+    };
     return (
         <div className='w-[80%] m-auto mt-24 p-3 '>
             <form onSubmit={handleSubmit}>
@@ -58,41 +156,34 @@ const CourseContent: FC<Props> = ({ courseContent, setCourseContent, active, set
                                             </>
                                         )
                                     }
-                                    <div className='flex w-full items-center justify-between my-0' >
+                                    <div className={`flex w-full items-center ${content.title === '' || !isCollapsed[index] ? "justify-end" : "justify-between"} my-0  bg-[#111C43] p-5 hover:bg-[#111c43e3] `} >
                                         {
-                                            isCollapsed[index] ? (
+                                            isCollapsed[index] && (
                                                 <>
                                                     {
-                                                        content.title ? (
+                                                        content.title && (
                                                             <p className='font-Poppins dark:text-white text-black'>
                                                                 {index + 1}. {content.title}
                                                             </p>
-                                                        ) : (
-                                                            <></>
                                                         )
                                                     }
                                                 </>
-                                            ) : (
-                                                <div>
-
-                                                </div>
                                             )
+
                                         }
                                         {/* arrow button for collasped video content */}
                                         <div className="flex items-center">
-                                            <AiOutlineDelete
-                                                className={`dark:text-white text-black text-[20px] mr-2  ${index > 0 ? "cursor-pointer" : "cursor-no-drop"}`}
-                                                onClick={() => {
-                                                    if (index > 0) {
-                                                        const updatedContent = [...courseContent]
-                                                        updatedContent.splice(index, 1)
-                                                        setCourseContent(updatedContent)
-                                                    }
-                                                }}
-                                            />
+                                            {
+                                                index !== 0 && (
+                                                    <AiOutlineDelete
+                                                        className={`dark:text-white text-black text-[20px] mr-2  ${index > 0 ? "cursor-pointer" : "cursor-no-drop"}`}
+                                                        onClick={() => handleRemoveContent(index)}
+                                                    />
+                                                )
+                                            }
                                             <MdOutlineKeyboardArrowDown
                                                 fontSize="large "
-                                                className='dark:text-white text-black'
+                                                className='dark:text-white text-black cursor-pointer'
                                                 style={{
                                                     transform: isCollapsed[index] ? "rotate(180deg)" : "rotate(0deg)"
                                                 }}
@@ -154,15 +245,19 @@ const CourseContent: FC<Props> = ({ courseContent, setCourseContent, active, set
                                                                 <label className={styles.label}>
                                                                     Link {linkIndex + 1}
                                                                 </label>
-                                                                <AiOutlineDelete
-                                                                    className={`${linkIndex === 0 ? "cursor-no-drop" : "cursor-pointer"
-                                                                        } text-black dark:text-white text-[20px]`}
-                                                                    onClick={() => {
-                                                                        if (linkIndex !== 0) {
-                                                                            handleRemoveLink(index, linkIndex);
-                                                                        }
-                                                                    }}
-                                                                />
+                                                                {
+                                                                    linkIndex !== 0 && (
+                                                                        <AiOutlineDelete
+                                                                            className={`${linkIndex === 0 ? "cursor-no-drop" : "cursor-pointer"
+                                                                                } text-black dark:text-white text-[20px]`}
+                                                                            onClick={() => {
+                                                                                if (linkIndex !== 0) {
+                                                                                    handleRemoveLink(index, linkIndex);
+                                                                                }
+                                                                            }}
+                                                                        />
+                                                                    )
+                                                                }
                                                             </div>
 
                                                             <input
@@ -176,19 +271,75 @@ const CourseContent: FC<Props> = ({ courseContent, setCourseContent, active, set
                                                                     setCourseContent(updatedData);
                                                                 }}
                                                             />
+                                                            <input
+                                                                type="text"
+                                                                placeholder="Source Url... (Link URL)"
+                                                                className={styles.input}
+                                                                value={link.url}
+                                                                onChange={(e) => {
+                                                                    const updatedData = [...courseContent];
+                                                                    updatedData[index].links[linkIndex].url = e.target.value;
+                                                                    setCourseContent(updatedData);
+                                                                }}
+                                                            />
 
                                                         </div>
                                                     ))
                                                 }
+                                                <br />
+                                                {/* add link button */}
+                                                <div className="inline-block mb-4">
+                                                    <p
+                                                        className="flex items-center text-[18px] dark:text-white text-black cursor-pointer"
+                                                        onClick={() => handleAddLink(index)}
+                                                    >
+                                                        <BsLink45Deg className="mr-2" /> Add Link
+                                                    </p>
+                                                </div>
                                             </>
                                         )
                                     }
+                                    <br />
+                                    {/* add new content */}
+                                    {index === courseContent.length - 1 && (
+                                        <div>
+                                            <p
+                                                className="flex items-center text-[18px] dark:text-white text-black cursor-pointer"
+                                                onClick={(e: any) => newContentHandler(content)}
+                                            >
+                                                <AiOutlinePlusCircle className="mr-2" /> Add New Content
+                                            </p>
+                                        </div>
+                                    )}
+
                                 </div>
                             </>
                         )
                     })
                 }
+                <br />
+                <div className='flex items-center text-[20px] dark:text-white text-black cursor-pointer' onClick={() => addNewSection()}>
+                    <AiOutlinePlusCircle className='mr-2' />
+                    Add New Section
+                </div>
             </form>
+            <br />
+            <div className="w-full flex items-center justify-between">
+                <div
+                    className="w-full 800px:w-[180px] flex items-center justify-center h-[40px] bg-[#37a39a] text-center text-[#fff] rounded mt-8 cursor-pointer"
+                    onClick={() => prevButton()}
+                >
+                    Prev
+                </div>
+                <div
+                    className="w-full 800px:w-[180px] flex items-center justify-center h-[40px] bg-[#37a39a] text-center text-[#fff] rounded mt-8 cursor-pointer"
+                    onClick={() => handleOptions()}
+                >
+                    Next
+                </div>
+            </div>
+            <br />
+            <br />
         </div>
     )
 }

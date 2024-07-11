@@ -21,21 +21,24 @@ const CreateCourse = (props: Props) => {
   })
   const [benefits, setBenefits] = React.useState([{ title: '' }])
   const [preRequisites, setPreRequisites] = React.useState([{ title: '' }])
-  const [courseContent, setCourseContent] = React.useState([{
-    videoUrl: '',
-    title: '',
-    description: '',
-    videoSection: 'Untitled Section',
-    links: [
-      {
-        title: '',
-        url: ''
-      }
-    ],
-    suggestion: ''
-  }])
+  const [courseContent, setCourseContent] = React.useState([
+    {
+      videoUrl: '',
+      title: '',
+      description: '',
+      videoSection: 'Untitled Section',
+      links: [
+        {
+          title: '',
+          url: ''
+        }
+      ],
+      suggestion: ''
+    }
+  ]
+  )
   const [courseData, setCourseData] = React.useState({})
-  const handleSubmit = async() => {
+  const handleSubmit = async () => {
 
   }
   return (
@@ -53,7 +56,7 @@ const CreateCourse = (props: Props) => {
         }
         {
           active === 2 && (
-            <CourseContent courseContent={courseContent} setCourseContent={setCourseContent} active={active} setActive={setActive} handleSubmit={handleSubmit}  />
+            <CourseContent courseContent={courseContent} setCourseContent={setCourseContent} active={active} setActive={setActive} handleSubmit={handleSubmit} />
           )
         }
       </div>
