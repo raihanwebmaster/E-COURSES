@@ -27,7 +27,7 @@ const CourseOptions: FC<Props> = ({ active, setActive }) => {
                   )
                 }
             </div>
-            <h5 className={`pl-3 ${active === index ? "dark:text-white text-black" : "dark:text-white text-balance"} text-[20px]`}>
+            <h5 className={`pl-3 ${active === index ? "dark:text-white text-black" : "dark:text-white text-black"} text-[20px]`}>
               {option}
             </h5>
           </div>

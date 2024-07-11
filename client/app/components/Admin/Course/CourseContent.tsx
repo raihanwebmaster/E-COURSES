@@ -156,7 +156,7 @@ const CourseContent: FC<Props> = ({ courseContent, setCourseContent, active, set
                                             </>
                                         )
                                     }
-                                    <div className={`flex w-full items-center ${content.title === '' || !isCollapsed[index] ? "justify-end" : "justify-between"} my-0  bg-[#111C43] p-5 hover:bg-[#111c43e3] `} >
+                                    <div className={`flex w-full items-center ${content.title === '' || !isCollapsed[index] ? "justify-end" : "justify-between"} my-0  dark:bg-[#111C43] bg-[#b4bad2] p-5 hover:dark:bg-[#111c43e3] hover:bg-[#c0c5d8] `} >
                                         {
                                             isCollapsed[index] && (
                                                 <>
