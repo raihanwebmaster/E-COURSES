@@ -13,12 +13,12 @@ type Props = {
 }
 
 const CoursePreview: FC<Props> = ({ active, setActive, courseData, handleCourseCreate }) => {
-    console.log(courseData,'courseData')
+    console.log(courseData, 'courseData')
     let discountPercentage;
     if (courseData?.estimatePrice === 0) {
-      discountPercentage = 0;
+        discountPercentage = 0;
     } else {
-      discountPercentage = ((courseData?.estimatePrice - courseData?.price) / courseData?.estimatePrice) * 100;
+        discountPercentage = ((courseData?.estimatePrice - courseData?.price) / courseData?.estimatePrice) * 100;
     }
 
     const discountPercentagePrice = discountPercentage.toFixed(0);
@@ -31,7 +31,7 @@ const CoursePreview: FC<Props> = ({ active, setActive, courseData, handleCourseC
     }
     useEffect(() => {
         window.scrollTo(0, 0);
-      }, []);
+    }, []);
     return (
         <div className="w-[90%] m-auto py-5 mb-5 " >
             <div className='w-full relative' >
@@ -62,10 +62,10 @@ const CoursePreview: FC<Props> = ({ active, setActive, courseData, handleCourseC
                         name=""
                         id=""
                         placeholder="Discount code..."
-                        className={`${styles.input} 1500px:!w-[50%] 1100px:w-[60%] ml-3 lmt-0`}
+                        className={`${styles.input} 1500px:!w-[50%] 1100px:w-[60%] ml-3 !mt-0`}
                     />
                     <div
-                        className={`${styles.button} w-[120px] my-3 ml-4 font-Poppins cursor-pointer`}
+                        className={`${styles.button} !w-[120px] my-3 ml-4 font-Poppins cursor-pointer`}
                     >
                         Apply
                     </div>
@@ -122,7 +122,7 @@ const CoursePreview: FC<Props> = ({ active, setActive, courseData, handleCourseC
                         Course Details
                     </h1>
                     <p className="text-[18px] mt-[20px] whitespace-pre-line w-full overflow-hidden">
-                    {courseData?.description}
+                        {courseData?.description}
                     </p>
                 </div>
                 <br />
