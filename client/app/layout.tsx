@@ -41,11 +41,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${poppins.variable} ${josefin.variable} !bg-white bg-no-repeat dark:bg-gradient-to-b dark:from-gray-900 dark:to-black duration-300 min-h-screen`}>
-        <Provider store={store}>
           <Providers>
             {isMounted ? <Custom>{children}</Custom> : null}
           </Providers>
-        </Provider>
       </body>
     </html>
   );

@@ -13,6 +13,8 @@ import { sendMail } from '../../utils/sendMail';
 import { IUser } from '../User/user.interface';
 import { Notification } from '../Notification/notification.model';
 import mongoose from 'mongoose';
+import axios from 'axios';
+import config from '../../config';
 
 const createCourseIntoDB = async (course: any) => {
     const thumbnail = course.thumbnail
@@ -267,6 +269,27 @@ const deleteCourseFromDB = async (courseId: string) => {
     return course;
 };
 
+const generateVideoUrlWithVdoCipher = async (videoId: string) => {
+    try {
+        const response = await axios.post(
+            `https://dev.vdocipher.com/api/videos/${videoId}/otp`,
+            { ttl: 300 },
+            {
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                    Authorization: `Apisecret ${config.vdocipher_api_key}`,
+                },
+            }
+        );
+        return response.data;
+    } catch (error: any) {
+        throw new AppError(httpStatus.BAD_REQUEST, error.message);
+    }
+
+
+}
+
 
 export const CourseServices = {
     createCourseIntoDB,
@@ -279,5 +302,6 @@ export const CourseServices = {
     addReviewIntoCourse,
     addReplyReviewIntoCourse,
     getAllCoursesFromDB,
-    deleteCourseFromDB
+    deleteCourseFromDB,
+    generateVideoUrlWithVdoCipher
 };

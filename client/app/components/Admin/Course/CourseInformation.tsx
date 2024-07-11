@@ -28,7 +28,7 @@ const schema = Yup.object().shape({
   estimatePrice: Yup.number().optional(),
   tags: Yup.string().required("Please enter the course tags!"),
   level: Yup.string().required("Please enter the course level!"),
-  demoUrl: Yup.string().url().required("Please enter the course demo URL!"),
+  demoUrl: Yup.string().required("Please enter the course demo URL!"),
   thumbnail: Yup.mixed().required("Please upload the course thumbnail!"),
 })
 

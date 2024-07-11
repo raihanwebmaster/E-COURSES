@@ -132,6 +132,17 @@ const deleteCourse = catchAsync(async (req, res) => {
   });
 });  
 
+const generateVideoUrl = catchAsync(async (req, res) => {
+  const {videoId} = req.body;
+  const videoUrl = await CourseServices.generateVideoUrlWithVdoCipher(videoId);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Video Url is generated succesfully',
+    data: videoUrl,
+  });
+});
+
 
 export const CourseControllers = {
   uploadCourse,
@@ -144,5 +155,6 @@ export const CourseControllers = {
   addReview,
   addReplyReview,
   getAllCourses,
-  deleteCourse
+  deleteCourse,
+  generateVideoUrl
 };

@@ -4,11 +4,12 @@ import CourseInformation from './CourseInformation'
 import CourseOptions from './CourseOptions'
 import CourseData from './CourseData'
 import CourseContent from './CourseContent'
+import CoursePreview from './CoursePreview'
 
 type Props = {}
 
 const CreateCourse = (props: Props) => {
-  const [active, setActive] = React.useState(2)
+  const [active, setActive] = React.useState(0)
   const [courseInfo, setCourseInfo] = React.useState({
     name: '',
     description: '',
@@ -40,6 +41,18 @@ const CreateCourse = (props: Props) => {
   const [courseData, setCourseData] = React.useState({})
   const handleSubmit = async () => {
 
+    // prepare courseData
+    const courseData = {
+      ...courseInfo,
+      totalVideo: courseContent.length,
+      benefits: benefits,
+      preRequisites: preRequisites,
+      courseContent: courseContent
+    }
+    setCourseData(courseData)
+  }
+  const handleCourseCreate = async () => {
+
   }
   return (
     <div className='w-full flex min-h-screen'>
@@ -57,6 +70,11 @@ const CreateCourse = (props: Props) => {
         {
           active === 2 && (
             <CourseContent courseContent={courseContent} setCourseContent={setCourseContent} active={active} setActive={setActive} handleSubmit={handleSubmit} />
+          )
+        }
+        {
+          active === 3 && (
+            <CoursePreview  active={active} setActive={setActive} courseData={courseData} handleCourseCreate={handleCourseCreate}  />
           )
         }
       </div>

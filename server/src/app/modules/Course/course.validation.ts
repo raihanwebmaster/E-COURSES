@@ -116,6 +116,12 @@ const addReplyReviewValidationSchema = z.object({
   }),
  });
 
+ const generateVideoUrlValidationSchema = z.object({
+  body: z.object({
+    videoId: z.string(),
+  }),
+ });
+
 
 
 export const CourseValidation = {
@@ -124,5 +130,6 @@ export const CourseValidation = {
   addQuestionValidationSchema,
   addAnswerValidationSchema,
   addReviewValidationSchema,
-  addReplyReviewValidationSchema
+  addReplyReviewValidationSchema,
+  generateVideoUrlValidationSchema
 };

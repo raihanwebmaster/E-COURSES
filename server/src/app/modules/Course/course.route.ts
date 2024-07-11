@@ -75,5 +75,12 @@ router.get(
 
 router.delete('/delete-course/:id', auth(USER_ROLE.admin), CourseControllers.deleteCourse);
 
+router.post(
+  '/getVdoCipherOTP',
+  // auth(USER_ROLE.admin),
+  validateRequest(CourseValidation.generateVideoUrlValidationSchema),
+  CourseControllers.generateVideoUrl,
+)
+
 
 export const CourseRoutes = router;

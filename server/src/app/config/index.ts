@@ -25,4 +25,5 @@ export default {
   smtp_service: process.env.SMTP_SERVICE,
   smtp_mail: process.env.SMTP_MAIL,
   smtp_password: process.env.SMTP_PASSWORD,
+  vdocipher_api_key: process.env.VDOCIPHER_API_KEY
 };
