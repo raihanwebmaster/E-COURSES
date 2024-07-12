@@ -32,6 +32,7 @@ const InputSection: FC<Props> = ({ title, items, onChange, onAdd, placeholder, o
                 {items.length > 1 && index === items.length - 1 && (
                     <AiOutlineMinusCircle
                         size="20px"
+                        className="dark:text-white text-black"
                         style={{ position: "absolute", right: 10, top: "50%", transform: "translateY(-50%)", cursor: "pointer" }}
                         onClick={() => onDelete(index)}
                     />
@@ -41,6 +42,7 @@ const InputSection: FC<Props> = ({ title, items, onChange, onAdd, placeholder, o
         }
         <AiOutlinePlusCircle
             size="30px"
+            className="dark:text-white text-black"
             style={{ margin: "10px 0px", cursor: "pointer" }}
             onClick={onAdd}
         />
