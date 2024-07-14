@@ -2,17 +2,19 @@ import { styles } from '@/app/styles/styles'
 import CoursePlayer from '@/app/utils/CoursePlayer'
 import Ratings from '@/app/utils/Ratings'
 import React, { FC, useEffect } from 'react'
+import { ImSpinner2 } from 'react-icons/im';
 import { IoCheckmarkDoneOutline } from "react-icons/io5";
 
 type Props = {
     active: number
     setActive: (active: number) => void
     courseData: any
-    handleCourseCreate: any
+    handleCourseCreate: any,
+    isLoading: boolean
 
 }
 
-const CoursePreview: FC<Props> = ({ active, setActive, courseData, handleCourseCreate }) => {
+const CoursePreview: FC<Props> = ({ active, setActive, courseData, handleCourseCreate, isLoading }) => {
     console.log(courseData, 'courseData')
     let discountPercentage;
     if (courseData?.estimatePrice === 0) {
@@ -27,7 +29,7 @@ const CoursePreview: FC<Props> = ({ active, setActive, courseData, handleCourseC
         setActive(active - 1);
     }
     const createCourse = () => {
-        handleCourseCreate()
+        !isLoading && handleCourseCreate();
     }
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -139,7 +141,11 @@ const CoursePreview: FC<Props> = ({ active, setActive, courseData, handleCourseC
                     className="w-full 800px:w-[180px] flex items-center justify-center h-[40px] bg-[#37a39a] text-center text-[#fff] rounded mt-8 cursor-pointer"
                     onClick={() => createCourse()}
                 >
-                    Create
+                    {isLoading ? (
+                        <ImSpinner2 className="animate-spin text-white" size={24} />
+                    ) : (
+                        'Create'
+                    )}
                 </div>
             </div>
 

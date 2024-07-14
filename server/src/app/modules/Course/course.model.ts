@@ -35,8 +35,8 @@ const CourseDataSchema = new Schema<ICourseData>({
     description: { type: String, required: true },
     videoUrl: { type: String, required: true },
     videoSection: { type: String, required: true },
-    videoLength: { type: Number, required: true },
-    videoPlayer: { type: String, required: true },
+    videoLength: { type: Number, required: false },
+    videoPlayer: { type: String, required: false },
     links: [LinkSchema],
     suggestion: { type: String, required: false },
     questions: [QuestionSchema]

@@ -31,20 +31,15 @@ const ILinkSchema = z.object({
 const ICourseDataSchema = z.object({
   title: z.string(),
   description: z.string(),
-  videoUrl: z.string().url(),
-  videoThumbnail: z.string(),
+  videoUrl: z.string(),
   videoSection: z.string(),
-  videoLength: z.number().positive(),
-  videoPlayer: z.string(),
+  videoLength: z.number().positive().optional(),
+  videoPlayer: z.string().optional(),
   links: z.array(ILinkSchema),
   suggestion: z.string().optional(),
   questions: z.array(IQuestionSchema).optional(),
 });
 
-const IThumbnailSchema = z.object({
-  public_id: z.string(),
-  url: z.string().url(),
-});
 
 const createCourseValidateionSchema = z.object({
   body: z.object({
@@ -52,10 +47,10 @@ const createCourseValidateionSchema = z.object({
     description: z.string(),
     price: z.number().positive(),
     estimatePrice: z.number().positive().optional(),
-    thumbnail: IThumbnailSchema.optional(),
+    thumbnail: z.string(),
     tags: z.string(),
     level: z.string(),
-    demoUrl: z.string().url(),
+    demoUrl: z.string(),
     benefits: z.array(z.object({ title: z.string() })),
     prerequisites: z.array(z.object({ title: z.string() })),
     reviews: z.array(IReviewSchema).optional(),
@@ -71,10 +66,10 @@ const updateCourseValidationSchema = z.object({
     description: z.string().optional(),
     price: z.number().positive().optional(),
     estimatePrice: z.number().positive().optional(),
-    thumbnail: IThumbnailSchema.optional(),
+    thumbnail: z.string().optional(),
     tags: z.string().optional(),
     level: z.string().optional(),
-    demoUrl: z.string().url().optional(),
+    demoUrl: z.string().optional(),
     benefits: z.array(z.object({ title: z.string() })).optional(),
     prerequisites: z.array(z.object({ title: z.string() })).optional(),
     reviews: z.array(IReviewSchema).optional(),

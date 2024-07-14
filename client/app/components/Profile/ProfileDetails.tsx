@@ -38,6 +38,8 @@ const ProfileDetails: FC<Props> = ({ avatar, user }) => {
     }
     if (avatarError || profileError) {
       console.log("error", avatarError || profileError);
+      toast.error("Something went wrong!");
+      
     }
   }, [isAvatarSuccess, isProfileSuccess, avatarError, profileError, refetch]);
 
@@ -86,6 +88,7 @@ const ProfileDetails: FC<Props> = ({ avatar, user }) => {
                 className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
                 required
                 value={name}
+                placeholder={user.name}
                 onChange={(e) => setName(e.target.value)}
               />
             </div>

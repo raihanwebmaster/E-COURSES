@@ -2,7 +2,6 @@
 import "./globals.css";
 import { Poppins } from 'next/font/google';
 import { Josefin_Sans } from "next/font/google";
-import { Provider } from 'react-redux';
 import { useEffect, useState } from 'react';
 import Loader from "./components/Loader/Loader";
 import Providers from "./lib/Providers/Providers";
