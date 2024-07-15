@@ -26,6 +26,8 @@ import { useSelector } from "react-redux";
 import Link from "next/link";
 import Image from "next/image";
 import { useTheme } from "next-themes";
+import { useLogOutMutation } from "@/redux/features/auth/authApi";
+import { signOut } from "next-auth/react";
 
 interface itemProps {
   title: string;
@@ -50,21 +52,32 @@ const Item: FC<itemProps> = ({ title, to, icon, selected, setSelected }) => {
 
 const Sidebar = () => {
   const { user } = useSelector((state: any) => state.auth);
-  const [logout, setlogout] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [selected, setSelected] = useState("Dashboard");
   const [mounted, setMounted] = useState(false);
-  const { resolvedTheme:theme, setTheme } = useTheme();
+  const { resolvedTheme: theme, setTheme } = useTheme();
+  const [logOut, { isLoading, isSuccess, error, data }] = useLogOutMutation()
 
   useEffect(() => setMounted(true), []);
+
+  useEffect(() => {
+    const handleSignOut = async () => {
+      if (isSuccess) {
+        await signOut();
+      }
+    };
+    handleSignOut();
+  }, [isSuccess, error, data])
 
   if (!mounted) {
     return null;
   }
 
-  const logoutHandler = () => {
-    setlogout(true);
+  const logoutHandler = async () => {
+    await logOut()
   };
+
+
 
   return (
     <Box
