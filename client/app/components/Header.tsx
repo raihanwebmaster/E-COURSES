@@ -83,14 +83,6 @@ const Header: FC<Props> = ({ activeItem, open, setOpen, route, setRoute }) => {
 
     const ModalComponent = useMemo(() => getModalComponent(), [getModalComponent])
 
-    useEffect(() => {
-        if (open) {
-          document.body.classList.add('modal-open');
-        } else {
-          document.body.classList.remove('modal-open');
-        }
-      }, [open]);
-
     return (
         <div className='w-full relative'>
             <div className={`${active ? "dark:bg-opacity-50 dark:bg-gradient-to-b dark:from-gray-900 dark:to-black fixed top-o left-0 w-full h-[80px] z-[80] border-b dark:border-[#ffffff1c]  shadow-xl transition duration-500 " : "w-full border-b dark:border-[#ffffff1c] h-[80px] z-[80] dark:shrink"}`}>
