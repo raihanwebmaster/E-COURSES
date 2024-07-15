@@ -2,6 +2,7 @@
 import React from 'react'
 import Heading from '@/app/utils/Heading'
 import AllUsers from '@/app/components/Admin/Users/AllUsers'
+import withAdmin from '@/app/hooks/withAdmin'
 
 type Props = {}
 
@@ -14,4 +15,4 @@ const Page = (props: Props) => {
     )
 }
 
-export default Page
+export default withAdmin(Page)

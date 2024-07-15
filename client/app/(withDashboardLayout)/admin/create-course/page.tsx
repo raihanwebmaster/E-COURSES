@@ -1,8 +1,7 @@
 "use client"
-
 import CreateCourse from '@/app/components/Admin/Course/CreateCourse'
 import Heading from '@/app/utils/Heading'
-import React, { useState } from 'react'
+import React from 'react'
 type Props = {}
 
 const Page = (props: Props) => {
