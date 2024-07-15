@@ -10,7 +10,7 @@ const Page = (props: Props) => {
   const [open, setOpen] = useState(false)
   return (
     <div>
-      <Heading title="ECourses - Admin" description="ECourses is a platform for students to learn and get help from teachers" keywords="Programming,MERN,Redux,Machine Learing" />
+      <Heading title="E-Courses - Admin" description="E-Courses is a platform for students to learn and get help from teachers" keywords="Programming,MERN,Redux,Machine Learing" />
       <DashboardHeader open={open} setOpen={setOpen} />
       <CreateCourse />
     </div>

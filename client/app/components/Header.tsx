@@ -98,7 +98,7 @@ const Header: FC<Props> = ({ activeItem, open, setOpen, route, setRoute }) => {
                     <div className='w-full h-[80px] flex items-center justify-between p-3'>
                         <div>
                             <Link href='/' className='text-[25px] font-Poppins font-[500] text-black dark:text-white'>
-                                ECourses
+                                E-Courses
                             </Link>
                         </div>
                         <div className='flex items-center'>
@@ -136,7 +136,7 @@ const Header: FC<Props> = ({ activeItem, open, setOpen, route, setRoute }) => {
                             <br />
                             <br />
                             <p className='text-[16px] px-2 pl-5 text-black dark:text-white'>
-                                {`Copyright © ${new Date().getFullYear()} ECourses`}
+                                {`Copyright © ${new Date().getFullYear()} E-Courses`}
                             </p>
                         </div>
                     </div>

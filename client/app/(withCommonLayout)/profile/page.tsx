@@ -13,7 +13,7 @@ const Page: FC<Props> = (props) => {
   return (
     <div>
       <Protected>
-        <Heading title={`${user?.name} Profile - ECourses`} description="ECourses is a platform for students to lear and get help from teachers" keywords="Programming,MERN,Redux,Machine Learning" />
+        <Heading title={`${user?.name} Profile - E-Courses`} description="E-Courses is a platform for students to lear and get help from teachers" keywords="Programming,MERN,Redux,Machine Learning" />
         <Profile user={user} />
       </Protected>
     </div>

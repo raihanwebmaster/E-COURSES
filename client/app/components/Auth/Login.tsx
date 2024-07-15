@@ -57,7 +57,7 @@ const Login: FC<Props> = ({ setRoute, setOpen }) => {
     return (
         <div className='w-full mt-2'>
             <h1 className={`${styles.title}`}>
-                Login with ECourses
+                Login with E-Courses
             </h1>
             <form onSubmit={handleSubmit}>
                 <div>
