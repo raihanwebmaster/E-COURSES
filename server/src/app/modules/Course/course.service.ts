@@ -248,7 +248,12 @@ const addReplyReviewIntoCourse = async (user: JwtPayload, replyData: IAddReplyRe
 
 
 const getAllCoursesFromDB = async () => {
+    // const isCacheExist = await redis.get("allCourses");
+    // if (isCacheExist) {
+    //     return JSON.parse(isCacheExist);
+    // }
     const courses = await Course.find().sort({ createdAt: -1 });
+    // await redis.set("allCourses", JSON.stringify(courses));
     return courses;
 };
 
