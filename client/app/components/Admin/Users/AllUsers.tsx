@@ -1,16 +1,21 @@
-import React from 'react'
+"use client"
+import React, {FC, useState} from 'react'
 import { DataGrid } from '@mui/x-data-grid'
 import { Button, Box } from '@mui/material'
 import { AiOutlineDelete, AiOutlineMail } from 'react-icons/ai'
-import { useTheme } from 'next-themes'
 import Loader from '../../Loader/Loader'
 import { format } from "timeago.js";
 import { useGetAllUsersQuery } from '@/redux/features/user/userApi'
+import { useTheme } from 'next-themes'
+import { styles } from '@/app/styles/styles'
 
-type Props = {}
+type Props = {
+  isTeam : boolean
+}
 
-const AllUsers = (props: Props) => {
-  const { resolvedTheme, setTheme } = useTheme()
+const AllUsers:FC<Props> = ({isTeam}) => {
+  const { resolvedTheme } = useTheme()
+  const [active, setActive] = useState(false)
   const { isLoading, data, error } = useGetAllUsersQuery({})
   const columns = [
     { field: "id", headerName: "ID", flex: 0.3 },
@@ -37,7 +42,7 @@ const AllUsers = (props: Props) => {
       },
     },
     {
-      field: " ",
+      field: "sendMail",
       headerName: "Email",
       flex: 0.2,
       renderCell: (params: any) => {
@@ -56,16 +61,18 @@ const AllUsers = (props: Props) => {
   ];
 
   const rows: any[] = [];
-  data?.data && data?.data.map((course: any) => {
-    rows.push({
-      id: course._id,
-      name: course.name,
-      email: course.email,
-      role: course.role,
-      courses: course.courses.length,
-      created_at: format(course.created_at),
-    })
-  })
+  data?.data && data?.data.forEach((user: any) => {
+    if (!isTeam || (isTeam && user.role === 'admin')) {
+      rows.push({
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        courses: user.courses.length,
+        created_at: format(user.createdAt),
+      });
+    }
+  });
 
   return (
     <div className='mt-[120px]'>
@@ -74,6 +81,11 @@ const AllUsers = (props: Props) => {
           <Loader />
         ) : (
           <Box m="20px">
+            <div className="w-full flex justify-end cursor-pointer" onClick={()=> setActive(!active)}>
+                <div className={`${styles.button} !w-[250px] !h-[35px] dark:bg-[#57c7a3] dark:border-[#ffffff6c]`} >
+                    Add New Member
+                </div>
+              </div>
             <Box
               m="40px 0 0 0"
               height="80vh"

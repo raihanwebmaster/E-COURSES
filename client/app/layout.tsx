@@ -5,7 +5,7 @@ import { Josefin_Sans } from "next/font/google";
 import { useEffect, useState } from 'react';
 import Loader from "./components/Loader/Loader";
 import Providers from "./lib/Providers/Providers";
-import { apiSlice, useLoadUserQuery } from "@/redux/features/api/appSlice";
+import { apiSlice, useLoadUserQuery } from "../redux/features/api/appSlice";
 import { store } from "@/redux/store";
 
 const poppins = Poppins({
