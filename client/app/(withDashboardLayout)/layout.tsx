@@ -3,6 +3,7 @@
 import React, { useState } from 'react'
 import AdminProtected from '../hooks/adminProtected'
 import AdminSidebar from '../components/Admin/Sidebar/AdminSidebar'
+import DashboardHero from '../components/Admin/DashboardHero'
 
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
@@ -14,6 +15,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                         <AdminSidebar />
                     </div>
                     <div className='w-[85%]' >
+                        <DashboardHero />
                         {children}
                     </div>
                 </div>
