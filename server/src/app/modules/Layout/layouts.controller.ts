@@ -28,7 +28,7 @@ const editLayout = catchAsync(async (req, res) => {
 
 
 const getLayout = catchAsync(async (req, res) => {
-    const { type } = req.body;
+    const { type } = req.params;
     const result = await LayoutServices.getLayoutFromDB(type);
     sendResponse(res, {
         statusCode: httpStatus.OK,

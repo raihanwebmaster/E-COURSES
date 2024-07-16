@@ -24,17 +24,10 @@ const createLayoutZodSchema = z.object({
     })
 });
 
-const getLayoutZodSchema = z.object({
-    body: z.object({
-        type: z.string()
-    })
-
-});
 
 
 export const layoutsValidation = {
     createLayoutZodSchema,
     updateLayoutZodSchema: createLayoutZodSchema,
-    getLayoutZodSchema
 
 }

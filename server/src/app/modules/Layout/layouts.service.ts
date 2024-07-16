@@ -49,21 +49,23 @@ const editLayoutIntoDB = async (layout: any) => {
             throw new AppError(httpStatus.NOT_FOUND, 'Banner not found')
         }
         const { title, subtitle, image } = layout.banner;
-        await destroyImage(bannerData.banner.image.public_id);
-        const { secure_url, public_id } = (await sendImageToCloudinary(image, "banner")) as {
-            secure_url: string;
-            public_id: string;
-        };
+        let updateImage = { public_id: bannerData.banner.image.public_id, url: bannerData.banner.image.url };
+
+        if (!image.startsWith("https")) {
+            await destroyImage(bannerData.banner.image.public_id);
+            const { secure_url, public_id } = (await sendImageToCloudinary(image, "banner")) as {
+                secure_url: string;
+                public_id: string;
+            };
+            updateImage = { public_id, url: secure_url };
+        }
+
         const banner = {
             title,
             subtitle,
-            image: {
-                public_id,
-                url: secure_url
-            }
-        }
+            image: updateImage
+        };
         await Layout.findOneAndUpdate({ type: "Banner" }, { banner });
-
     }
     else if (type === "Categories") {
         await Layout.findOneAndUpdate({ type: "Categories" }, { categories: layout.categories });
