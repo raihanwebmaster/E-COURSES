@@ -33,8 +33,11 @@ const createCourseIntoDB = async (course: any) => {
 };
 const updateCourseFromDB = async (couserId: string, course: any) => {
     const thumbnail = course.thumbnail
-    if (thumbnail) {
-        await destroyImage(thumbnail.public_id);
+    const courseData = await Course.findById(couserId) as any;
+    if (courseData && thumbnail && !thumbnail.startsWith("https")) {
+        // await cloudinary.v2.uploader.destroy(courseData.thumbnail.public_id);
+        await destroyImage(courseData.thumbnail.public_id);
+
         const { secure_url, public_id } = (await sendImageToCloudinary(thumbnail, "courses",)) as {
             secure_url: string;
             public_id: string;
@@ -42,8 +45,16 @@ const updateCourseFromDB = async (couserId: string, course: any) => {
         course.thumbnail = {
             public_id: public_id,
             url: secure_url,
-        }
+        };
     }
+
+    if (courseData && thumbnail.startsWith("https")) {
+        course.thumbnail = {
+            public_id: courseData.thumbnail.public_id,
+            url: courseData.thumbnail.url,
+        };
+    }
+
     const uploadCourse = await Course.findByIdAndUpdate(couserId, course, { new: true });
     await redis.set(couserId, JSON.stringify(uploadCourse), 'EX', 60 * 60 * 24 * 7);
     return uploadCourse;

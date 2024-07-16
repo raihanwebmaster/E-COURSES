@@ -9,15 +9,16 @@ import Loader from '../../Loader/Loader'
 import { format } from "timeago.js";
 import { styles } from '@/app/styles/styles'
 import toast from 'react-hot-toast'
+import Link from 'next/link'
 
 type Props = {}
 
 const AllCourses = (props: Props) => {
   const { resolvedTheme, setTheme } = useTheme()
   const { isLoading, data, refetch } = useGetAllCoursesQuery({}, { refetchOnMountOrArgChange: true });
+  console.log(data,'courses')
   const [open, setOpen] = useState(false);
   const [courseId, setCourseId] = useState("");
-  //useDeleteCourseMutation
   const [deleteCourse, { isSuccess: deleteSuccess, error: deleteError }] = useDeleteCourseMutation({});
   const handleDelete = async () => {
     const id = courseId;
@@ -37,7 +38,7 @@ const AllCourses = (props: Props) => {
         toast.error(errorMessage.data.message);
       }
     }
-  }, [ deleteSuccess, deleteError]);
+  }, [deleteSuccess, deleteError]);
 
   const columns = [
     { field: "id", headerName: "ID", flex: 0.5 },
@@ -45,6 +46,7 @@ const AllCourses = (props: Props) => {
     { field: "ratings", headerName: "Ratings", flex: 0.5 },
     { field: "purchased", headerName: "Purchased", flex: 0.5 },
     { field: "created_at", headerName: "Created At", flex: 0.5 },
+    { field: "updated_at", headerName: "updated At", flex: 0.5 },
     {
       field: "edit",
       headerName: "Edit",
@@ -52,12 +54,12 @@ const AllCourses = (props: Props) => {
       renderCell: (params: any) => {
         return (
           <>
-            <Button>
+            <Link href={`/admin/edit-course/${params.row.id}`}className="flex h-full items-center">
               <FiEdit2
                 className="dark:text-white text-black"
                 size={20}
               />
-            </Button>
+            </Link>
           </>
         );
       },
@@ -93,6 +95,7 @@ const AllCourses = (props: Props) => {
       ratings: course.ratings,
       purchased: course.purchased,
       created_at: format(course.createdAt),
+      updated_at: format(course.updatedAt),
     })
   })
 

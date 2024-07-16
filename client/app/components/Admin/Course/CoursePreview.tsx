@@ -10,11 +10,12 @@ type Props = {
     setActive: (active: number) => void
     courseData: any
     handleCourseCreate: any,
-    isLoading: boolean
+    isLoading: boolean,
+    isEdit?: boolean,
 
 }
 
-const CoursePreview: FC<Props> = ({ active, setActive, courseData, handleCourseCreate, isLoading }) => {
+const CoursePreview: FC<Props> = ({ active, setActive, courseData, handleCourseCreate, isLoading, isEdit }) => {
     console.log(courseData, 'courseData')
     let discountPercentage;
     if (courseData?.estimatePrice === 0) {
@@ -144,7 +145,7 @@ const CoursePreview: FC<Props> = ({ active, setActive, courseData, handleCourseC
                     {isLoading ? (
                         <ImSpinner2 className="animate-spin text-white" size={24} />
                     ) : (
-                        'Create'
+                        isEdit ? "Update" : "Create"
                     )}
                 </div>
             </div>

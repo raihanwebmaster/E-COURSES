@@ -1,7 +1,7 @@
 import { styles } from '@/app/styles/styles';
 import { useFormik } from 'formik';
 import Image from 'next/image';
-import React, { FC } from 'react'
+import React, { FC , useState, useEffect} from 'react'
 import * as Yup from 'yup'
 
 type Props = {
@@ -34,27 +34,23 @@ const schema = Yup.object().shape({
 
 const CourseInformation: FC<Props> = ({ courseInfo, setCourseInfo, active, setActive }) => {
   const [dragging, setDragging] = React.useState(false)
+  const [initialValues, setInitialValues] = useState(courseInfo);
+
+  useEffect(() => {
+    setInitialValues(courseInfo);
+  }, [courseInfo]);
+
 
   const formik = useFormik({
-    initialValues: {
-      name: courseInfo.name || '',
-      description: courseInfo.description || '',
-      price: courseInfo.price || "",
-      estimatePrice: courseInfo.estimatePrice || "",
-      tags: courseInfo.tags || '',
-      level: courseInfo.level || '',
-      demoUrl: courseInfo.demoUrl || '',
-      thumbnail: courseInfo.thumbnail || ''
-    },
+    initialValues:initialValues,
+    enableReinitialize: true,
     validationSchema: schema,
     onSubmit: async (values) => {
-      if (values.estimatePrice === '') {
-        values.estimatePrice = 0;
-      }
       setCourseInfo(values)
       setActive(active + 1);
     }
   })
+
 
   const handleFileChange = (e: any) => {
     const file = e.target.files[0]
@@ -239,11 +235,10 @@ const CourseInformation: FC<Props> = ({ courseInfo, setCourseInfo, active, setAc
             onDrop={handleDrop}
           >
             {values.thumbnail ? (
-              <Image
+              <img
                 src={values.thumbnail}
                 alt=""
-                width={100}
-                height={100}
+                layout="intrinsic"
                 className="max-h-full w-full object-cover"
               />
             ) : (

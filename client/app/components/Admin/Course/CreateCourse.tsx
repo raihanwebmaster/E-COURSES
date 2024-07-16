@@ -60,7 +60,7 @@ const CreateCourse = (props: Props) => {
   useEffect(() => {
     if (isSuccess) {
       toast.success("Course create successfully")
-      router.push(`/admin/all-courses`);
+      router.push(`/admin/courses`);
     }
     if (error) {
       if ('data' in error) {
