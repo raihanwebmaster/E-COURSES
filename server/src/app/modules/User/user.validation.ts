@@ -87,7 +87,7 @@ const userAvatarUpdateValidationSchema = z.object({
 
 const userRoleUpdateZodValidationSchema = z.object({
   body: z.object({
-    id: z.string().min(1),
+    email: z.string().email(),
     role: z.enum(['user', 'admin']),
   }),
 

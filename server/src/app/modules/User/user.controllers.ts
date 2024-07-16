@@ -53,8 +53,8 @@ const getAllUsers = catchAsync(async (req, res) => {
 });
 
 const updateUserRole = catchAsync(async (req, res) => {
-  const { id, role } = req.body;
-  const result = await UserServices.updateUserRoleIntoDB(id, role);
+  const { email, role } = req.body;
+  const result = await UserServices.updateUserRoleIntoDB(email, role);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,

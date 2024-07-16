@@ -65,8 +65,8 @@ const getAllUsersFromDB = async () => {
   return users;
 };
 
-const updateUserRoleIntoDB = async (userId: string, role: string) => {
-  const updateUser = await User.findByIdAndUpdate(  userId, { role }, { new: true });
+const updateUserRoleIntoDB = async (email: string, role: string) => {
+  const updateUser = await User.findOneAndUpdate({ email }, { role }, { new: true });
   return updateUser;
 };
 
