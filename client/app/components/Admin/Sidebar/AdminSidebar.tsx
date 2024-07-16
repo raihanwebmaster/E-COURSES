@@ -1,5 +1,6 @@
 "use client";
 import { FC, useEffect, useState } from "react";
+import { usePathname } from "next/navigation"; 
 import { ProSidebar, Menu, MenuItem } from "react-pro-sidebar";
 import { Box, IconButton, Typography } from "@mui/material";
 import "react-pro-sidebar/dist/css/styles.css";
@@ -28,6 +29,7 @@ import Image from "next/image";
 import { useTheme } from "next-themes";
 import { useLogOutMutation } from "@/redux/features/auth/authApi";
 import { signOut } from "next-auth/react";
+import { useRouter } from 'next/navigation'
 
 interface itemProps {
   title: string;
@@ -41,7 +43,10 @@ const Item: FC<itemProps> = ({ title, to, icon, selected, setSelected }) => {
   return (
     <MenuItem
       active={selected === title}
-      onClick={() => setSelected(title)}
+      onClick={() => {
+        setSelected(title);
+        localStorage.setItem("selectedSidebarItem", title); // Save the selected state
+      }}
       icon={icon}
     >
       <Typography className="!text-[16px] !font-Poppins">{title}</Typography>
@@ -57,6 +62,8 @@ const Sidebar = () => {
   const [mounted, setMounted] = useState(false);
   const { resolvedTheme: theme, setTheme } = useTheme();
   const [logOut, { isLoading, isSuccess, error, data }] = useLogOutMutation()
+  const pathname = usePathname();
+  console.log(pathname,'pathname')
 
   useEffect(() => setMounted(true), []);
 
@@ -68,6 +75,15 @@ const Sidebar = () => {
     };
     handleSignOut();
   }, [isSuccess, error, data])
+
+  useEffect(() => {
+    const savedSelected = localStorage.getItem("selectedSidebarItem");
+    if(pathname === '/admin'){
+      setSelected("Dashboard");
+    }else{
+      setSelected(savedSelected);
+    }
+  }, []);
 
   if (!mounted) {
     return null;
