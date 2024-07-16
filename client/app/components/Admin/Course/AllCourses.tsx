@@ -1,18 +1,44 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { DataGrid } from '@mui/x-data-grid'
-import { Button, Box } from '@mui/material'
+import { Button, Box, Modal } from '@mui/material'
 import { AiOutlineDelete } from 'react-icons/ai'
 import { FiEdit2 } from 'react-icons/fi'
 import { useTheme } from 'next-themes'
-import { useGetAllCoursesQuery } from '@/redux/features/courses/coursesApi'
+import { useDeleteCourseMutation, useGetAllCoursesQuery } from '@/redux/features/courses/coursesApi'
 import Loader from '../../Loader/Loader'
 import { format } from "timeago.js";
+import { styles } from '@/app/styles/styles'
+import toast from 'react-hot-toast'
 
 type Props = {}
 
 const AllCourses = (props: Props) => {
   const { resolvedTheme, setTheme } = useTheme()
-  const { isLoading, data, error } = useGetAllCoursesQuery({})
+  const { isLoading, data, refetch } = useGetAllCoursesQuery({}, { refetchOnMountOrArgChange: true });
+  const [open, setOpen] = useState(false);
+  const [courseId, setCourseId] = useState("");
+  //useDeleteCourseMutation
+  const [deleteCourse, { isSuccess: deleteSuccess, error: deleteError }] = useDeleteCourseMutation({});
+  const handleDelete = async () => {
+    const id = courseId;
+    await deleteCourse(id);
+  };
+
+  useEffect(() => {
+    if (deleteSuccess) {
+      refetch();
+      toast.success("Delete user successfully!");
+      setOpen(false);
+      setCourseId("");
+    }
+    if (deleteError) {
+      if ("data" in deleteError) {
+        const errorMessage = deleteError as any;
+        toast.error(errorMessage.data.message);
+      }
+    }
+  }, [ deleteSuccess, deleteError]);
+
   const columns = [
     { field: "id", headerName: "ID", flex: 0.5 },
     { field: "name", headerName: "Course Name", flex: 1 },
@@ -45,6 +71,10 @@ const AllCourses = (props: Props) => {
           <>
             <Button>
               <AiOutlineDelete
+                onClick={() => {
+                  setCourseId(params.row.id);
+                  setOpen(true);
+                }}
                 className="dark:text-white text-black"
                 size={20}
               />
@@ -99,6 +129,12 @@ const AllCourses = (props: Props) => {
                 },
                 "& .MuiDataGrid-cell": {
                   borderBottom: "none!important",
+                  "&:focus": {
+                    outline: "none !important",
+                  },
+                  "&:focus-within": {
+                    outline: "none !important",
+                  },
                 },
                 "& .name-column--cell": {
                   color: resolvedTheme === "dark" ? "#fff" : "#000",
@@ -131,8 +167,42 @@ const AllCourses = (props: Props) => {
                 },
               }}
             >
-              <DataGrid checkboxSelection columns={columns} rows={rows} />
+              <DataGrid columns={columns} rows={rows} />
             </Box>
+            {open && (
+              <Modal
+                open={open}
+                onClose={() => {setOpen(!open); setCourseId("");}}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+                disableScrollLock
+                sx={{
+                  "&.MuiModal-root": {
+                    zIndex: "2147483647!important",
+                  },
+                }}
+              >
+                <Box className="absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 w-[450px] bg-white dark:bg-slate-900 rounded-[8px] shadow p-4 outline-none">
+                  <h1 className={`${styles.title}`}>
+                    Are you sure you want to delete this course?
+                  </h1>
+                  <div className="flex w-full items-center justify-between mb-6 mt-4">
+                    <div
+                      className={`${styles.button} !w-[120px] h-[30px] bg-[#57c7a3] cursor-pointer`}
+                      onClick={() => setOpen(!open)}
+                    >
+                      Cancel
+                    </div>
+                    <div
+                      className={`${styles.button} !w-[120px] h-[30px] bg-[#d63f3f] cursor-pointer`}
+                      onClick={handleDelete}
+                    >
+                      Delete
+                    </div>
+                  </div>
+                </Box>
+              </Modal>
+            )}
           </Box>
         )
       }

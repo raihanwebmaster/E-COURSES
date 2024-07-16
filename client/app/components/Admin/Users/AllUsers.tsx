@@ -3,18 +3,21 @@ import React, { FC, useState, useEffect } from 'react'
 import { DataGrid } from '@mui/x-data-grid'
 import { Button, Box, Modal } from '@mui/material'
 import { AiOutlineDelete, AiOutlineMail } from 'react-icons/ai'
+import { TiDeleteOutline } from 'react-icons/ti'
 import Loader from '../../Loader/Loader'
 import { format } from "timeago.js";
 import { useDeleteUserMutation, useGetAllUsersQuery, useUpdateUserRoleMutation } from '@/redux/features/user/userApi'
 import { useTheme } from 'next-themes'
 import { styles } from '@/app/styles/styles'
 import toast from 'react-hot-toast'
+import { useSelector } from 'react-redux'
 
 type Props = {
   isTeam: boolean
 }
 
 const AllUsers: FC<Props> = ({ isTeam }) => {
+  const { user } = useSelector((state: any) => state.auth);
   const { resolvedTheme } = useTheme()
   const [active, setActive] = useState(false)
   const { isLoading, data, refetch } = useGetAllUsersQuery({}, { refetchOnMountOrArgChange: true })
@@ -74,16 +77,26 @@ const AllUsers: FC<Props> = ({ isTeam }) => {
       headerName: "Delete",
       flex: 0.2,
       renderCell: (params: any) => {
+        const isCurrentUser = user._id === params.row.id;
         return (
           <>
             <Button onClick={() => {
               setOpen(!open);
               setUserId(params.row.id);
-            }}>
-              <AiOutlineDelete
-                className="dark:text-white text-black"
-                size={20}
-              />
+            }} disabled={isCurrentUser}>
+              {
+                isCurrentUser ? (
+                  <TiDeleteOutline
+                    className={`dark:text-white text-black`}
+                    size={20}
+                  />
+                ) : (
+                  <AiOutlineDelete
+                    className={`dark:text-white text-black`}
+                    size={20}
+                  />
+                )
+              }
             </Button>
           </>
         );
@@ -203,9 +216,11 @@ const AllUsers: FC<Props> = ({ isTeam }) => {
             {active && (
               <Modal
                 open={active}
-                onClose={() =>{ setActive(!active);
-                    setEmail("");
-                  setRole("admin");}}
+                onClose={() => {
+                  setActive(!active);
+                  setEmail("");
+                  setRole("admin");
+                }}
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
                 disableScrollLock
@@ -255,7 +270,7 @@ const AllUsers: FC<Props> = ({ isTeam }) => {
             {open && (
               <Modal
                 open={open}
-                onClose={() => {setOpen(!open); setUserId("");}}
+                onClose={() => { setOpen(!open); setUserId(""); }}
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
                 disableScrollLock
