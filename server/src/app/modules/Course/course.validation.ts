@@ -45,6 +45,7 @@ const createCourseValidateionSchema = z.object({
   body: z.object({
     name: z.string(),
     description: z.string(),
+    categories: z.array(z.string()),
     price: z.number().positive(),
     estimatePrice: z.number().positive().optional(),
     thumbnail: z.string(),
@@ -64,6 +65,7 @@ const updateCourseValidationSchema = z.object({
   body: z.object({
     name: z.string().optional(),
     description: z.string().optional(),
+    categories: z.array(z.string()).optional(),
     price: z.number().positive().optional(),
     estimatePrice: z.number().positive().optional(),
     thumbnail: z.string().optional(),

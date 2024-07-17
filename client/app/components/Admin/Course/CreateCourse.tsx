@@ -18,6 +18,7 @@ const CreateCourse = (props: Props) => {
   const [courseInfo, setCourseInfo] = React.useState({
     name: '',
     description: '',
+    categories: [],
     price: 0,
     estimatePrice: 0,
     tags: '',
@@ -33,6 +34,7 @@ const CreateCourse = (props: Props) => {
       title: '',
       description: '',
       videoSection: 'Untitled Section',
+      videoLength: 0,
       links: [
         {
           title: '',

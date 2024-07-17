@@ -259,11 +259,18 @@ const addReplyReviewIntoCourse = async (user: JwtPayload, replyData: IAddReplyRe
 
 
 const getAllCoursesFromDB = async () => {
-    // const isCacheExist = await redis.get("allCourses");
+      // const isCacheExist = await redis.get("allCourses");
     // if (isCacheExist) {
     //     return JSON.parse(isCacheExist);
     // }
-    const courses = await Course.find().sort({ createdAt: -1 });
+    const courses = await Course.find()
+        .sort({ createdAt: -1 })
+        .populate({
+            path: 'categories',
+            match: { type: 'Categories' }, // Ensure we are populating from the correct Layout type
+            select: 'categories' // Only select the categories field
+        });
+
     // await redis.set("allCourses", JSON.stringify(courses));
     return courses;
 };

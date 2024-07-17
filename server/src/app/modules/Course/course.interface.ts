@@ -39,6 +39,7 @@ export interface ICourseData {
 export interface ICourse {
     name: string,
     description: string,
+    categories: Types.ObjectId[],
     price: number,
     estimatePrice?: number,
     thumbnail: object,

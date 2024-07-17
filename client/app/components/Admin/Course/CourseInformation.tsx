@@ -1,7 +1,10 @@
 import { styles } from '@/app/styles/styles';
+import { useGetLayoutQuery } from '@/redux/features/layouts/layoutsApi';
+import { OutlinedInput, Select, MenuItem } from '@mui/material';
+import { GridExpandMoreIcon } from '@mui/x-data-grid';
 import { useFormik } from 'formik';
-import Image from 'next/image';
-import React, { FC , useState, useEffect} from 'react'
+import { useTheme } from 'next-themes';
+import React, { FC, useState, useEffect } from 'react'
 import * as Yup from 'yup'
 
 type Props = {
@@ -13,8 +16,9 @@ type Props = {
     tags: string,
     level: string,
     demoUrl: string,
-    thumbnail: string
-  
+    thumbnail: string,
+    categories: string[],
+
   };
   setCourseInfo: (courseInfo: any) => void;
   active: number;
@@ -30,11 +34,23 @@ const schema = Yup.object().shape({
   level: Yup.string().required("Please enter the course level!"),
   demoUrl: Yup.string().required("Please enter the course demo URL!"),
   thumbnail: Yup.mixed().required("Please upload the course thumbnail!"),
+  categories: Yup.array()
+    .min(1, "Please select at least one category!")
+    .required("Please enter the course categories!"),
 })
 
 const CourseInformation: FC<Props> = ({ courseInfo, setCourseInfo, active, setActive }) => {
+  const { data } = useGetLayoutQuery("Categories", {});
+  const { resolvedTheme } = useTheme();
   const [dragging, setDragging] = React.useState(false)
   const [initialValues, setInitialValues] = useState(courseInfo);
+  const [categories, setCategories] = useState<any[]>([]);
+  useEffect(() => {
+    if (data) {
+      setCategories(data.data.categories);
+    }
+  }, [data]);
+  console.log(categories, 'categ')
 
   useEffect(() => {
     setInitialValues(courseInfo);
@@ -42,7 +58,7 @@ const CourseInformation: FC<Props> = ({ courseInfo, setCourseInfo, active, setAc
 
 
   const formik = useFormik({
-    initialValues:initialValues,
+    initialValues: initialValues,
     enableReinitialize: true,
     validationSchema: schema,
     onSubmit: async (values) => {
@@ -89,6 +105,18 @@ const CourseInformation: FC<Props> = ({ courseInfo, setCourseInfo, active, setAc
       reader.readAsDataURL(file)
     }
   }
+  const handleCategoriesChange = (event: any) => {
+    const {
+      target: { value },
+    } = event;
+    formik.setFieldValue('categories', typeof value === 'string' ? value.split(',') : value);
+  };
+
+  const getCategoryTitleById = (id: string) => {
+    const category = categories.find((category) => category._id === id);
+    return category ? category.title : '';
+  };
+
 
   const { errors, touched, values, handleChange, handleSubmit, isValid } = formik
   return (
@@ -165,23 +193,79 @@ const CourseInformation: FC<Props> = ({ courseInfo, setCourseInfo, active, setAc
             {errors.estimatePrice && touched.estimatePrice && <span className="text-red-500 pt-2 block">{errors.estimatePrice}</span>}
           </div>
         </div>
-        <div className='mb-5'>
-          <label className={`${styles.label}`} htmlFor='tags' >
-            Course Tags
-          </label>
-          <input
-            type='text'
-            name='tags'
-            value={values.tags}
-            onChange={handleChange}
-            id='tags'
-            placeholder='MERN,Next 13,Socket io,tailwind css,LMS'
-            className={`
+        <div className='w-full flex justify-between mb-5'>
+          <div className='w-[45%]'>
+            <label className={`${styles.label}`} htmlFor='tags' >
+              Course Tags
+            </label>
+            <input
+              type='text'
+              name='tags'
+              value={values.tags}
+              onChange={handleChange}
+              id='tags'
+              placeholder='MERN,Next 13,Socket io,tailwind css,LMS'
+              className={`
                     ${errors.tags && touched.tags && "border-red-500"}
                     ${styles.input}`}
-          />
-          {errors.tags && touched.tags && <span className="text-red-500 pt-2 block">{errors.tags}</span>}
+            />
+            {errors.tags && touched.tags && <span className="text-red-500 pt-2 block">{errors.tags}</span>}
+          </div>
+          <div className='w-[45%]'>
+            <label className={`${styles.label}`} htmlFor='demoUrl' >
+              Course Categories
+            </label>
+            <Select
+              multiple
+              displayEmpty
+              value={values.categories}
+              onChange={handleCategoriesChange}
+              input={<OutlinedInput
+                className={`
+                  ${errors.categories && touched.categories && "border-red-500"}
+                  ${styles.input}`}
+              />}
+              sx={{
+                '&.MuiOutlinedInput-root': {
+                    '& fieldset': {
+                      border: 'none',
+                    },
+                  },
+                  '&.Mui-focused': {
+                    '& fieldset': {
+                      border: 'none',
+                    },
+                  },
+                '& .MuiSelect-icon': {
+                  color: `${resolvedTheme !== "dark" ? "#000" : "#fff"}`,
+                },
+              }}
+              renderValue={(selected) => {
+                if (selected.length === 0) {
+                  return <p className="text-gray-500">Placeholder</p>;
+                }
+
+                return selected.map((value) => getCategoryTitleById(value)).join(', ');
+              }}
+              
+            >
+              <MenuItem disabled value="">
+                <p>Placeholder</p>
+              </MenuItem>
+              {categories.map((category) => (
+                <MenuItem
+                  key={category._id}
+                  value={category._id}
+                // style={getStyles(name, personName, theme)}
+                >
+                  {category.title}
+                </MenuItem>
+              ))}
+            </Select>
+            {errors.categories && touched.categories && <span className="text-red-500 pt-2 block">{errors.categories}</span>}
+          </div>
         </div>
+
         <div className='w-full flex justify-between mb-5'>
           <div className='w-[45%]'>
             <label className={`${styles.label}`} htmlFor='level' >
@@ -229,7 +313,7 @@ const CourseInformation: FC<Props> = ({ courseInfo, setCourseInfo, active, setAc
           <label
             htmlFor="thumbnail"
             className={`w-full min-h-[10vh]  p-3 border flex items-center justify-center ${dragging ? "bg-blue-500" : errors.thumbnail && touched.thumbnail ? 'border-red-500' : 'dark:border-white border-[#00000026]'
-            }`}
+              }`}
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
@@ -238,7 +322,6 @@ const CourseInformation: FC<Props> = ({ courseInfo, setCourseInfo, active, setAc
               <img
                 src={values.thumbnail}
                 alt=""
-                layout="intrinsic"
                 className="max-h-full w-full object-cover"
               />
             ) : (
