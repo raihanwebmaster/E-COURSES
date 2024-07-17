@@ -16,7 +16,6 @@ type Props = {
 }
 
 const CoursePreview: FC<Props> = ({ active, setActive, courseData, handleCourseCreate, isLoading, isEdit }) => {
-    console.log(courseData, 'courseData')
     let discountPercentage;
     if (courseData?.estimatePrice === 0) {
         discountPercentage = 0;

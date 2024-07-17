@@ -37,7 +37,6 @@ const ProfileDetails: FC<Props> = ({ avatar, user }) => {
       refetch();
     }
     if (avatarError || profileError) {
-      console.log("error", avatarError || profileError);
       toast.error("Something went wrong!");
       
     }

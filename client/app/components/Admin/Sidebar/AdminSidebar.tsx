@@ -1,6 +1,6 @@
 "use client";
 import { FC, useEffect, useState } from "react";
-import { usePathname } from "next/navigation"; 
+import { usePathname } from "next/navigation";
 import { ProSidebar, Menu, MenuItem } from "react-pro-sidebar";
 import { Box, IconButton, Typography } from "@mui/material";
 import "react-pro-sidebar/dist/css/styles.css";
@@ -63,7 +63,6 @@ const Sidebar = () => {
   const { resolvedTheme: theme, setTheme } = useTheme();
   const [logOut, { isLoading, isSuccess, error, data }] = useLogOutMutation()
   const pathname = usePathname();
-  console.log(pathname,'pathname')
 
   useEffect(() => setMounted(true), []);
 
@@ -78,10 +77,12 @@ const Sidebar = () => {
 
   useEffect(() => {
     const savedSelected = localStorage.getItem("selectedSidebarItem");
-    if(pathname === '/admin'){
-      setSelected("Dashboard");
-    }else{
-      setSelected(savedSelected);
+    if (savedSelected) {
+      if (pathname === '/admin') {
+        setSelected("Dashboard");
+      } else {
+        setSelected(savedSelected);
+      }
     }
   }, []);
 

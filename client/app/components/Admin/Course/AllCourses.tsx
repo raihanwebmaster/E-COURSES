@@ -16,7 +16,6 @@ type Props = {}
 const AllCourses = (props: Props) => {
   const { resolvedTheme, setTheme } = useTheme()
   const { isLoading, data, refetch } = useGetAllCoursesQuery({}, { refetchOnMountOrArgChange: true });
-  console.log(data,'courses')
   const [open, setOpen] = useState(false);
   const [courseId, setCourseId] = useState("");
   const [deleteCourse, { isSuccess: deleteSuccess, error: deleteError }] = useDeleteCourseMutation({});
