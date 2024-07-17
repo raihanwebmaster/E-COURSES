@@ -10,8 +10,7 @@ import { IoMdAddCircleOutline } from 'react-icons/io';
 type Props = {}
 
 const EditFAQ = (props: Props) => {
-    const { data, refetch } = useGetLayoutQuery("FAQ", {
-    });
+    const { data, refetch } = useGetLayoutQuery("FAQ", { refetchOnMountOrArgChange: true });
     const [questions, setQuestions] = useState<any[]>([]);
     const [editLayouts, { isLoading: editLoading, isSuccess, error }] = useEditLayoutsMutation()
 
@@ -23,16 +22,16 @@ const EditFAQ = (props: Props) => {
 
     useEffect(() => {
         if (isSuccess) {
-          refetch()
-          toast.success("FAQ Updated successfully")
+            refetch()
+            toast.success("FAQ Updated successfully")
         }
         if (error) {
-          if ('data' in error) {
-            const errorData = error as any;
-            toast.error(errorData.data.message)
-          }
+            if ('data' in error) {
+                const errorData = error as any;
+                toast.error(errorData.data.message)
+            }
         }
-      }, [isSuccess, error])
+    }, [isSuccess, error])
 
     const toggleQuestion = (id: string) => {
         setQuestions((prevQuestions) =>
@@ -59,13 +58,18 @@ const EditFAQ = (props: Props) => {
     }
 
     const newFaqHandler = () => {
-        setQuestions((prevQuestions) => [
-            ...prevQuestions,
-            {
-                question: "",
-                answer: "",
-            },
-        ]);
+        if (questions[questions.length - 1].question === "" || questions[questions.length - 1].answer === "") {
+            toast.error("Question and Answer cannot be empty")
+            return
+        } else {
+            setQuestions((prevQuestions) => [
+                ...prevQuestions,
+                {
+                    question: "",
+                    answer: "",
+                },
+            ]);
+        }
     }
 
     const stripActiveProperty = (questions: any[]) => {
@@ -93,7 +97,7 @@ const EditFAQ = (props: Props) => {
 
 
     return (
-        <div className='w-[90%] 800px:w-[80%] m-auto'>
+        <div className='w-[90%] 800px:w-[80%] m-auto mt-[120px]'>
             <h1 className={`${styles.title} 800px:text-[40px]`}>
                 Frequently Asked Questions
             </h1>
@@ -156,24 +160,25 @@ const EditFAQ = (props: Props) => {
                 <br />
                 <br />
                 <IoMdAddCircleOutline className='dark:text-white text-black text-[25px] cursor-pointer ' onClick={newFaqHandler} />
+                <div className={`${styles.button
+                    } !w-[100px] !min-h-[40px] !h-[40px] dark:text-white text-black bg-[#cccccc34] ${areQuestionsUnchanged(data?.data?.faq, questions) || isAnyQuestionEmpty(questions)
+                        ? "!cursor-not-allowed"
+                        : "!cursor-pointer !bg-[#42d383]"
+                    } !rounded absolute bottom-12 right-[7rem]`}
+                    onClick={
+                        areQuestionsUnchanged(data?.data.faq, questions) || isAnyQuestionEmpty(questions)
+                            ? () => { }
+                            : handleEdit
+                    }
+                >
+                    {editLoading ? (
+                        <ImSpinner2 className="animate-spin text-white" size={24} />
+                    ) : (
+                        "Save"
+                    )}
+                </div>
             </div>
-            <div className={`${styles.button
-                } w-[100px] !min-h-[40px] !h-[40px] dark:text-white text-black bg-[#cccccc34] ${areQuestionsUnchanged(data?.data?.faq, questions) || isAnyQuestionEmpty(questions)
-                    ? "!cursor-not-allowed"
-                    : "!cursor-pointer bg-[#42d383]"
-                } !rounded absolute bottom-12 right-[7rem]`}
-                onClick={
-                    areQuestionsUnchanged(data?.data.faq, questions) || isAnyQuestionEmpty(questions)
-                        ? () => { }
-                        : handleEdit
-                }
-            >
-                {editLoading ? (
-                    <ImSpinner2 className="animate-spin text-white" size={24} />
-                ) : (
-                    "Save"
-                )}
-            </div>
+
         </div>
     )
 }
