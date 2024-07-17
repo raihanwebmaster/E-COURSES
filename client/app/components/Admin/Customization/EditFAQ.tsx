@@ -9,7 +9,7 @@ import { IoMdAddCircleOutline } from 'react-icons/io';
 
 type Props = {}
 
-const Faq = (props: Props) => {
+const EditFAQ = (props: Props) => {
     const { data, refetch } = useGetLayoutQuery("FAQ", {
     });
     const [questions, setQuestions] = useState<any[]>([]);
@@ -178,4 +178,4 @@ const Faq = (props: Props) => {
     )
 }
 
-export default Faq
+export default EditFAQ
