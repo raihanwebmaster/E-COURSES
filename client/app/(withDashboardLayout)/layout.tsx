@@ -10,7 +10,7 @@ import { BrowserView, MobileView, isBrowser, isMobile } from 'react-device-detec
 const Layout = ({ children }: { children: React.ReactNode }) => {
     return (
         <div>
-            <div className='flex min-h-screen' >
+            <div className='flex min-h-screen justify-evenly' >
                 <div className='1500px:w-[16%] w-1/5 ' >
                     <AdminSidebar />
                 </div>
