@@ -91,7 +91,44 @@ const createOderIntoDB = async (user: JwtPayload, orderData: IOrder) => {
 };
 
 const getAllOrdersFromDB = async () => {
-    const orders = await Order.find().sort({ createdAt: -1 });
+    const orders = await Order.aggregate([
+        {
+            $lookup: {
+                from: 'courses',
+                localField: 'courseId',
+                foreignField: '_id',
+                as: 'course'
+            }
+        },
+        {
+            $unwind: '$course'
+        },
+        {
+            $lookup: {
+                from: 'users',
+                localField: 'user',
+                foreignField: '_id',
+                as: 'user'
+            }
+        },
+        {
+            $unwind: '$user'
+        },
+        {
+            $sort: {
+                createdAt: -1
+            }
+        },
+        {
+            $project: {
+                _id: 1,
+                course: 1,
+                user: 1,
+                createdAt: 1,
+                updatedAt: 1
+            }
+        }
+    ]);
     return orders;
 
 }
