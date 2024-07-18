@@ -251,6 +251,7 @@ const CourseContent: FC<Props> = ({ courseContent, setCourseContent, active, set
                                                     placeholder='Video length in minutes...'
                                                     className={`${styles.input}`}
                                                     value={content.videoLength || ""}
+                                                    onWheel={(e) => (e.target as HTMLInputElement).blur()}
                                                     onChange={(e) => {
                                                         const updatedData = [...courseContent];
                                                         updatedData[index] = { ...updatedData[index], videoLength: Number(e.target.value) };

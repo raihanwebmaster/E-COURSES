@@ -169,6 +169,7 @@ const CourseInformation: FC<Props> = ({ courseInfo, setCourseInfo, active, setAc
               name='price'
               value={values.price || ''}
               onChange={handleChange}
+              onWheel={(e) => (e.target as HTMLInputElement).blur()}
               id='price'
               placeholder='9.99'
               className={`
@@ -186,6 +187,7 @@ const CourseInformation: FC<Props> = ({ courseInfo, setCourseInfo, active, setAc
               name='estimatePrice'
               value={values.estimatePrice || ''}
               onChange={handleChange}
+              onWheel={(e) => (e.target as HTMLInputElement).blur()}
               id='estimatePrice'
               placeholder='9.99'
               className={`
