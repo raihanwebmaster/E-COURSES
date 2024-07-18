@@ -91,6 +91,7 @@ const EditCourse: FC<Props> = ({ id }) => {
     useEffect(() => {
         if (isSuccess) {
             toast.success('Course Updated Successfully')
+            localStorage.setItem("selectedSidebarItem", "Live Courses"); 
             redirect('/admin/courses')
         }
         if(updateError) {

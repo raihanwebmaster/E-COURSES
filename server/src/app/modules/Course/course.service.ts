@@ -265,11 +265,6 @@ const getAllCoursesFromDB = async () => {
     // }
     const courses = await Course.find()
         .sort({ createdAt: -1 })
-        .populate({
-            path: 'categories',
-            match: { type: 'Categories' }, // Ensure we are populating from the correct Layout type
-            select: 'categories' // Only select the categories field
-        });
 
     // await redis.set("allCourses", JSON.stringify(courses));
     return courses;

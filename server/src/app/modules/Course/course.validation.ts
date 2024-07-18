@@ -25,7 +25,7 @@ const IReviewSchema = z.object({
 
 const ILinkSchema = z.object({
   title: z.string(),
-  url: z.string().url(),
+  url: z.string(),
 });
 
 const ICourseDataSchema = z.object({
@@ -47,7 +47,7 @@ const createCourseValidateionSchema = z.object({
     description: z.string(),
     categories: z.array(z.string()),
     price: z.number().positive(),
-    estimatePrice: z.number().positive().optional(),
+    estimatePrice: z.number().optional(),
     thumbnail: z.string(),
     tags: z.string(),
     level: z.string(),

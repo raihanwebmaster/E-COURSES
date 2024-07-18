@@ -1,6 +1,6 @@
-"use client"
+"use client";
 import { styles } from '@/app/styles/styles';
-import React, { FC } from 'react'
+import React, { FC } from 'react';
 import { AiOutlineMinusCircle, AiOutlinePlusCircle } from "react-icons/ai";
 
 type Props = {
@@ -20,24 +20,24 @@ const InputSection: FC<Props> = ({ title, items, onChange, onAdd, placeholder, o
         {
             items.map((item, index) => (
                 <div key={index} className="relative">
-                <input
-                    type="text"
-                    name={title}
-                    placeholder={placeholder}
-                    className={`${styles.input} my-2`}
-                    required
-                    value={item.title}
-                    onChange={(e) => onChange(e, index)}
-                />
-                {items.length > 1 && index === items.length - 1 && (
-                    <AiOutlineMinusCircle
-                        size="20px"
-                        className="dark:text-white text-black"
-                        style={{ position: "absolute", right: 10, top: "50%", transform: "translateY(-50%)", cursor: "pointer" }}
-                        onClick={() => onDelete(index)}
+                    <input
+                        type="text"
+                        name={title}
+                        placeholder={placeholder}
+                        className={`${styles.input} my-2`}
+                        required
+                        value={item.title}
+                        onChange={(e) => onChange(e, index)}
                     />
-                )}
-            </div>
+                    {items.length > 1 && index === items.length - 1 && (
+                        <AiOutlineMinusCircle
+                            size="20px"
+                            className="dark:text-white text-black"
+                            style={{ position: "absolute", right: 10, top: "50%", transform: "translateY(-50%)", cursor: "pointer" }}
+                            onClick={() => onDelete(index)}
+                        />
+                    )}
+                </div>
             ))
         }
         <AiOutlinePlusCircle

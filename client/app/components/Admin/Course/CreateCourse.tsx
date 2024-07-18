@@ -62,6 +62,7 @@ const CreateCourse = (props: Props) => {
   useEffect(() => {
     if (isSuccess) {
       toast.success("Course create successfully")
+      localStorage.setItem("selectedSidebarItem", "Live Courses"); 
       router.push(`/admin/courses`);
     }
     if (error) {

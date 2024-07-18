@@ -28,7 +28,7 @@ type Props = {
 const schema = Yup.object().shape({
   name: Yup.string().required("Please enter the course name!"),
   description: Yup.string().required("Please enter the course description!"),
-  price: Yup.number().required("Please enter the course price!"),
+  price: Yup.number().min(0.01, 'Please enter the course price!').required('Please enter the course price!'),
   estimatePrice: Yup.number().optional(),
   tags: Yup.string().required("Please enter the course tags!"),
   level: Yup.string().required("Please enter the course level!"),
@@ -50,7 +50,6 @@ const CourseInformation: FC<Props> = ({ courseInfo, setCourseInfo, active, setAc
       setCategories(data.data.categories);
     }
   }, [data]);
-  console.log(categories, 'categ')
 
   useEffect(() => {
     setInitialValues(courseInfo);
@@ -62,6 +61,9 @@ const CourseInformation: FC<Props> = ({ courseInfo, setCourseInfo, active, setAc
     enableReinitialize: true,
     validationSchema: schema,
     onSubmit: async (values) => {
+      if (typeof values.estimatePrice === "string" && (values.estimatePrice === "" || values.estimatePrice == null)) {
+        values.estimatePrice = 0;
+      }
       setCourseInfo(values)
       setActive(active + 1);
     }
@@ -165,7 +167,7 @@ const CourseInformation: FC<Props> = ({ courseInfo, setCourseInfo, active, setAc
             <input
               type='number'
               name='price'
-              value={values.price}
+              value={values.price || ''}
               onChange={handleChange}
               id='price'
               placeholder='9.99'
@@ -182,7 +184,7 @@ const CourseInformation: FC<Props> = ({ courseInfo, setCourseInfo, active, setAc
             <input
               type='number'
               name='estimatePrice'
-              value={values.estimatePrice}
+              value={values.estimatePrice || ''}
               onChange={handleChange}
               id='estimatePrice'
               placeholder='9.99'
@@ -220,6 +222,7 @@ const CourseInformation: FC<Props> = ({ courseInfo, setCourseInfo, active, setAc
               displayEmpty
               value={values.categories}
               onChange={handleCategoriesChange}
+              MenuProps={{ disableScrollLock: true }} 
               input={<OutlinedInput
                 className={`
                   ${errors.categories && touched.categories && "border-red-500"}

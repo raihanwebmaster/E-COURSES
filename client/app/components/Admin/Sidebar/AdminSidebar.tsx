@@ -84,7 +84,7 @@ const Sidebar = () => {
         setSelected(savedSelected);
       }
     }
-  }, []);
+  }, [pathname]);
 
   if (!mounted) {
     return null;

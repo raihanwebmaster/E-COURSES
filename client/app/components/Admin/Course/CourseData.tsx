@@ -1,16 +1,17 @@
-import { styles } from '@/app/styles/styles'
-import React, { FC } from 'react'
+"use client"
+import { styles } from '@/app/styles/styles';
+import React, { FC } from 'react';
 import { AiOutlinePlusCircle } from "react-icons/ai";
 import InputSection from './Input/InputSection';
 import toast from 'react-hot-toast';
 
 type Props = {
     benefits: { title: string }[],
-    setBenefits: (benefits: { title: string }[]) => void
+    setBenefits: (benefits: { title: string }[]) => void;
     preRequisites: { title: string }[],
-    setPreRequisites: (preRequisites: { title: string }[]) => void
-    active: number
-    setActive: (active: number) => void
+    setPreRequisites: (preRequisites: { title: string }[]) => void;
+    active: number;
+    setActive: (active: number) => void;
 }
 
 const CourseData: FC<Props> = ({ benefits, setBenefits, preRequisites, setPreRequisites, active, setActive }) => {
@@ -22,7 +23,7 @@ const CourseData: FC<Props> = ({ benefits, setBenefits, preRequisites, setPreReq
         setState: (state: { title: string }[]) => void
     ) => {
         const updatedState = [...state];
-        updatedState[index].title = e.target.value;
+        updatedState[index] = { ...updatedState[index], title: e.target.value }; 
         setState(updatedState);
     };
 
@@ -38,7 +39,7 @@ const CourseData: FC<Props> = ({ benefits, setBenefits, preRequisites, setPreReq
         if (benefits[benefits.length - 1]?.title !== "" && preRequisites[preRequisites.length - 1]?.title !== "") {
             setActive(active + 1);
         } else {
-            toast.error("Please fill the fields for go to next!")
+            toast.error("Please fill the fields to go to next step!")
         }
     };
 
@@ -47,9 +48,8 @@ const CourseData: FC<Props> = ({ benefits, setBenefits, preRequisites, setPreReq
         setState(updatedState);
     };
 
-
     return (
-        <div className='w-[80%] m-auto mt-24 block  '>
+        <div className='w-[80%] m-auto mt-24 block'>
             <InputSection
                 title="What are the benefits for the students in this course?"
                 items={benefits}
@@ -70,13 +70,13 @@ const CourseData: FC<Props> = ({ benefits, setBenefits, preRequisites, setPreReq
             <div className="w-full flex items-center justify-between">
                 <div
                     className="w-full 800px:w-[180px] flex items-center justify-center h-[40px] bg-[#37a39a] text-center text-[#fff] rounded mt-8 cursor-pointer"
-                    onClick={() => prevButton()}
+                    onClick={prevButton}
                 >
                     Prev
                 </div>
                 <div
                     className="w-full 800px:w-[180px] flex items-center justify-center h-[40px] bg-[#37a39a] text-center text-[#fff] rounded mt-8 cursor-pointer"
-                    onClick={() => handleOptions()}
+                    onClick={handleOptions}
                 >
                     Next
                 </div>
@@ -85,4 +85,4 @@ const CourseData: FC<Props> = ({ benefits, setBenefits, preRequisites, setPreReq
     )
 }
 
-export default CourseData
+export default CourseData;
