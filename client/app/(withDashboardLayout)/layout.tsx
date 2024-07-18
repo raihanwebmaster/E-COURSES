@@ -4,6 +4,7 @@ import React from 'react'
 import AdminSidebar from '../components/Admin/Sidebar/AdminSidebar'
 import DashboardHero from '../components/Admin/DashboardHero'
 import withAdmin from '../hooks/withAdmin'
+import { BrowserView, MobileView, isBrowser, isMobile } from 'react-device-detect';
 
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
@@ -15,7 +16,9 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                 </div>
                 <div className='w-[80%]' >
                     <DashboardHero />
-                    {children}
+                    <BrowserView>
+                        {children}
+                    </BrowserView>
                 </div>
             </div>
         </div>
