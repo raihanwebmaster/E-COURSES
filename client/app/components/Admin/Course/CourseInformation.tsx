@@ -6,6 +6,7 @@ import { useFormik } from 'formik';
 import { useTheme } from 'next-themes';
 import React, { FC, useState, useEffect } from 'react'
 import * as Yup from 'yup'
+import Image from 'next/image'
 
 type Props = {
   courseInfo: {
@@ -324,9 +325,12 @@ const CourseInformation: FC<Props> = ({ courseInfo, setCourseInfo, active, setAc
             onDrop={handleDrop}
           >
             {values.thumbnail ? (
-              <img
+              <Image
                 src={values.thumbnail}
                 alt=""
+                width= {1000}
+                height= {500}
+                quality={100}
                 className="max-h-full w-full object-cover"
               />
             ) : (

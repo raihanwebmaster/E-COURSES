@@ -56,8 +56,9 @@ const ProfileDetails: FC<Props> = ({ avatar, user }) => {
           <Image
             src={user.avatar || avatar ? user.avatar.url || avatar : avatarIcon}
             alt=""
-            width={120}
-            height={120}
+            width={500}
+            height={500}
+            quality={100} 
             className="w-[120px] h-[120px] cursor-pointer border-[3px] border-[#37a39a] rounded-full"
           />
           <input
