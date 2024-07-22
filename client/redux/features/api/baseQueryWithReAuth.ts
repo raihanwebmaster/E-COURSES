@@ -1,6 +1,5 @@
 import { fetchBaseQuery, FetchBaseQueryError, FetchArgs } from '@reduxjs/toolkit/query/react';
 import { Mutex } from 'async-mutex';
-import { store } from '@/redux/store';
 import { BaseQueryFn } from '@reduxjs/toolkit/query';
 import { userLoggedIn } from '../auth/authSlice';
 
@@ -8,7 +7,7 @@ const mutex = new Mutex();
 
 const baseQuery = fetchBaseQuery({
   baseUrl: process.env.NEXT_PUBLIC_SERVER_URL,
-  prepareHeaders: (headers, { getState }) => {
+  prepareHeaders: (headers) => {
     const token = localStorage.getItem('accessToken');
     if (token) {
       headers.set('authorization', `Bearer ${token}`);
@@ -36,7 +35,7 @@ const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQue
           // Fetch user details after refreshing the token
           const userResult = await baseQuery('/user/me', api, extraOptions);
           if (userResult.data) {
-            store.dispatch(userLoggedIn({
+            api.dispatch(userLoggedIn({
               user: (userResult.data as { data: { user: any } }).data.user,
               token: newAccessToken,
             }));
