@@ -39,7 +39,14 @@ export const coursesApi = apiSlice.injectEndpoints({
         credentials: "include" as const,
       }),
     }),
+    getCourseWithOutPurchase: builder.query({
+      query: (courseId) => ({
+        url: `/course/get-course-without-purchaseing/${courseId}`,
+        method: "GET",
+        credentials: "include" as const,
+      }),
+    }),
   }),
 });
 
-export const { useCreateCourseMutation, useGetAllCoursesQuery, useDeleteCourseMutation, useUpdateCourseMutation, useGetAllCoursesWithOutPurchaseQuery } = coursesApi;
+export const { useCreateCourseMutation, useGetAllCoursesQuery, useDeleteCourseMutation, useUpdateCourseMutation, useGetAllCoursesWithOutPurchaseQuery, useGetCourseWithOutPurchaseQuery } = coursesApi;
