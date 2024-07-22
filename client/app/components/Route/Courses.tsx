@@ -1,4 +1,4 @@
-import { useGetAllCoursesWithOutPurchaseQuery } from '@/redux/features/courses/coursesApi'
+import { useGetAllCoursesWithOutPurchaseQuery } from '../../../redux/features/courses/coursesApi'
 import React, { useEffect } from 'react'
 import CourseCard from './Course/CourseCard'
 

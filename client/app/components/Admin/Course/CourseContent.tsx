@@ -1,5 +1,5 @@
 "use client"
-import { styles } from '@/app/styles/styles';
+import { styles } from '../../../styles/styles';
 import React, { FC, useEffect } from 'react'
 import toast from 'react-hot-toast';
 import { AiOutlineDelete, AiOutlinePlusCircle } from 'react-icons/ai';

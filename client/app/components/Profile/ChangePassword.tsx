@@ -1,6 +1,6 @@
 
-import { styles } from "@/app/styles/styles";
-import { useChangePasswordMutation } from "@/redux/features/auth/authApi";
+import { styles } from "../../styles/styles";
+import { useChangePasswordMutation } from "../../../redux/features/auth/authApi";
 import { useFormik } from "formik";
 import React, { FC, useEffect, useState } from "react";
 import { toast } from "react-hot-toast";

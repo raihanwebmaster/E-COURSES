@@ -4,8 +4,8 @@ import { AiOutlineCamera } from "react-icons/ai";
 import avatarIcon from "../../../public/assests/avatar.png";
 import { toast } from "react-hot-toast";
 import { styles } from "../../../app/styles/styles";
-import { useEditProfileMutation, useUpdateAvatarMutation } from "@/redux/features/user/userApi";
-import { useLoadUserQuery } from "@/redux/features/api/appSlice";
+import { useEditProfileMutation, useUpdateAvatarMutation } from "../../../redux/features/user/userApi";
+import { useLoadUserQuery } from "../../../redux/features/api/appSlice";
 import { ImSpinner2 } from "react-icons/im";
 
 type Props = {

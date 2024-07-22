@@ -27,7 +27,7 @@ import { useSelector } from "react-redux";
 import Link from "next/link";
 import Image from "next/image";
 import { useTheme } from "next-themes";
-import { useLogOutMutation } from "@/redux/features/auth/authApi";
+import { useLogOutMutation } from "../../../../redux/features/auth/authApi";
 import { signOut } from "next-auth/react";
 import { useRouter } from 'next/navigation'
 

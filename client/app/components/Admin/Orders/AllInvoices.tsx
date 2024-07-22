@@ -4,7 +4,7 @@ import { useTheme } from "next-themes";
 import Loader from "../../Loader/Loader";
 import { format } from "timeago.js";
 import { AiOutlineMail } from "react-icons/ai";
-import { useGetAllOrdersQuery } from "@/redux/features/orders/ordersApi";
+import { useGetAllOrdersQuery } from "../../../../redux/features/orders/ordersApi";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 
 type Props = {

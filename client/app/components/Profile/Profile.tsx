@@ -1,7 +1,7 @@
 "use client"
 import React, { FC, useEffect } from 'react'
 import SidebarProfile from './SidebarProfile'
-import { useLogOutMutation } from '@/redux/features/auth/authApi'
+import { useLogOutMutation } from '../../../redux/features/auth/authApi'
 import { signOut } from 'next-auth/react'
 import ProfileDetails from './ProfileDetails'
 import ChangePassword from './ChangePassword'

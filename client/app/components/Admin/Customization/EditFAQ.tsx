@@ -1,5 +1,5 @@
-import { styles } from '@/app/styles/styles';
-import { useEditLayoutsMutation, useGetLayoutQuery } from '@/redux/features/layouts/layoutsApi';
+import { styles } from '../../../styles/styles';
+import { useEditLayoutsMutation, useGetLayoutQuery } from '../../../../redux/features/layouts/layoutsApi';
 import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast';
 import { AiOutlineDelete } from 'react-icons/ai';

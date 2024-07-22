@@ -1,6 +1,6 @@
 'use client'
-import DashboardWidget from '@/app/components/Admin/DashboardWidget'
-import Heading from '@/app/utils/Heading'
+import DashboardWidget from '../../components/Admin/DashboardWidget'
+import Heading from '../../utils/Heading'
 import React from 'react'
 
 type Props = {}

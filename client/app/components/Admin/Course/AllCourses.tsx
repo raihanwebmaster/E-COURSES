@@ -4,10 +4,10 @@ import { Button, Box, Modal } from '@mui/material'
 import { AiOutlineDelete } from 'react-icons/ai'
 import { FiEdit2 } from 'react-icons/fi'
 import { useTheme } from 'next-themes'
-import { useDeleteCourseMutation, useGetAllCoursesQuery } from '@/redux/features/courses/coursesApi'
+import { useDeleteCourseMutation, useGetAllCoursesQuery } from '../../../../redux/features/courses/coursesApi'
 import Loader from '../../Loader/Loader'
 import { format } from "timeago.js";
-import { styles } from '@/app/styles/styles'
+import { styles } from '../../../styles/styles'
 import toast from 'react-hot-toast'
 import Link from 'next/link'
 

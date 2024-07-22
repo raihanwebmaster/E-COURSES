@@ -1,5 +1,5 @@
-import { styles } from '@/app/styles/styles';
-import { useGetLayoutQuery } from '@/redux/features/layouts/layoutsApi';
+import { styles } from '../../../styles/styles';
+import { useGetLayoutQuery } from '../../../../redux/features/layouts/layoutsApi';
 import { OutlinedInput, Select, MenuItem } from '@mui/material';
 import { GridExpandMoreIcon } from '@mui/x-data-grid';
 import { useFormik } from 'formik';

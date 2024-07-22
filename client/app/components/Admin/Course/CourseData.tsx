@@ -1,5 +1,4 @@
 "use client"
-import { styles } from '@/app/styles/styles';
 import React, { FC } from 'react';
 import { AiOutlinePlusCircle } from "react-icons/ai";
 import InputSection from './Input/InputSection';

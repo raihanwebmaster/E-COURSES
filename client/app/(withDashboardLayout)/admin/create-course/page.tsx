@@ -1,6 +1,6 @@
 "use client"
-import CreateCourse from '@/app/components/Admin/Course/CreateCourse'
-import Heading from '@/app/utils/Heading'
+import CreateCourse from '../../../components/Admin/Course/CreateCourse'
+import Heading from '../../../utils/Heading'
 import React from 'react'
 type Props = {}
 

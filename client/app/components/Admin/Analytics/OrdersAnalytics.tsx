@@ -1,7 +1,7 @@
-import { useGetOrdersAnalyticsQuery } from '@/redux/features/analytics/analyticsApi';
+import { useGetOrdersAnalyticsQuery } from '../../../../redux/features/analytics/analyticsApi';
 import React, { FC } from 'react'
 import Loader from '../../Loader/Loader';
-import { styles } from '@/app/styles/styles';
+import { styles } from '../../../styles/styles';
 import { CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 
 type Props = {

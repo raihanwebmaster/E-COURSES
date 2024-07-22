@@ -6,9 +6,9 @@ import { AiOutlineDelete, AiOutlineMail } from 'react-icons/ai'
 import { TiDeleteOutline } from 'react-icons/ti'
 import Loader from '../../Loader/Loader'
 import { format } from "timeago.js";
-import { useDeleteUserMutation, useGetAllUsersQuery, useUpdateUserRoleMutation } from '@/redux/features/user/userApi'
+import { useDeleteUserMutation, useGetAllUsersQuery, useUpdateUserRoleMutation } from '../../../../redux/features/user/userApi'
 import { useTheme } from 'next-themes'
-import { styles } from '@/app/styles/styles'
+import { styles } from '../../../styles/styles'
 import toast from 'react-hot-toast'
 import { useSelector } from 'react-redux'
 

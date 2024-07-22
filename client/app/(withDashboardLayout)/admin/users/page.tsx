@@ -1,8 +1,8 @@
 'use client'
 import React from 'react'
-import Heading from '@/app/utils/Heading'
-import AllUsers from '@/app/components/Admin/Users/AllUsers'
-import withAdmin from '@/app/hooks/withAdmin'
+import Heading from '../../../utils/Heading'
+import AllUsers from '../../../components/Admin/Users/AllUsers'
+import withAdmin from '../../../hooks/withAdmin'
 
 type Props = {}
 

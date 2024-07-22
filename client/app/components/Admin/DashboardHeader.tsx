@@ -1,5 +1,5 @@
 "use client";
-import ThemeSwitcher from "@/app/utils/ThemeSwitcher";
+import ThemeSwitcher from "../../utils/ThemeSwitcher";
 import React, { FC, useEffect, useState } from "react";
 import { IoMdNotificationsOutline } from "react-icons/io";
 import { format } from "timeago.js";

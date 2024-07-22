@@ -3,7 +3,7 @@ import React, { FC, useState } from 'react'
 import Heading from '../../utils/Heading'
 import Profile from '../../components/Profile/Profile'
 import { useSelector } from 'react-redux'
-import withAuth from '@/app/hooks/withAuth'
+import withAuth from '../../hooks/withAuth'
 
 type Props = {}
 

@@ -1,6 +1,6 @@
 import React, { FC } from 'react'
-import { useGetUsersAnalyticsQuery } from '@/redux/features/analytics/analyticsApi';
-import { styles } from '@/app/styles/styles';
+import { useGetUsersAnalyticsQuery } from '../../../../redux/features/analytics/analyticsApi';
+import { styles } from '../../../styles/styles';
 import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import Loader from '../../Loader/Loader';
 

@@ -1,5 +1,5 @@
 'use client'
-import { useGetCourseWithOutPurchaseQuery } from '@/redux/features/courses/coursesApi';
+import { useGetCourseWithOutPurchaseQuery } from '../../../redux/features/courses/coursesApi';
 import React, { FC } from 'react'
 
 type Props = {

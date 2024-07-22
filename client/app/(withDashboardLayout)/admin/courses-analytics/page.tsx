@@ -1,7 +1,7 @@
 'use client'
 import React, { FC } from 'react'
-import Heading from '@/app/utils/Heading'
-import CoursesAnalytics from '@/app/components/Admin/Analytics/CoursesAnalytics'
+import Heading from '../../../utils/Heading'
+import CoursesAnalytics from '../../../components/Admin/Analytics/CoursesAnalytics'
 
 type Props = {}
 

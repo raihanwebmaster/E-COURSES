@@ -1,4 +1,4 @@
-import { useGetCoursesAnalyticsQuery } from '@/redux/features/analytics/analyticsApi'
+import { useGetCoursesAnalyticsQuery } from '../../../../redux/features/analytics/analyticsApi'
 import React from 'react'
 import {
   BarChart,
@@ -10,7 +10,7 @@ import {
   Label,
 } from "recharts"
 import Loader from '../../Loader/Loader'
-import { styles } from '@/app/styles/styles'
+import { styles } from '../../../styles/styles'
 
 type Props = {}
 

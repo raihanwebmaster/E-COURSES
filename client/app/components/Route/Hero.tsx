@@ -1,7 +1,7 @@
 /** @format */
 
 "use client";
-import { useGetLayoutQuery } from "@/redux/features/layouts/layoutsApi";
+import { useGetLayoutQuery } from "../../../redux/features/layouts/layoutsApi";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";

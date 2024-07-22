@@ -1,6 +1,6 @@
 "use client";
-import EditHero from '@/app/components/Admin/Customization/EditHero';
-import Heading from '@/app/utils/Heading';
+import EditHero from '../../../components/Admin/Customization/EditHero';
+import Heading from '../../../utils/Heading';
 import React from 'react'
 
 type Props = {}

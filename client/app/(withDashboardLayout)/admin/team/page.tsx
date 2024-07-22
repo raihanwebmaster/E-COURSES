@@ -1,7 +1,7 @@
 "use client"
 import React from 'react'
-import Heading from '@/app/utils/Heading'
-import AllUsers from '@/app/components/Admin/Users/AllUsers'
+import Heading from '../../../utils/Heading'
+import AllUsers from '../../../components/Admin/Users/AllUsers'
 
 type Props = {}
 

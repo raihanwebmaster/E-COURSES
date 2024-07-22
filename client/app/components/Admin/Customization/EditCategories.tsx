@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { useEditLayoutsMutation, useGetLayoutQuery } from '@/redux/features/layouts/layoutsApi';
-import { styles } from '@/app/styles/styles';
+import { useEditLayoutsMutation, useGetLayoutQuery } from '../../../../redux/features/layouts/layoutsApi';
+import { styles } from '../../../styles/styles';
 import { AiOutlineDelete } from 'react-icons/ai';
 import toast from 'react-hot-toast';
 import { IoMdAddCircleOutline } from 'react-icons/io';

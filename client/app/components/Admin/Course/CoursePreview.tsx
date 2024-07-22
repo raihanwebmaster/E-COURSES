@@ -1,6 +1,6 @@
-import { styles } from '@/app/styles/styles'
-import CoursePlayer from '@/app/utils/CoursePlayer'
-import Ratings from '@/app/utils/Ratings'
+import { styles } from '../../../styles/styles'
+import CoursePlayer from '../../../utils/CoursePlayer'
+import Ratings from '../../../utils/Ratings'
 import React, { FC, useEffect } from 'react'
 import { ImSpinner2 } from 'react-icons/im';
 import { IoCheckmarkDoneOutline } from "react-icons/io5";

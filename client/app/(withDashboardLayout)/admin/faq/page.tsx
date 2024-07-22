@@ -1,7 +1,7 @@
 "use client";
 import React from 'react'
-import EditFAQ from '@/app/components/Admin/Customization/EditFAQ';
-import Heading from '@/app/utils/Heading';
+import EditFAQ from '../../../components/Admin/Customization/EditFAQ';
+import Heading from '../../../utils/Heading';
 
 type Props = {}
 

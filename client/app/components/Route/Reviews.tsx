@@ -1,5 +1,5 @@
 
-import { styles } from "@/app/styles/styles";
+import { styles } from "../../styles/styles";
 import Image from "next/image";
 import React from "react";
 import ReviewCard from "./Review/ReviewCard";
