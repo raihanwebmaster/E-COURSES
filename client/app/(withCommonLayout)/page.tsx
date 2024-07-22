@@ -5,7 +5,6 @@ import Hero from "../components/Route/Hero";
 import Courses from "../components/Route/Courses";
 import Reviews from "../components/Route/Reviews";
 import Faq from "../components/Route/FAQ/Faq";
-import Footer from "../components/Footer/Footer";
 
 interface Props{}
 
@@ -17,7 +16,6 @@ const HomePage: FC<Props> = (props)  => {
       <Courses />
       <Reviews />
       <Faq />
-      <Footer/>
     </div>
   )
 }

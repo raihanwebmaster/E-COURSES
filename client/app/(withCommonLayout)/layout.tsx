@@ -12,6 +12,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         <div>
             <Header open={open} setOpen={setOpen} activeItem={activeItem} route={route} setRoute={setRoute} />
             {children}
+            <Footer/>
         </div>
     )
 }
