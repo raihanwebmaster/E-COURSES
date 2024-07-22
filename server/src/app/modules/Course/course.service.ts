@@ -29,6 +29,8 @@ const createCourseIntoDB = async (course: any) => {
         }
     }
     const createCourese = await Course.create(course)
+    const courses = await Course.find().select("-courseData.videoUrl  -courseData.videoPlayer -courseData.links -courseData.suggestion -courseData.questions");
+    await redis.set("courses", JSON.stringify(courses));
     return createCourese;
 };
 const updateCourseFromDB = async (couserId: string, course: any) => {
