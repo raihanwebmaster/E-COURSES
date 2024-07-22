@@ -1,16 +1,20 @@
-'use client'
-import { useGetCourseWithOutPurchaseQuery } from '../../../redux/features/courses/coursesApi';
-import React, { FC } from 'react'
+/** @format */
+
+"use client";
+import React, { FC } from "react";
+import Loader from "../Loader/Loader";
 
 type Props = {
-    id:string
-}
+  id: string;
+  course: any;
+  isLoading: boolean;
+};
 
-const CourseDetailsPage:FC<Props> = ({id}) => {
-   const {data} = useGetCourseWithOutPurchaseQuery(id)
-  return (
-    <div>CourseDetailsPage</div>
-  )
-}
+const CourseDetailsPage: FC<Props> = ({ id, course, isLoading }) => {
+  const [route, setRoute] = React.useState("Login");
+  const [open, setOpen] = React.useState(false);
 
-export default CourseDetailsPage
+  return isLoading ? <Loader /> : <>Course Details Page</>;
+};
+
+export default CourseDetailsPage;
