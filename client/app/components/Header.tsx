@@ -85,7 +85,10 @@ const Header: FC<Props> = ({ activeItem, open, setOpen, route, setRoute }) => {
 
     return (
         <div className='w-full relative'>
-            <div className={`${active ? "dark:bg-opacity-50 dark:bg-gradient-to-b dark:from-gray-900 dark:to-black fixed top-o left-0 w-full h-[80px] z-[80] border-b dark:border-[#ffffff1c]  shadow-xl transition duration-500 " : "w-full border-b dark:border-[#ffffff1c] h-[80px] z-[80] dark:shrink"}`}>
+            <div className={`${active
+                    ? "dark:bg-opacity-50 bg-white dark:bg-gradient-to-b dark:from-gray-900 dark:to-black fixed top-0 left-0 w-full h-[80px] z-[80] border-b dark:border-[#ffffff1c] shadow-xl transition duration-500"
+                    : "w-full border-b dark:border-[#ffffff1c] h-[80px] z-[80] dark:shadow"
+                }`}>
                 <div className='w-[95%] 800px:w-[92%] m-auto py-2 h-full'>
                     <div className='w-full h-[80px] flex items-center justify-between p-3'>
                         <div>
@@ -104,12 +107,12 @@ const Header: FC<Props> = ({ activeItem, open, setOpen, route, setRoute }) => {
                                 user ? (
                                     <Link href='/profile'>
                                         <div className='cursor-pointer'>
-                                            <Image src={user?.avatar ? user.avatar?.url : avatar} alt='avatar' width={25} height={25} className='rounded-full' style={{border: activeItem === 5 ? "2px solid #37a39a" : ""}}/>
+                                            <Image src={user?.avatar ? user.avatar?.url : avatar} alt='avatar' width={25} height={25} className='rounded-full' style={{ border: activeItem === 5 ? "2px solid #37a39a" : "" }} />
                                         </div>
                                     </Link>
                                 ) : (
 
-                                    <HiOutlineUserCircle size={25} className='hidden 800px:block cursor-pointer dark:text-white text-black' style={{border: activeItem === 5 ? "2px solid #37a39a" : ""}} onClick={() => setOpen(true)}  />
+                                    <HiOutlineUserCircle size={25} className='hidden 800px:block cursor-pointer dark:text-white text-black' style={{ border: activeItem === 5 ? "2px solid #37a39a" : "" }} onClick={() => setOpen(true)} />
                                 )
                             }
                         </div>
