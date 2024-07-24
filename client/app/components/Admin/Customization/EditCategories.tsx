@@ -30,18 +30,18 @@ const EditCategories = (props: Props) => {
       }
     }
   }, [isSuccess, error])
-  const handleCategoriesAdd = (id: string, value: string) => {
+  const handleCategoriesAdd = (prevIndex: number, value: string) => {
     setCategories((prevCategories) =>
-      prevCategories.map((item) =>
-        item._id === id ? { ...item, title: value } : item
+      prevCategories.map((item, index) =>
+        index === prevIndex ? { ...item, title: value } : item
       )
     );
   }
   const newCategoriesHandler = () => {
-    if (categories[categories.length - 1].title === "") {
-      toast.error("Category title cannot be empty")
+    if (categories.length === 0 || categories[categories.length - 1].title !== "") {
+      setCategories((prevCategory: any) => [...prevCategory, { title: "" }]);
     } else {
-      setCategories((prevCategory: any) => [...prevCategory, { title: "" }])
+      toast.error("Category title cannot be empty");
     }
   }
   const areCategoriesUnchanged = (oldCategories: any[], newCategories: any[]) => {
@@ -68,7 +68,7 @@ const EditCategories = (props: Props) => {
                   className={`${styles.input} !w-[unset] !border-none !text-[20px]`}
                   value={item.title}
                   onChange={(e) =>
-                    handleCategoriesAdd(item._id, e.target.value)
+                    handleCategoriesAdd(index, e.target.value)
                   }
                   placeholder="Enter category title..."
                 />
@@ -76,7 +76,7 @@ const EditCategories = (props: Props) => {
                   className="dark:text-white text-black text-[18px] cursor-pointer"
                   onClick={() => {
                     setCategories((prevCategory: any) =>
-                      prevCategory.filter((i: any) => i._id !== item._id)
+                      prevCategory.filter((_: any, i: number) => i !== index)
                     );
                   }}
                 />
