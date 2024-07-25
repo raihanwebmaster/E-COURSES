@@ -2,39 +2,44 @@
 
 "use client";
 import React, { FC } from "react";
-import Loader from "../Loader/Loader";
 import { useSelector } from "react-redux";
 import Ratings from "@/app/utils/Ratings";
-import { IoCheckmarkDoneOutline } from "react-icons/io5";
-import Image from "next/image";
+import { IoCheckmarkDoneOutline, IoCloseOutline } from "react-icons/io5";
 import { format } from "timeago.js";
 import { VscVerifiedFilled } from "react-icons/vsc";
 import CoursePlayer from "@/app/utils/CoursePlayer";
 import Link from "next/link";
 import { styles } from "@/app/styles/styles";
 import CourseContentList from "./CourseContentList";
+import { Elements } from "@stripe/react-stripe-js";
+import CheckOutForm from "../Payment/CheckOutForm";
 
 type Props = {
   id: string;
   course: any;
-  isLoading: boolean;
+  stripePromise: any;
+  clientSecret: string | null;
 };
 
-const CourseDetails: FC<Props> = ({ id, course, isLoading }) => {
+const CourseDetails: FC<Props> = ({ id, course, stripePromise, clientSecret }) => {
   const [route, setRoute] = React.useState("Login");
   const [open, setOpen] = React.useState(false);
   const { user } = useSelector((state: any) => state.auth);
-  console.log(course, 'course')
   const discountPercentage = course?.estimatePrice
     ? ((course.estimatePrice - course.price) / course.estimatePrice) * 100
     : 0;
   const discountPercentengePrice = discountPercentage.toFixed(0);
   const isPurchased = user?.courses?.find((item: any) => item.courseId === id);
   const handleOrder = (e: any) => {
-    console.log("Order");
+    if (user) {
+      setOpen(true);
+    } else {
+      setRoute("Login");
+      // openAuthModal(true);
+    }
   }
 
-  return isLoading ? <Loader /> :
+  return (
     <div>
       <div className="w-[90%] 800px:w-[90%] m-auto py-5 " >
         <div className="w-full flex flex-col-reverse 800px:flex-row " >
@@ -121,16 +126,16 @@ const CourseDetails: FC<Props> = ({ id, course, isLoading }) => {
                       <div className="flex">
                         <div className="w-[50px] h-[50px]">
                           {/* <Image
-                          src={
-                            item.user.avatar
-                              ? item.user.avatar.url
-                              : "https://res.cloudinary.com/dshp9jnuy/image/upload/v1665822253/avatars/nrxsg8sd9iy10bbsoenn.png"
-                          }
-                          width={50}
-                          height={50}
-                          alt=""
-                          className="w-[50px] h-[50px] rounded-full object-cover"
-                        /> */}
+                        src={
+                          item.user.avatar
+                            ? item.user.avatar.url
+                            : "https://res.cloudinary.com/dshp9jnuy/image/upload/v1665822253/avatars/nrxsg8sd9iy10bbsoenn.png"
+                        }
+                        width={50}
+                        height={50}
+                        alt=""
+                        className="w-[50px] h-[50px] rounded-full object-cover"
+                      /> */}
                           <div className="w-[50px] h-[50px] bg-slate-600 rounded-[50px] flex items-center justify-center cursor-pointer">
                             <h1 className="uppercase text-[18px] text-black dark:text-white">
                               {item.user.name.slice(0, 2)}
@@ -160,32 +165,32 @@ const CourseDetails: FC<Props> = ({ id, course, isLoading }) => {
                         </div>
                       </div>
                       {/* {item.commentReplies.map((i: any, index: number) => (
-                      <div className="w-full flex 800px:ml-16 my-5" key={index}>
-                        <div className="w-[50px] h-[50px]">
-                          <Image
-                            src={
-                              i.user.avatar
-                                ? i.user.avatar.url
-                                : "https://res.cloudinary.com/dshp9jnuy/image/upload/v1665822253/avatars/nrxsg8sd9iy10bbsoenn.png"
-                            }
-                            width={50}
-                            height={50}
-                            alt=""
-                            className="w-[50px] h-[50px] rounded-full object-cover"
-                          />
-                        </div>
-                        <div className="pl-2">
-                          <div className="flex items-center">
-                            <h5 className="text-[20px]">{i.user.name}</h5>{" "}
-                            <VscVerifiedFilled className="text-[#0095F6] ml-2 text-[20px]" />
-                          </div>
-                          <p>{i.comment}</p>
-                          <small className="text-[#ffffff83]">
-                            {format(i.createdAt)} •
-                          </small>
-                        </div>
+                    <div className="w-full flex 800px:ml-16 my-5" key={index}>
+                      <div className="w-[50px] h-[50px]">
+                        <Image
+                          src={
+                            i.user.avatar
+                              ? i.user.avatar.url
+                              : "https://res.cloudinary.com/dshp9jnuy/image/upload/v1665822253/avatars/nrxsg8sd9iy10bbsoenn.png"
+                          }
+                          width={50}
+                          height={50}
+                          alt=""
+                          className="w-[50px] h-[50px] rounded-full object-cover"
+                        />
                       </div>
-                    ))} */}
+                      <div className="pl-2">
+                        <div className="flex items-center">
+                          <h5 className="text-[20px]">{i.user.name}</h5>{" "}
+                          <VscVerifiedFilled className="text-[#0095F6] ml-2 text-[20px]" />
+                        </div>
+                        <p>{i.comment}</p>
+                        <small className="text-[#ffffff83]">
+                          {format(i.createdAt)} •
+                        </small>
+                      </div>
+                    </div>
+                  ))} */}
                     </div>
                   )
                 )}
@@ -241,7 +246,29 @@ const CourseDetails: FC<Props> = ({ id, course, isLoading }) => {
           </div>
         </div>
       </div>
-    </div>;
+      {open && (
+        <div className="w-full h-screen bg-[#00000036] fixed top-0 left-0 z-50 flex items-center justify-center">
+          <div className="w-[500px] min-h-[500px] bg-white rounded-xl shadow p-3">
+            <div className="w-full flex justify-end">
+              <IoCloseOutline
+                size={40}
+                className="text-black cursor-pointer"
+                onClick={() => setOpen(false)}
+              />
+            </div>
+            <div className="w-full">
+              {stripePromise && clientSecret && (
+                <Elements stripe={stripePromise} options={{ clientSecret }}>
+                  <CheckOutForm setOpen={setOpen} data={course} user={user} />
+                </Elements>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+
 };
 
 export default CourseDetails;

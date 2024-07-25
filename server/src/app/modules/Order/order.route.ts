@@ -18,5 +18,14 @@ router.get("/all-orders",
     OderControllers.getAllOrders
 );
 
+router.get("/stripe-publishable-key",
+    OderControllers.sendStripePublishableKey
+);
+
+router.post("/payment",
+    auth(USER_ROLE.user, USER_ROLE.admin),
+    OderControllers.newPayment
+);
+
 
 export const OrderRoutes = router;

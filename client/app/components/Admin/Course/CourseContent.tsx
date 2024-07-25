@@ -322,7 +322,7 @@ const CourseContent: FC<Props> = ({ courseContent, setCourseContent, active, set
                                                                 updatedData[index] = { ...updatedData[index], links: updatedLinks };
                                                                 setCourseContent(updatedData);
                                                             }}
-                                                        
+
                                                         />
 
                                                     </div>

@@ -27,7 +27,30 @@ const getAllOrders = catchAsync(async (req, res) => {
     });
 });
 
+const sendStripePublishableKey = catchAsync(async (req, res) => {
+    const stripePublishableKey = await OrderServices.getStripePublishableKey();
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: 'Stripe publishable key is retrieved successfully',
+        data: stripePublishableKey,
+    });
+});
+
+const newPayment = catchAsync(async (req, res) => {
+    const paymentData = req.body;
+    const payment = await OrderServices.createPayment(paymentData);
+    sendResponse(res, {
+        statusCode: httpStatus.CREATED,
+        success: true,
+        message: 'Payment is created succesfully',
+        data: payment,
+    });
+});
+
 export const OderControllers = {
     createOder,
-    getAllOrders
+    getAllOrders,
+    sendStripePublishableKey,
+    newPayment
 };

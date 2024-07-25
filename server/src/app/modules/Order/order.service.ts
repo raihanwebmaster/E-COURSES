@@ -12,8 +12,22 @@ import { sendMail } from '../../utils/sendMail';
 import { Notification } from '../Notification/notification.model';
 import mongoose from 'mongoose';
 import { IOrder } from './order.interface';
+import config from '../../config';
+const stripe = require("stripe")(config.stripe_secret_key);
 
-const createOderIntoDB = async (user: JwtPayload, orderData: IOrder) => {
+const createOderIntoDB = async (user: JwtPayload, orderData: any,) => {
+    if (orderData.paymentInfo) {
+        if ("id" in orderData.paymentInfo) {
+            const paymentIntentId = orderData.paymentInfo.id;
+            const paymentIntent = await stripe.paymentIntents.retrieve(
+                paymentIntentId
+            );
+
+            if (paymentIntent.status !== "succeeded") {
+                throw new AppError(httpStatus.BAD_REQUEST, 'Payment not authorized');
+            }
+        }
+    }
     const isExistUser = await User.isUserExistsByEmail(user.email);
     if (!isExistUser) {
         throw new AppError(httpStatus.NOT_FOUND, 'User not found');
@@ -133,7 +147,34 @@ const getAllOrdersFromDB = async () => {
 
 }
 
+// send stripe pubnlisheable key
+const getStripePublishableKey = async () => {
+    const stripePublishableKey = config.stripe_publishable_key;
+    return stripePublishableKey;
+};
+
+const createPayment = async (paymentInfo: any) => {
+    const myPayment = await stripe.paymentIntents.create({
+        amount: paymentInfo.amount,
+        currency: "USD",
+        description: "E-Courses course services",
+        metadata: {
+            company: "E-Courses"
+        },
+        automatic_payment_methods: {
+            enabled: true,
+        },
+    });
+
+    return {
+        clientSecret: myPayment.client_secret
+    };
+
+}
+
 export const OrderServices = {
     createOderIntoDB,
-    getAllOrdersFromDB
+    getAllOrdersFromDB,
+    getStripePublishableKey,
+    createPayment
 };

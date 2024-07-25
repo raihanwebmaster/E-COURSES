@@ -15,6 +15,8 @@
     "@mui/material": "^5.15.21",
     "@mui/x-data-grid": "^5.0.0",
     "@reduxjs/toolkit": "^2.2.6",
+    "@stripe/react-stripe-js": "^2.7.3",
+    "@stripe/stripe-js": "^4.1.0",
     "async-mutex": "^0.5.0",
     "axios": "^1.7.2",
     "formik": "^2.4.6",
@@ -30,7 +32,6 @@
     "react-pro-sidebar": "^0.7.1",
     "react-redux": "^9.1.2",
     "recharts": "^2.12.7",
-    "redux-devtools-extension": "^2.13.9",
     "timeago.js": "^4.0.2",
     "yup": "^1.4.0"
   },
