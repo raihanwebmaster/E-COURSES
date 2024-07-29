@@ -27,7 +27,7 @@ const CoursePlayer: FC<Props> = ({ videoUrl, title }) => {
             })
     }, [videoUrl])
     return (
-        <div style={{ paddingTop: "41%", position: "relative", minHeight: "300px" }}>
+        <div style={{ paddingTop: "41%", position: "relative", overflow: "hidden" }}>
             {
                 isLoading ? <div className="flex justify-center items-center absolute top-0 left-0 w-full h-full">
                     <ImSpinner2 className="animate-spin text-5xl text-white" />
@@ -38,7 +38,7 @@ const CoursePlayer: FC<Props> = ({ videoUrl, title }) => {
                                 src={`https://player.vdocipher.com/v2/?otp=${videoData?.otp}&playbackInfo=${videoData.playbackInfo}&player=${process.env.NEXT_PUBLIC_VDOCIPHER_PLAYER_ID}`}
                                 style={{
                                     border: 0,
-                                    width: "90%",
+                                    width: "100%",
                                     height: "100%",
                                     position: "absolute",
                                     top: 0,
