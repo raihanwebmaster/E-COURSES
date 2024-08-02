@@ -87,7 +87,15 @@ const getCourseByUserFromDB = async (courseId: string, userCourseList: string[])
     if (!courseExist) {
         throw new AppError(httpStatus.NOT_FOUND, 'You are not eligible to access this course');
     }
-    const course = await Course.findById(courseId);
+    const course = await Course.findById(courseId).populate({
+        path: 'courseData.questions.user',
+        model: 'User',
+        select: '-password'
+    }).populate({
+        path: 'courseData.questions.questionReplies.user',
+        model: 'User',
+        select: '-password'
+    });
     const content = course?.courseData;
     return content;
 };

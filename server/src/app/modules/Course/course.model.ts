@@ -6,14 +6,14 @@ import { IReview, ICourse, ICourseData, ILink, IQuestion, IReply } from './cours
 const ReplySchema: Schema<IReply> = new Schema({
     user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     answer: { type: String, required: true }
-});
+}, { timestamps: true });
 
 const QuestionSchema: Schema<IQuestion> = new Schema({
     user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     question: { type: String, required: true },
     questionReplies: [ReplySchema]
 
-});
+}, { timestamps: true });
 
 // Review Schema
 const ReviewSchema = new Schema<IReview>({
@@ -21,7 +21,7 @@ const ReviewSchema = new Schema<IReview>({
     rating: { type: Number, default: 0, required: true },
     comment: { type: String, required: true },
     commentReplies: [ReplySchema]
-});
+},{ timestamps: true });
 
 // Link Schema
 const LinkSchema = new Schema<ILink>({

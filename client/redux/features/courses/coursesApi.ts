@@ -25,7 +25,7 @@ export const coursesApi = apiSlice.injectEndpoints({
       }),
     }),
     updateCourse: builder.mutation({
-      query: ({id, course}) => ({
+      query: ({ id, course }) => ({
         url: `/course/update-course/${id}`,
         method: "PUT",
         body: course,
@@ -46,14 +46,30 @@ export const coursesApi = apiSlice.injectEndpoints({
         credentials: "include" as const,
       }),
     }),
-    getCourseContent : builder.query({
+    getCourseContent: builder.query({
       query: (courseId) => ({
         url: `/course/get-course-by-user/${courseId}`,
         method: "GET",
         credentials: "include" as const,
       }),
+    }),
+    addNewQuestion: builder.mutation({
+      query: ({ question, courseId, contentId }) => ({
+        url: "/course/add-question",
+        method: "PUT",
+        body: { question, courseId, contentId },
+        credentials: "include" as const,
+      }),
+    }),
+    addAnswerInQuestion: builder.mutation({
+      query: ({ answer, courseId, contentId, questionId }) => ({
+        url: "/course/add-answer",
+        method: "PUT",
+        body: { answer, courseId, contentId, questionId },
+        credentials: "include" as const,
+      })
     })
   }),
 });
 
-export const { useCreateCourseMutation, useGetAllCoursesQuery, useDeleteCourseMutation, useUpdateCourseMutation, useGetAllCoursesWithOutPurchaseQuery, useGetCourseWithOutPurchaseQuery, useGetCourseContentQuery } = coursesApi;
+export const { useCreateCourseMutation, useGetAllCoursesQuery, useDeleteCourseMutation, useUpdateCourseMutation, useGetAllCoursesWithOutPurchaseQuery, useGetCourseWithOutPurchaseQuery, useGetCourseContentQuery, useAddNewQuestionMutation, useAddAnswerInQuestionMutation } = coursesApi;

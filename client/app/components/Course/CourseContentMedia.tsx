@@ -1,10 +1,13 @@
 import { styles } from '@/app/styles/styles'
 import CoursePlayer from '@/app/utils/CoursePlayer'
 import Ratings from '@/app/utils/Ratings'
-import { useGetCourseWithOutPurchaseQuery } from '@/redux/features/courses/coursesApi'
+import { useAddAnswerInQuestionMutation, useAddNewQuestionMutation, useGetCourseWithOutPurchaseQuery } from '@/redux/features/courses/coursesApi'
 import Image from 'next/image'
-import React, { FC, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
+import toast from 'react-hot-toast'
 import { AiFillStar, AiOutlineArrowLeft, AiOutlineArrowRight, AiOutlineStar } from 'react-icons/ai'
+import { BiMessage } from 'react-icons/bi'
+import { VscVerifiedFilled } from 'react-icons/vsc'
 import { useSelector } from 'react-redux'
 import { format } from 'timeago.js'
 
@@ -12,10 +15,11 @@ type Props = {
     courseContent: any,
     activeVideo: number,
     setActiveVideo: (activeVideo: number) => void,
-    id: string
+    id: string,
+    refetch?: any
 }
 
-const CourseContentMedia: FC<Props> = ({ courseContent, activeVideo, setActiveVideo, id }) => {
+const CourseContentMedia: FC<Props> = ({ courseContent, activeVideo, setActiveVideo, id, refetch }) => {
     const [activeBar, setActiveBar] = React.useState(0)
     const { user } = useSelector((state: any) => state.auth);
     const [question, setQuestion] = React.useState("")
@@ -29,6 +33,60 @@ const CourseContentMedia: FC<Props> = ({ courseContent, activeVideo, setActiveVi
     );
     const [rating, setRating] = useState(1);
     const [review, setReview] = useState("");
+    const [addNewQuestion, { isSuccess: addQSuccess, error: addQError, isLoading: qcLoading }] = useAddNewQuestionMutation();
+    const [answer, setAnswer] = useState("");
+    const [questionId, setQuestionId] = useState("")
+    const [addAnswerInQuestion, { isSuccess: answerSuccess, error: answerError, isLoading: answerCreationLoading, },] = useAddAnswerInQuestionMutation();
+
+    const handleQuestion = () => {
+        if (question.length === 0) {
+            toast.error("Question can't be empty");
+        } else {
+            addNewQuestion({
+                question,
+                courseId: id,
+                contentId: courseContent[activeVideo]._id,
+            });
+        }
+    }
+
+    const handleAnswerSubmit = () => {
+        if (answer.length === 0) {
+            toast.error("Answer can't be empty")
+        } else {
+            addAnswerInQuestion({
+                answer,
+                courseId: id,
+                contentId: courseContent[activeVideo]._id,
+                questionId: questionId,
+            });
+        }
+    };
+
+    useEffect(() => {
+        if (addQSuccess) {
+            setQuestion("")
+            refetch()
+        }
+        if (answerSuccess) {
+            setAnswer("")
+            refetch()
+        }
+        if (addQError) {
+            if ("data" in addQError) {
+                const errorMessage = addQError as any;
+                toast.error(errorMessage.data.message);
+            }
+        }
+        if (answerError) {
+            if ("data" in answerError) {
+                const errorMessage = answerError as any;
+                toast.error(errorMessage.data.message)
+            }
+        }
+
+    }, [addQSuccess, addQError, answerSuccess, answerError]);
+
     return (
         <div className='w-[95%] 800px:w-[60%] py-4 m-auto'>
             <CoursePlayer
@@ -139,9 +197,8 @@ const CourseContentMedia: FC<Props> = ({ courseContent, activeVideo, setActiveVi
                     </div>
                     <div className="w-full flex justify-end">
                         <div
-                            className={`${styles.button
-                                } !w-[120px] !h-[40px] text-[18px] mt-5`}
-                        // onClick={questionCreationLoading ? () => { } : handleQuestion}
+                            className={`${styles.button} cursor-pointer !w-[120px] !h-[40px] text-[18px] mt-5 ${qcLoading && "cursor-not-allowed"}`}
+                            onClick={qcLoading ? () => { } : handleQuestion}
                         >
                             Submit
                         </div>
@@ -150,8 +207,8 @@ const CourseContentMedia: FC<Props> = ({ courseContent, activeVideo, setActiveVi
                     <br />
                     <div className="w-full h-[1px] bg-[#ffffff3b]"></div>
                     <div>
-                        {/* <CommentReply
-                            data={data}
+                        <CommentReply
+                            data={courseContent}
                             activeVideo={activeVideo}
                             answer={answer}
                             setAnswer={setAnswer}
@@ -160,7 +217,7 @@ const CourseContentMedia: FC<Props> = ({ courseContent, activeVideo, setActiveVi
                             questionId={questionId}
                             setQuestionId={setQuestionId}
                             answerCreationLoading={answerCreationLoading}
-                        /> */}
+                        />
                     </div>
                 </>
             )}
@@ -333,5 +390,163 @@ const CourseContentMedia: FC<Props> = ({ courseContent, activeVideo, setActiveVi
         </div>
     )
 }
+
+const CommentReply = ({
+    data,
+    activeVideo,
+    answer,
+    setAnswer,
+    handleAnswerSubmit,
+    questionId,
+    setQuestionId,
+    answerCreationLoading,
+}: any) => {
+    return (
+        <>
+            <div className="w-full my-3">
+                {data[activeVideo].questions.map((item: any, index: any) => (
+                    <CommentItem
+                        key={index}
+                        data={data}
+                        activeVideo={activeVideo}
+                        item={item}
+                        index={index}
+                        answer={answer}
+                        setAnswer={setAnswer}
+                        questionId={questionId}
+                        setQuestionId={setQuestionId}
+                        handleAnswerSubmit={handleAnswerSubmit}
+                        answerCreationLoading={answerCreationLoading}
+                    />
+                ))}
+            </div>
+        </>
+    );
+};
+
+const CommentItem = ({
+    questionId,
+    setQuestionId,
+    item,
+    answer,
+    setAnswer,
+    handleAnswerSubmit,
+    answerCreationLoading,
+}: any) => {
+    // const [replyActive, setreplyActive] = useState(false);
+    const isActive = questionId === item._id;
+    const handleReplyClick = () => {
+        if (isActive) {
+            setQuestionId("");
+            setAnswer("");
+        } else {
+            setQuestionId(item._id);
+            setAnswer("");
+        }
+    };
+    return (
+        <>
+            <div className="my-4">
+                <div className="flex mb-2">
+                    <div>
+                        <Image
+                            src={
+                                item.user.avatar
+                                    ? item.user.avatar.url
+                                    : "https://res.cloudinary.com/dshp9jnuy/image/upload/v1665822253/avatars/nrxsg8sd9iy10bbsoenn.png"
+                            }
+                            width={50}
+                            height={50}
+                            alt=""
+                            className="w-[50px] h-[50px] rounded-full object-cover"
+                        />
+                    </div>
+                    <div className="pl-3 dark:text-white text-black">
+                        <h5 className="text-[20px]">{item?.user.name}</h5>
+                        <p>{item?.question}</p>
+                        <small className="text-[#000000b8] dark:text-[#ffffff83]">
+                            {!item.createdAt ? "" : format(item?.createdAt)} •
+                        </small>
+                    </div>
+                </div>
+                <div className="w-full flex">
+                    <span
+                        className="800px:pl-16 text-[#000000b8] dark:text-[#ffffff83] cursor-pointer mr-2"
+                        onClick={handleReplyClick}
+                    >
+                        {!isActive
+                            ? item.questionReplies.length !== 0
+                                ? "All Replies"
+                                : "Add Reply"
+                            : "Hide Replies"}
+                    </span>
+                    <BiMessage
+                        size={20}
+                        className="dark:text-[#ffffff83] cursor-pointer text-[#000000b8]"
+                    />
+                    <span className="pl-1 mt-[-4px] cursor-pointer text-[#000000b8] dark:text-[#ffffff83]">
+                        {item.questionReplies.length}
+                    </span>
+                </div>
+
+                {isActive && questionId === item._id && (
+                    <>
+                        {item.questionReplies.map((item: any) => (
+                            <div className="w-full flex 800px:ml-16 my-5 text-black dark:text-white" key={item._id}>
+                                <div>
+                                    <Image
+                                        src={
+                                            item.user.avatar
+                                                ? item.user.avatar.url
+                                                : "https://res.cloudinary.com/dshp9jnuy/image/upload/v1665822253/avatars/nrxsg8sd9iy10bbsoenn.png"
+                                        }
+                                        width={50}
+                                        height={50}
+                                        alt=""
+                                        className="w-[50px] h-[50px] rounded-full object-cover"
+                                    />
+                                </div>
+                                <div className="pl-3">
+                                    <div className="flex items-center">
+                                        <h5 className="text-[20px]">{item.user.name}</h5>{" "}
+                                        {item.user.role === "admin" && (
+                                            <VscVerifiedFilled className="text-[#0095F6] ml-2 text-[20px]" />
+                                        )}
+                                    </div>
+                                    <p>{item.answer}</p>
+                                    <small className="text-[#ffffff83]">
+                                        {format(item.createdAt)} •
+                                    </small>
+                                </div>
+                            </div>
+                        ))}
+                        <>
+                            <div className="w-full flex relative dark:text-white text-black">
+                                <input
+                                    type="text"
+                                    placeholder="Enter your answer..."
+                                    value={answer}
+                                    onChange={(e: any) => setAnswer(e.target.value)}
+                                    className={`block 800px:ml-12 mt-2 outline-none bg-transparent border-b border-[#00000027] dark:text-white text-black dark:border-[#fff] p-[5px] w-[95%] ${answer === "" ||
+                                        (answerCreationLoading && "cursor-not-allowed")
+                                        }`}
+                                />
+                                <button
+                                    type="submit"
+                                    className="absolute right-0 bottom-1"
+                                    onClick={handleAnswerSubmit}
+                                    disabled={answer === "" || answerCreationLoading}
+                                >
+                                    Submit
+                                </button>
+                            </div>
+                            <br />
+                        </>
+                    </>
+                )}
+            </div>
+        </>
+    );
+};
 
 export default CourseContentMedia

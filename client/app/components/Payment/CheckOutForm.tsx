@@ -8,7 +8,7 @@ import {
     useElements,
     useStripe,
 } from "@stripe/react-stripe-js";
-import { redirect } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 
@@ -22,10 +22,10 @@ const CheckOutForm = ({ data, setOpen }: Props) => {
     const stripe = useStripe();
     const elements = useElements();
     const [message, setMessage] = useState<any>("");
-    const [createOrder, { data: orderData, error }] = useCreateOrderMutation();
+    const [createOrder, { data: orderData, error, isLoading: createOrderLoading }] = useCreateOrderMutation();
     const [isLoading, setIsLoading] = useState(false);
-    const [fetchUserData, setFetchUserData] = useState(false);
-    const { data: userData, refetch } = useLoadUserQuery(undefined, { skip: !fetchUserData });
+    const { refetch, isUninitialized } = useLoadUserQuery(undefined, { skip: false });
+    const router = useRouter();
 
     const handleSubmit = async (e: any) => {
         e.preventDefault();
@@ -49,11 +49,14 @@ const CheckOutForm = ({ data, setOpen }: Props) => {
 
     useEffect(() => {
         if (orderData) {
-            // refetch();
-            setFetchUserData(true);
-            setOpen(false);
-            toast.success("Payment successful");
-            redirect(`/course-access/${data._id}`);
+            if (!isUninitialized) {
+                refetch().then(() => {
+                    setOpen(false);
+                    toast.success("Payment successful");
+                    router.push(`/course-access/${data._id}`);
+                });
+            }
+
         }
         if (error) {
             if ("data" in error) {
@@ -61,22 +64,15 @@ const CheckOutForm = ({ data, setOpen }: Props) => {
                 toast.error(errorMessage.data.message);
             }
         }
-    }, [orderData, error])
-
-    useEffect(() => {
-        if (fetchUserData) {
-            refetch();
-        }
-    }, [fetchUserData]);
-
+    }, [orderData, error, isUninitialized])
 
     return (
         <form id="payment-form" onSubmit={handleSubmit}>
             <LinkAuthenticationElement id="link-authentication-element" />
             <PaymentElement id="payment-element" />
-            <button disabled={isLoading || !stripe || !elements} id="submit">
+            <button disabled={isLoading || !stripe || !elements || createOrderLoading} id="submit">
                 <span id="button-text" className={`${styles.button} mt-2 !h-[35px]`}>
-                    {isLoading ? "Paying..." : "Pay now"}
+                    {(isLoading || createOrderLoading) ? "Paying..." : "Pay now"}
                 </span>
             </button>
             {/* Show any error or success messages */}
