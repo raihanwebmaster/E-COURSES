@@ -18,7 +18,7 @@ const Page = ({ params }: Props) => {
     const { user } = useSelector((state: any) => state.auth);
     useEffect(() => {
         if (user) {
-            const isPurchased = user.courses.find((course: any) => course.courseId === id)
+            const isPurchased = user.role === "admin" ? true : user.courses.find((course: any) => course.courseId === id)
             if (!isPurchased) {
                 redirect('/')
             }

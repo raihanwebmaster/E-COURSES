@@ -53,7 +53,7 @@ const getAllCoursesWithOutPurchaseing = catchAsync(async (req, res) => {
 const getCourseByUser = catchAsync(async (req, res) => {
   const userCourseList = req.user?.courses;
   const courseId = req.params.id;
-  const courses = await CourseServices.getCourseByUserFromDB(courseId, userCourseList);
+  const courses = await CourseServices.getCourseByUserFromDB(courseId, userCourseList, req.user);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,

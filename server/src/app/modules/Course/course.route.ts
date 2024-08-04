@@ -48,7 +48,7 @@ router.put(
 
 router.put(
   '/add-answer',
-  auth(USER_ROLE.admin),
+  auth(USER_ROLE.admin, USER_ROLE.user),
   validateRequest(CourseValidation.addAnswerValidationSchema),
   CourseControllers.addAnswer,
 )

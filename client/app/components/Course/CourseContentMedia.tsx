@@ -1,7 +1,7 @@
 import { styles } from '@/app/styles/styles'
 import CoursePlayer from '@/app/utils/CoursePlayer'
 import Ratings from '@/app/utils/Ratings'
-import { useAddAnswerInQuestionMutation, useAddNewQuestionMutation, useGetCourseWithOutPurchaseQuery } from '@/redux/features/courses/coursesApi'
+import { useAddAnswerInQuestionMutation, useAddNewQuestionMutation, useAddReplayInReviewMutation, useAddReviewInCourseMutation, useGetCourseWithOutPurchaseQuery } from '@/redux/features/courses/coursesApi'
 import Image from 'next/image'
 import React, { FC, useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
@@ -23,20 +23,19 @@ const CourseContentMedia: FC<Props> = ({ courseContent, activeVideo, setActiveVi
     const [activeBar, setActiveBar] = React.useState(0)
     const { user } = useSelector((state: any) => state.auth);
     const [question, setQuestion] = React.useState("")
-    const { data: courseData, refetch: courseRefetch } = useGetCourseWithOutPurchaseQuery(
-        id,
-        { refetchOnMountOrArgChange: true }
-    );
+    const { data: courseData, refetch: courseRefetch } = useGetCourseWithOutPurchaseQuery(id, { refetchOnMountOrArgChange: true });
     const course = courseData?.data;
-    const isReviewExists = course?.reviews?.find(
-        (item: any) => item.user._id === user._id
-    );
+    const isReviewExists = user.role === 'admin' ? true : course?.reviews?.find((item: any) => item.user._id === user._id);
     const [rating, setRating] = useState(1);
     const [review, setReview] = useState("");
     const [addNewQuestion, { isSuccess: addQSuccess, error: addQError, isLoading: qcLoading }] = useAddNewQuestionMutation();
     const [answer, setAnswer] = useState("");
     const [questionId, setQuestionId] = useState("")
     const [addAnswerInQuestion, { isSuccess: answerSuccess, error: answerError, isLoading: answerCreationLoading, },] = useAddAnswerInQuestionMutation();
+    const [addReviewInCourse, { isSuccess: reviewSuccess, error: reviewError, isLoading: reviewCreationLoading, },] = useAddReviewInCourseMutation();
+    const [reviewId, setReviewId] = useState("");
+    const [reply, setReply] = useState("");
+    const [addReplyInReview, { isSuccess: replySuccess, error: replyError, isLoading: replyCreationLoading, },] = useAddReplayInReviewMutation();
 
     const handleQuestion = () => {
         if (question.length === 0) {
@@ -63,6 +62,29 @@ const CourseContentMedia: FC<Props> = ({ courseContent, activeVideo, setActiveVi
         }
     };
 
+    const handleReviewSubmit = async () => {
+        if (review.length === 0) {
+            toast.error("Review can't be empty");
+        } else {
+            addReviewInCourse({
+                courseId: id,
+                review,
+                rating,
+            });
+        }
+
+    }
+
+    const handleReviewReplySubmit = () => {
+        if (!replyCreationLoading) {
+            if (reply === "") {
+                toast.error("Reply can't be empty");
+            } else {
+                addReplyInReview({ comment: reply, courseId: id, reviewId });
+            }
+        }
+    };
+
     useEffect(() => {
         if (addQSuccess) {
             setQuestion("")
@@ -72,6 +94,17 @@ const CourseContentMedia: FC<Props> = ({ courseContent, activeVideo, setActiveVi
             setAnswer("")
             refetch()
         }
+        if (reviewSuccess) {
+            setReview("")
+            setRating(1)
+            courseRefetch()
+        }
+        if (replySuccess) {
+            setReply("");
+            setReviewId("");
+            courseRefetch();
+        }
+
         if (addQError) {
             if ("data" in addQError) {
                 const errorMessage = addQError as any;
@@ -84,8 +117,20 @@ const CourseContentMedia: FC<Props> = ({ courseContent, activeVideo, setActiveVi
                 toast.error(errorMessage.data.message)
             }
         }
+        if (reviewError) {
+            if ("data" in reviewError) {
+                const errorMessage = reviewError as any;
+                toast.error(errorMessage.data.message);
+            }
+        }
+        if (replyError) {
+            if ("data" in replyError) {
+                const errorMessage = replyError as any;
+                toast.error(errorMessage.data.message);
+            }
+        }
 
-    }, [addQSuccess, addQError, answerSuccess, answerError]);
+    }, [addQSuccess, addQError, answerSuccess, answerError, reviewSuccess, reviewError, replySuccess, replyError]);
 
     return (
         <div className='w-[95%] 800px:w-[60%] py-4 m-auto'>
@@ -279,10 +324,10 @@ const CourseContentMedia: FC<Props> = ({ courseContent, activeVideo, setActiveVi
                                 <div className="w-full flex justify-end">
                                     <div
                                         className={`${styles.button
-                                            } !w-[120px] !h-[40px] text-[18px] mt-5 800px:mr-0 mr-2`}
-                                    // onClick={
-                                    //     reviewCreationLoading ? () => { } : handleReviewSubmit
-                                    // }
+                                            } !w-[120px] !h-[40px] text-[18px] mt-5 800px:mr-0 mr-2 cursor-pointer ${reviewCreationLoading && "cursor-not-allowed"}`}
+                                        onClick={
+                                            reviewCreationLoading ? () => { } : handleReviewSubmit
+                                        }
                                     >
                                         Submit
                                     </div>
@@ -291,7 +336,7 @@ const CourseContentMedia: FC<Props> = ({ courseContent, activeVideo, setActiveVi
                         )}
                         <br />
                         <div className="w-full h-[1px] bg-[#ffffff3b]"></div>
-                        {/* <div className="w-full">
+                        <div className="w-full">
                             {(course?.reviews && [...course.reviews].reverse())?.map(
                                 (item: any, index: number) => {
 
@@ -322,9 +367,8 @@ const CourseContentMedia: FC<Props> = ({ courseContent, activeVideo, setActiveVi
                                             </div>
                                             {user.role === "admin" && item.commentReplies.length === 0 && (
                                                 <span
-                                                    className={`${styles.label} !ml-10 cursor-pointer`}
+                                                    className={`${styles.label} !ml-14 cursor-pointer`}
                                                     onClick={() => {
-                                                        setIsReviewReply(true);
                                                         setReviewId(item._id);
                                                     }}
                                                 >
@@ -332,7 +376,7 @@ const CourseContentMedia: FC<Props> = ({ courseContent, activeVideo, setActiveVi
                                                 </span>
                                             )}
 
-                                            {isReviewReply && reviewId === item._id && (
+                                            {reviewId === item._id && (
                                                 <div className="w-full flex relative">
                                                     <input
                                                         type="text"
@@ -382,7 +426,7 @@ const CourseContentMedia: FC<Props> = ({ courseContent, activeVideo, setActiveVi
                                     );
                                 }
                             )}
-                        </div> */}
+                        </div>
                     </>
                 </div>
             )}

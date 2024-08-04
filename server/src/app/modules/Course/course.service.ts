@@ -57,9 +57,18 @@ const updateCourseFromDB = async (couserId: string, course: any) => {
         };
     }
 
-    const uploadCourse = await Course.findByIdAndUpdate(couserId, course, { new: true });
-    await redis.set(couserId, JSON.stringify(uploadCourse), 'EX', 60 * 60 * 24 * 7);
-    return uploadCourse;
+    const updatedCourse = await Course.findByIdAndUpdate(couserId, course, { new: true })
+        .populate({
+            path: 'reviews.user',
+            select: '-password'
+        })
+        .populate({
+            path: 'reviews.commentReplies.user',
+            select: '-password'
+        });
+
+    await redis.set(couserId, JSON.stringify(updatedCourse), 'EX', 60 * 60 * 24 * 7);
+    return updatedCourse;
 };
 
 const getCourseWithOutPurchaseingFromDB = async (courseId: string) => {
@@ -67,9 +76,17 @@ const getCourseWithOutPurchaseingFromDB = async (courseId: string) => {
     if (isCacheExist) {
         return JSON.parse(isCacheExist);
     }
-    const courses = await Course.findById(courseId).select("-courseData.videoUrl  -courseData.videoPlayer -courseData.links -courseData.suggestion -courseData.questions");
-    await redis.set(courseId, JSON.stringify(courses), 'EX', 60 * 60 * 24 * 7); // 7 days
-    return courses;
+    const course = await Course.findById(courseId).select("-courseData.videoUrl  -courseData.videoPlayer -courseData.links -courseData.suggestion -courseData.questions")
+        .populate({
+            path: 'reviews.user',
+            select: '-password'
+        })
+        .populate({
+            path: 'reviews.commentReplies.user',
+            select: '-password'
+        });;
+    await redis.set(courseId, JSON.stringify(course), 'EX', 60 * 60 * 24 * 7); // 7 days
+    return course;
 };
 
 const getAllCoursesWithOutPurchaseingFromDB = async () => {
@@ -82,10 +99,12 @@ const getAllCoursesWithOutPurchaseingFromDB = async () => {
     return courses;
 };
 
-const getCourseByUserFromDB = async (courseId: string, userCourseList: string[]) => {
-    const courseExist = userCourseList?.find((course: any) => course.courseId.toString() === courseId);
-    if (!courseExist) {
-        throw new AppError(httpStatus.NOT_FOUND, 'You are not eligible to access this course');
+const getCourseByUserFromDB = async (courseId: string, userCourseList: string[], user: any) => {
+    if (user.role !== 'admin') {
+        const courseExist = userCourseList?.find((course: any) => course.courseId.toString() === courseId);
+        if (!courseExist) {
+            throw new AppError(httpStatus.NOT_FOUND, 'You are not eligible to access this course');
+        }
     }
     const course = await Course.findById(courseId).populate({
         path: 'courseData.questions.user',
@@ -126,7 +145,17 @@ const addQuestionIntoCourse = async (user: JwtPayload, questionData: IAddQuestio
             title: 'New Question Received',
         }], { session });
         await session.commitTransaction();
-        return course;
+        const updatedCourse = await Course.findById(courseId)
+            .populate({
+                path: 'reviews.user',
+                select: '-password'
+            })
+            .populate({
+                path: 'reviews.commentReplies.user',
+                select: '-password'
+            });
+        await redis.set(courseId, JSON.stringify(updatedCourse), 'EX', 60 * 60 * 24 * 7);
+        return updatedCourse;
     } catch (error) {
         await session.abortTransaction();
         throw new AppError(httpStatus.BAD_REQUEST, 'Question failed');
@@ -190,7 +219,19 @@ const addAnswerIntoCourse = async (user: JwtPayload, questionData: IAddAnswerDat
         }
 
         await session.commitTransaction();
-        return course;
+        const updatedCourse = await Course.findById(courseId)
+            .populate({
+                path: 'reviews.user',
+                select: '-password'
+            })
+            .populate({
+                path: 'reviews.commentReplies.user',
+                select: '-password'
+            }); // Added population of reviews and commentReplies
+
+        await redis.set(courseId, JSON.stringify(updatedCourse), 'EX', 60 * 60 * 24 * 7); // Added updating the specific course cache
+
+        return updatedCourse;
     } catch (error) {
         await session.abortTransaction();
         throw new AppError(httpStatus.BAD_REQUEST, "answer failed");
@@ -230,14 +271,28 @@ const addReviewIntoCourse = async (user: JwtPayload, courseId: string, reviewDat
 
     try {
         session.startTransaction();
-        await course?.save({ session });
+        const updateCourse = await course?.save({ session });
+        await redis.set(courseId, JSON.stringify(updateCourse), 'EX', 60 * 60 * 24 * 7); // 7 days
+
         await Notification.create([{
             user: user.id,
             message: `${user.name} has given a review in ${course.name} course`,
             title: 'New Review Received',
         }], { session });
         await session.commitTransaction();
-        return course;
+        const updatedCourse = await Course.findById(courseId)
+            .populate({
+                path: 'reviews.user',
+                select: '-password'
+            })
+            .populate({
+                path: 'reviews.commentReplies.user',
+                select: '-password'
+            }); // Added population of reviews and commentReplies
+
+        await redis.set(courseId, JSON.stringify(updatedCourse), 'EX', 60 * 60 * 24 * 7); // Added updating the specific course cache
+
+        return updatedCourse;
 
     } catch (error) {
         await session.abortTransaction();
@@ -249,7 +304,10 @@ const addReviewIntoCourse = async (user: JwtPayload, courseId: string, reviewDat
 
 const addReplyReviewIntoCourse = async (user: JwtPayload, replyData: IAddReplyReviewData) => {
     const { courseId, reviewId, comment } = replyData;
-    const course = await Course.findById(courseId);
+    const course = await Course.findById(courseId).populate({
+        path: 'reviews.user',
+        model: 'User'
+    }).exec();
     if (!course) {
         throw new AppError(httpStatus.NOT_FOUND, 'Course not found');
     }
@@ -263,13 +321,59 @@ const addReplyReviewIntoCourse = async (user: JwtPayload, replyData: IAddReplyRe
     }
     review.commentReplies = review.commentReplies ?? [];
     review.commentReplies.push(newReply);
-    await course?.save();
-    return course;
+
+    const session = await mongoose.startSession();
+    try {
+        session.startTransaction();
+        await course.save({ session });
+
+        if (user.id !== review.user.toString()) {
+            const reviewUser = review.user as unknown as IUser;
+            const data = {
+                name: reviewUser?.name,
+                title: review.comment,
+            };
+            await sendMail({
+                email: reviewUser.email,
+                subject: 'Review Reply',
+                template: 'review-reply.ejs',
+                data
+            });
+        } else {
+            await Notification.create([{
+                user: user.id,
+                message: `You have a new reply from ${user.name} for your review in ${course.name} course`,
+                title: 'New Review Reply Received',
+            }], { session });
+        }
+
+        await session.commitTransaction();
+        
+        const updatedCourse = await Course.findById(courseId)
+            .populate({
+                path: 'reviews.user',
+                select: '-password'
+            })
+            .populate({
+                path: 'reviews.commentReplies.user',
+                select: '-password'
+            }); // Added population of reviews and commentReplies
+
+        await redis.set(courseId, JSON.stringify(updatedCourse), 'EX', 60 * 60 * 24 * 7); // Added updating the specific course cache
+
+        return updatedCourse;
+    } catch (error) {
+        await session.abortTransaction();
+        throw new AppError(httpStatus.BAD_REQUEST, "Reply failed");
+    } finally {
+        session.endSession();
+    }
 };
 
 
+
 const getAllCoursesFromDB = async () => {
-      // const isCacheExist = await redis.get("allCourses");
+    // const isCacheExist = await redis.get("allCourses");
     // if (isCacheExist) {
     //     return JSON.parse(isCacheExist);
     // }

@@ -13,6 +13,7 @@ import { styles } from "@/app/styles/styles";
 import CourseContentList from "./CourseContentList";
 import { Elements } from "@stripe/react-stripe-js";
 import CheckOutForm from "../Payment/CheckOutForm";
+import Image from "next/image";
 
 type Props = {
   id: string;
@@ -29,7 +30,7 @@ const CourseDetails: FC<Props> = ({ id, course, stripePromise, clientSecret }) =
     ? ((course.estimatePrice - course.price) / course.estimatePrice) * 100
     : 0;
   const discountPercentengePrice = discountPercentage.toFixed(0);
-  const isPurchased = user?.courses?.find((item: any) => item.courseId === id);
+  const isPurchased = user?.role === "admin" ? true : user?.courses?.find((item: any) => item.courseId === id);
   const handleOrder = (e: any) => {
     if (user) {
       setOpen(true);
@@ -108,69 +109,27 @@ const CourseDetails: FC<Props> = ({ id, course, stripePromise, clientSecret }) =
             </div>
             <br />
             <br />
-            <div className="w-full" >
-              <div className="800px:flex items-center" >
-                <Ratings rating={course?.rating} />
-                <div className="mb-2 800px:mb-[unset] " >
-                  <h5 className="text-[25px] font-Poppins text-black dark:text-white " >
-                    {
-                      Number.isInteger(course?.ratings) ? course?.ratings.toFixed(1) : course?.ratings.toFixed(2)(" ")
-                    }
-                    Course Rating • {course?.reviews?.length} Reviews
-                  </h5>
-                </div>
-                <br />
-                {(course?.reviews && [...course.reviews].reverse()).map(
-                  (item: any, index: number) => (
-                    <div className="w-full pb-4" key={index}>
-                      <div className="flex">
-                        <div className="w-[50px] h-[50px]">
-                          {/* <Image
-                        src={
-                          item.user.avatar
-                            ? item.user.avatar.url
-                            : "https://res.cloudinary.com/dshp9jnuy/image/upload/v1665822253/avatars/nrxsg8sd9iy10bbsoenn.png"
-                        }
-                        width={50}
-                        height={50}
-                        alt=""
-                        className="w-[50px] h-[50px] rounded-full object-cover"
-                      /> */}
-                          <div className="w-[50px] h-[50px] bg-slate-600 rounded-[50px] flex items-center justify-center cursor-pointer">
-                            <h1 className="uppercase text-[18px] text-black dark:text-white">
-                              {item.user.name.slice(0, 2)}
-                            </h1>
-                          </div>
-
-                        </div>
-                        <div className="hidden 800px:block pl-2">
-                          <div className="flex items-center">
-                            <h5 className="text-[18px] pr-2 text-black dark:text-white">
-                              {item.user.name}
-                            </h5>
-                            <Ratings rating={item.rating} />
-                          </div>
-                          <p className="text-black dark:text-white">
-                            {item.comment}
-                          </p>
-                          <small className="text-[#000000d1] dark:text-[#ffffff83]">
-                            {format(item.createdAt)} •
-                          </small>
-                        </div>
-                        <div className="pl-2 flex 800px:hidden items-center">
-                          <h5 className="text-[18px] pr-2 text-black dark:text-white">
-                            {item.user.name}
-                          </h5>
-                          <Ratings rating={item.rating} />
-                        </div>
-                      </div>
-                      {/* {item.commentReplies.map((i: any, index: number) => (
-                    <div className="w-full flex 800px:ml-16 my-5" key={index}>
+            <div className="w-full">
+              <div className="800px:flex items-center">
+                <Ratings rating={course?.ratings} />
+                <div className="mb-2 800px:mb-[unset]" />
+                <h5 className="text-[25px] font-Poppins text-black dark:text-white">
+                  {Number.isInteger(course?.ratings)
+                    ? course?.ratings.toFixed(1)
+                    : course?.ratings.toFixed(2)}{" "}
+                  Course Rating • {course?.reviews?.length} Reviews
+                </h5>
+              </div>
+              <br />
+              {(course?.reviews && [...course.reviews].reverse()).map(
+                (item: any, index: number) => (
+                  <div className="w-full pb-4" key={index}>
+                    <div className="flex">
                       <div className="w-[50px] h-[50px]">
                         <Image
                           src={
-                            i.user.avatar
-                              ? i.user.avatar.url
+                            item.user.avatar
+                              ? item.user.avatar.url
                               : "https://res.cloudinary.com/dshp9jnuy/image/upload/v1665822253/avatars/nrxsg8sd9iy10bbsoenn.png"
                           }
                           width={50}
@@ -179,22 +138,57 @@ const CourseDetails: FC<Props> = ({ id, course, stripePromise, clientSecret }) =
                           className="w-[50px] h-[50px] rounded-full object-cover"
                         />
                       </div>
-                      <div className="pl-2">
+                      <div className="hidden 800px:block pl-2">
                         <div className="flex items-center">
-                          <h5 className="text-[20px]">{i.user.name}</h5>{" "}
-                          <VscVerifiedFilled className="text-[#0095F6] ml-2 text-[20px]" />
+                          <h5 className="text-[18px] pr-2 text-black dark:text-white">
+                            {item.user.name}
+                          </h5>
+                          <Ratings rating={item.rating} />
                         </div>
-                        <p>{i.comment}</p>
-                        <small className="text-[#ffffff83]">
-                          {format(i.createdAt)} •
+                        <p className="text-black dark:text-white">
+                          {item.comment}
+                        </p>
+                        <small className="text-[#000000d1] dark:text-[#ffffff83]">
+                          {format(item.createdAt)} •
                         </small>
                       </div>
+                      <div className="pl-2 flex 800px:hidden items-center">
+                        <h5 className="text-[18px] pr-2 text-black dark:text-white">
+                          {item.user.name}
+                        </h5>
+                        <Ratings rating={item.rating} />
+                      </div>
                     </div>
-                  ))} */}
-                    </div>
-                  )
-                )}
-              </div>
+                    {item.commentReplies.map((i: any, index: number) => (
+                      <div className="w-full flex 800px:ml-16 my-5" key={index}>
+                        <div className="w-[50px] h-[50px]">
+                          <Image
+                            src={
+                              i.user.avatar
+                                ? i.user.avatar.url
+                                : "https://res.cloudinary.com/dshp9jnuy/image/upload/v1665822253/avatars/nrxsg8sd9iy10bbsoenn.png"
+                            }
+                            width={50}
+                            height={50}
+                            alt=""
+                            className="w-[50px] h-[50px] rounded-full object-cover"
+                          />
+                        </div>
+                        <div className="pl-2">
+                          <div className="flex items-center">
+                            <h5 className="text-[20px]">{i.user.name}</h5>{" "}
+                            <VscVerifiedFilled className="text-[#0095F6] ml-2 text-[20px]" />
+                          </div>
+                          <p>{i.comment}</p>
+                          <small className="text-[#ffffff83]">
+                            {format(i.createdAt)} •
+                          </small>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )
+              )}
             </div>
           </div>
           <div className="w-full 800px:w-[35%] relative">
