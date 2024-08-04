@@ -14,6 +14,7 @@ import CourseContentList from "./CourseContentList";
 import { Elements } from "@stripe/react-stripe-js";
 import CheckOutForm from "../Payment/CheckOutForm";
 import Image from "next/image";
+import AuthModal from "@/app/utils/AuthModel";
 
 type Props = {
   id: string;
@@ -36,6 +37,7 @@ const CourseDetails: FC<Props> = ({ id, course, stripePromise, clientSecret }) =
       setOpen(true);
     } else {
       setRoute("Login");
+      setOpen(true);
       // openAuthModal(true);
     }
   }
@@ -260,6 +262,7 @@ const CourseDetails: FC<Props> = ({ id, course, stripePromise, clientSecret }) =
           </div>
         </div>
       )}
+      <AuthModal open={open} setOpen={setOpen} route={route} setRoute={setRoute} />
     </div>
   )
 

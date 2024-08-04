@@ -5,13 +5,12 @@ import { disableScroll, enableScroll } from './scrollLock';
 type Props = {
     open: boolean,
     setOpen: (open: boolean) => void
-    activeItem: number,
     route: string,
     component: React.ComponentType<any>;
     setRoute?: (route: string) => void
 }
 
-const CustomModal: FC<Props> = ({ open, setOpen, activeItem, route, component: Component, setRoute }) => {
+const CustomModal: FC<Props> = ({ open, setOpen, route, component: Component, setRoute }) => {
     // Memoize the component to avoid unnecessary re-renders
     const MemoizedComponent = useMemo(() => {
         return <Component setOpen={setOpen} open={open} setRoute={setRoute} />

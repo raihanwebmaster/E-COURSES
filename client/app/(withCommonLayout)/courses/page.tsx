@@ -3,7 +3,7 @@ import Loader from "@/app/components/Loader/Loader";
 import CourseCard from "@/app/components/Route/Course/CourseCard";
 import { styles } from "@/app/styles/styles";
 import Heading from "@/app/utils/Heading";
-import { useGetAllCoursesQuery } from "@/redux/features/courses/coursesApi";
+import { useGetAllCoursesQuery, useGetAllCoursesWithOutPurchaseQuery } from "@/redux/features/courses/coursesApi";
 import { useGetLayoutQuery } from "@/redux/features/layouts/layoutsApi";
 import { useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
@@ -13,7 +13,7 @@ type Props = {};
 const Page = (props: Props) => {
     const searchParams = useSearchParams();
     const search = searchParams?.get("title");
-    const { data, isLoading } = useGetAllCoursesQuery(undefined, {});
+    const { data, isLoading } = useGetAllCoursesWithOutPurchaseQuery(undefined, {});
     const { data: categoriesData } = useGetLayoutQuery("Categories", {});
     const [route, setRoute] = useState("Login");
     const [open, setOpen] = useState(false);
@@ -21,7 +21,6 @@ const Page = (props: Props) => {
     const [category, setCategory] = useState("All");
 
     useEffect(() => {
-        console.log(data, 'course');
         if (data?.data) {
             let filteredCourses = data.data;
 

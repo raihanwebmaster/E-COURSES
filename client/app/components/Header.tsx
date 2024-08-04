@@ -4,10 +4,6 @@ import React, { FC, useState, useEffect, useCallback, useMemo } from 'react'
 import NavItems from '../utils/NavItems'
 import ThemeSwitcher from '../utils/ThemeSwitcher'
 import { HiOutlineMenuAlt2, HiOutlineUserCircle } from 'react-icons/hi'
-import CustomModal from '../utils/CustomModal'
-import Login from './Auth/Login'
-import SignUp from './Auth/SignUp'
-import Verification from './Auth/Verification'
 import { useSelector } from 'react-redux'
 import Image from 'next/image'
 import avatar from '../../public/assests/avatar.png'
@@ -15,6 +11,7 @@ import { useSession } from 'next-auth/react'
 import { useSocialAuthMutation } from '../../redux/features/auth/authApi'
 import toast from 'react-hot-toast'
 import { usePathname } from 'next/navigation'
+import AuthModal from '../utils/AuthModel'
 
 
 type Props = {
@@ -88,20 +85,6 @@ const Header: FC<Props> = ({open, setOpen, route, setRoute }) => {
         if (e.target.id === 'sidebar') setOpenSidebar(false)
     }
 
-    const getModalComponent = useCallback(() => {
-        switch (route) {
-            case 'Login':
-                return Login
-            case 'Sign-Up':
-                return SignUp
-            case 'Verification':
-                return Verification
-            default:
-                return null
-        }
-    }, [route])
-
-    const ModalComponent = useMemo(() => getModalComponent(), [getModalComponent])
 
     return (
         <div className='w-full relative'>
@@ -157,9 +140,7 @@ const Header: FC<Props> = ({open, setOpen, route, setRoute }) => {
                     </div>
                 )}
             </div>
-            {open && ModalComponent && (
-                <CustomModal open={open} setOpen={setOpen} setRoute={setRoute} activeItem={activeItem} route={route} component={ModalComponent} />
-            )}
+            <AuthModal open={open} setOpen={setOpen} route={route} setRoute={setRoute} />
         </div>
     )
 }
