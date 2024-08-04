@@ -6,11 +6,10 @@ import Footer from '../components/Footer/Footer'
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
     const [open, setOpen] = useState(false)
-    const [activeItem, setActiveItem] = useState(0)
     const [route, setRoute] = useState("Login")
     return (
         <div>
-            <Header open={open} setOpen={setOpen} activeItem={activeItem} route={route} setRoute={setRoute} />
+            <Header open={open} setOpen={setOpen} route={route} setRoute={setRoute} />
             {children}
             <Footer/>
         </div>

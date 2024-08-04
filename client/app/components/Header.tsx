@@ -14,21 +14,41 @@ import avatar from '../../public/assests/avatar.png'
 import { useSession } from 'next-auth/react'
 import { useSocialAuthMutation } from '../../redux/features/auth/authApi'
 import toast from 'react-hot-toast'
+import { usePathname } from 'next/navigation'
+
 
 type Props = {
     open: boolean,
     setOpen: (open: boolean) => void
-    activeItem: number,
     route: string,
     setRoute: (route: string) => void
 }
 
-const Header: FC<Props> = ({ activeItem, open, setOpen, route, setRoute }) => {
+const Header: FC<Props> = ({open, setOpen, route, setRoute }) => {
     const [active, setActive] = useState(false)
     const [openSidebar, setOpenSidebar] = useState(false)
     const { user } = useSelector((state: any) => state.auth)
     const { data } = useSession()
     const [socialAuth, { isSuccess, error }] = useSocialAuthMutation()
+    const pathname = usePathname();
+    const activeItem = useMemo(() => {
+        switch (pathname) {
+            case '/':
+                return 0
+            case '/courses':
+                return 1
+            case '/about':
+                return 2
+            case '/policy':
+                return 3
+            case '/faq':
+                return 4
+            case '/profile':
+                return 5
+            default:
+                return 0
+        }
+    }, [pathname])
 
     useEffect(() => {
         if (!user) {
