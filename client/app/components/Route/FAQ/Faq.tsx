@@ -23,10 +23,15 @@ const Faq = (props: Props) => {
 
     return (
         <div>
-            <div className="w-[80%] 800px:w-[60%] m-auto">
-                <h1 className={`${styles.title} 800px:text-[40px]`}>
-                    Frequently Asked Questions
+            <div className="w-[80%] 800px:w-[75%] m-auto">
+                <h1 className={`${styles.title} 800px:!text-5xl`}>
+                    Common {" "}
+                    <span className="text-gradient">FAQ</span>{" "}
                 </h1>
+                <div className="flex items-center justify-center mt-5 space-x-2">
+                    <span className="h-3 w-3 rounded-full bg-green-500"></span>
+                    <h2 className="text-white text-xl font-semibold">Frequently asked questions</h2>
+                </div>
                 <div className="mt-12">
                     <dl className="space-y-8">
                         {questions?.map((q) => (
