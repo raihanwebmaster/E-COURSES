@@ -10,6 +10,9 @@ import { BiMessage } from 'react-icons/bi'
 import { VscVerifiedFilled } from 'react-icons/vsc'
 import { useSelector } from 'react-redux'
 import { format } from 'timeago.js'
+import socketIo from "socket.io-client";
+const ENDPOINT = process.env.NEXT_PUBLIC_SOCKET_URL || ""
+const socket = socketIo(ENDPOINT, { transports: ["websocket"] });
 
 type Props = {
     courseContent: any,
@@ -85,52 +88,77 @@ const CourseContentMedia: FC<Props> = ({ courseContent, activeVideo, setActiveVi
         }
     };
 
+    // Handle Add Question Success and Error
     useEffect(() => {
         if (addQSuccess) {
-            setQuestion("")
-            refetch()
+            setQuestion("");
+            refetch();
+            socket.emit("notification", {
+                title: "New Question Received",
+                message: `You have a new question in ${courseContent[activeVideo].title}`,
+                userId: user._id,
+            });
+            toast.success("Question added successfully");
         }
+        if (addQError && "data" in addQError) {
+            const errorMessage = addQError as any;
+            toast.error(errorMessage.data.message);
+        }
+    }, [addQSuccess, addQError]);
+
+
+    // Handle Answer Success and Error
+    useEffect(() => {
         if (answerSuccess) {
-            setAnswer("")
-            refetch()
+            setAnswer("");
+            refetch();
+            if (user.role === "admin") {
+                socket.emit("notification", {
+                    title: "New Question Reply Received",
+                    message: `You have a new question reply in ${courseContent[activeVideo].title}`,
+                    userId: user._id,
+                });
+            }
+            toast.success("Answer added successfully");
         }
+        if (answerError && "data" in answerError) {
+            const errorMessage = answerError as any;
+            toast.error(errorMessage.data.message);
+        }
+    }, [answerSuccess, answerError]);
+
+    // Handle Review Success and Error
+    useEffect(() => {
         if (reviewSuccess) {
-            setReview("")
-            setRating(1)
-            courseRefetch()
+            setReview("");
+            setRating(1);
+            courseRefetch();
+            socket.emit("notification", {
+                title: "New Review Received",
+                message: `You have a new review in ${course.title}`,
+                userId: user._id,
+            });
+            toast.success("Review added successfully");
         }
+        if (reviewError && "data" in reviewError) {
+            const errorMessage = reviewError as any;
+            toast.error(errorMessage.data.message);
+        }
+    }, [reviewSuccess, reviewError]);
+
+    // Handle Reply Success and Error
+    useEffect(() => {
         if (replySuccess) {
             setReply("");
             setReviewId("");
             courseRefetch();
+            toast.success("Reply added successfully");
         }
-
-        if (addQError) {
-            if ("data" in addQError) {
-                const errorMessage = addQError as any;
-                toast.error(errorMessage.data.message);
-            }
+        if (replyError && "data" in replyError) {
+            const errorMessage = replyError as any;
+            toast.error(errorMessage.data.message);
         }
-        if (answerError) {
-            if ("data" in answerError) {
-                const errorMessage = answerError as any;
-                toast.error(errorMessage.data.message)
-            }
-        }
-        if (reviewError) {
-            if ("data" in reviewError) {
-                const errorMessage = reviewError as any;
-                toast.error(errorMessage.data.message);
-            }
-        }
-        if (replyError) {
-            if ("data" in replyError) {
-                const errorMessage = replyError as any;
-                toast.error(errorMessage.data.message);
-            }
-        }
-
-    }, [addQSuccess, addQError, answerSuccess, answerError, reviewSuccess, reviewError, replySuccess, replyError]);
+    }, [replySuccess, replyError]);
 
     return (
         <div className='w-[95%] 800px:w-[60%] py-4 m-auto'>

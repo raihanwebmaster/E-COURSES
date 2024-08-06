@@ -6,7 +6,6 @@ type Props = {}
 
 const Courses = (props: Props) => {
   const { data, isLoading, error } = useGetAllCoursesWithOutPurchaseQuery({})
-  console.log(data, 'data')
   const [courses, setCourses] = React.useState([])
 
   useEffect(() => {

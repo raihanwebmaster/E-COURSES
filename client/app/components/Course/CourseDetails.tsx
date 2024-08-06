@@ -32,12 +32,15 @@ const CourseDetails: FC<Props> = ({ id, course, stripePromise, clientSecret }) =
     : 0;
   const discountPercentengePrice = discountPercentage.toFixed(0);
   const isPurchased = user?.role === "admin" ? true : user?.courses?.find((item: any) => item.courseId === id);
+  const [openAuthModal, setOpenAuthModal] = React.useState(false);
   const handleOrder = (e: any) => {
     if (user) {
       setOpen(true);
+      setOpenAuthModal(false);
     } else {
       setRoute("Login");
-      setOpen(true);
+      setOpen(false);
+      setOpenAuthModal(true);
       // openAuthModal(true);
     }
   }
@@ -262,7 +265,7 @@ const CourseDetails: FC<Props> = ({ id, course, stripePromise, clientSecret }) =
           </div>
         </div>
       )}
-      <AuthModal open={open} setOpen={setOpen} route={route} setRoute={setRoute} />
+      <AuthModal open={openAuthModal} setOpen={setOpenAuthModal} route={route} setRoute={setRoute} />
     </div>
   )
 

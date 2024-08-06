@@ -11,6 +11,9 @@ import {
 import { redirect, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
+import socketIo from "socket.io-client";
+const ENDPOINT = process.env.NEXT_PUBLIC_SOCKET_URL || ""
+const socket = socketIo(ENDPOINT, { transports: ["websocket"] });
 
 type Props = {
     setOpen: any;
@@ -18,7 +21,7 @@ type Props = {
     user: any;
 };
 
-const CheckOutForm = ({ data, setOpen }: Props) => {
+const CheckOutForm = ({ data, setOpen, user }: Props) => {
     const stripe = useStripe();
     const elements = useElements();
     const [message, setMessage] = useState<any>("");
@@ -53,6 +56,11 @@ const CheckOutForm = ({ data, setOpen }: Props) => {
                 refetch().then(() => {
                     setOpen(false);
                     toast.success("Payment successful");
+                    socket.emit("notification", {
+                        title: "New Order",
+                        message: `You have a new order from ${data.name}`,
+                        userId: user._id
+                    });
                     router.push(`/course-access/${data._id}`);
                 });
             }
@@ -64,7 +72,7 @@ const CheckOutForm = ({ data, setOpen }: Props) => {
                 toast.error(errorMessage.data.message);
             }
         }
-    }, [orderData, error, isUninitialized])
+    }, [orderData, error])
 
     return (
         <form id="payment-form" onSubmit={handleSubmit}>

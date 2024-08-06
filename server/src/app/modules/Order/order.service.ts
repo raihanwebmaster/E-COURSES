@@ -15,19 +15,18 @@ import { IOrder } from './order.interface';
 import config from '../../config';
 const stripe = require("stripe")(config.stripe_secret_key);
 
-const createOderIntoDB = async (user: JwtPayload, orderData: any,) => {
+const createOderIntoDB = async (user: JwtPayload, orderData: any) => {
     if (orderData.paymentInfo) {
         if ("id" in orderData.paymentInfo) {
             const paymentIntentId = orderData.paymentInfo.id;
-            const paymentIntent = await stripe.paymentIntents.retrieve(
-                paymentIntentId
-            );
+            const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
 
             if (paymentIntent.status !== "succeeded") {
                 throw new AppError(httpStatus.BAD_REQUEST, 'Payment not authorized');
             }
         }
     }
+
     const isExistUser = await User.isUserExistsByEmail(user.email);
     if (!isExistUser) {
         throw new AppError(httpStatus.NOT_FOUND, 'User not found');
@@ -54,30 +53,55 @@ const createOderIntoDB = async (user: JwtPayload, orderData: any,) => {
             user: user.id,
             paymentInfo: orderData.paymentInfo,
         };
-        // Pass the session to the create operation
+
+        // Create a new order within the session
         const newOrder = await Order.create([courseOrder], { session });
 
+        // Update user's courses
         isExistUser.courses.push({ courseId: course._id });
         const updateUser = await User.findByIdAndUpdate(user.id, { courses: isExistUser.courses }, {
             new: true,
-            runValidators: true, session
+            runValidators: true,
+            session
         });
         await redis.set(user.id, JSON.stringify(updateUser));
 
-        // Pass the session to the create operation
+        // Create a notification within the session
         await Notification.create([{
             user: user.id,
             message: `You have a new order from ${user.email} for ${course.name} course`,
             title: 'New Order',
         }], { session });
 
+        // Update course purchased count
+        await Course.findByIdAndUpdate(course._id, { $inc: { purchased: 1 } }, { session });
+
         // Commit the transaction
-        course.purchased = (course.purchased ?? 0) + 1;
-
-        await course.save({ session });
-
         await session.commitTransaction();
+        await session.endSession();
 
+        // Fetch the updated course and populate necessary fields
+        const updatedCourse = await Course.findById(course._id)
+            .populate({
+                path: 'reviews.user',
+                select: '-password'
+            })
+            .populate({
+                path: 'reviews.commentReplies.user',
+                select: '-password'
+            });
+
+        if (!updatedCourse) {
+            throw new AppError(httpStatus.INTERNAL_SERVER_ERROR, 'Failed to fetch updated course');
+        }
+
+        // Cache the populated course
+        await redis.set(course._id.toString(), JSON.stringify(updatedCourse), 'EX', 60 * 60 * 24 * 7); // Cache expires in 7 days
+
+        const courses = await Course.find().select("-courseData.videoUrl  -courseData.videoPlayer -courseData.links -courseData.suggestion -courseData.questions");
+        await redis.set("courses", JSON.stringify(courses));
+
+        // Send order confirmation email
         const mailData = {
             order: {
                 _id: course._id.toString().slice(0, 6),
@@ -93,8 +117,6 @@ const createOderIntoDB = async (user: JwtPayload, orderData: any,) => {
             data: mailData
         });
 
-        // End the session
-        await session.endSession();
         return newOrder;
     } catch (error) {
         // Abort the transaction in case of error
@@ -103,6 +125,7 @@ const createOderIntoDB = async (user: JwtPayload, orderData: any,) => {
         throw new AppError(httpStatus.BAD_REQUEST, 'Order failed');
     }
 };
+
 
 const getAllOrdersFromDB = async () => {
     const orders = await Order.aggregate([
