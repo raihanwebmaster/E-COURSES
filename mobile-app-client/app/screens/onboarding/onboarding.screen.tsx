@@ -4,6 +4,7 @@ import { Raleway_700Bold, useFonts } from '@expo-google-fonts/raleway';
 import { Nunito_400Regular, Nunito_700Bold } from '@expo-google-fonts/nunito';
 import { LinearGradient } from 'expo-linear-gradient';
 import { styles } from '@/styles/onboarding/onboard';
+import { router } from 'expo-router';
 
 export default function OnBoardingScreen() {
     let [fontsLoaded, fontError] = useFonts({

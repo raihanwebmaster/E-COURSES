@@ -34,7 +34,7 @@ export const styles = StyleSheet.create({
     right: -40,
     top: -20,
   },
-  titleShape3: {
+  titleTextShape3: {
     position: "absolute",
     left: 60,
   },
@@ -57,7 +57,7 @@ export const styles = StyleSheet.create({
     color: "white",
     textAlign: "center",
   },
-  welcomeButtonStyle:{
+  welcomeButtonStyle: {
     backgroundColor: "#2467EC",
     width: responsiveWidth(88),
     height: responsiveHeight(5.5),

@@ -6,6 +6,7 @@ import 'react-native-reanimated';
 
 import { View } from 'react-native';
 import OnBoarding from './(routes)/onboarding';
+import { Stack } from 'expo-router';
 
 export {
   ErrorBoundary,
@@ -40,6 +41,11 @@ function RootLayoutNav() {
   const [isLoggedIn, setisLoaggedIn] = useState(false);
 
   return (
-       isLoggedIn ? <View></View> : <OnBoarding />
+       isLoggedIn ? <View></View> : (
+        <Stack screenOptions={{headerShown: false}}>
+          <Stack.Screen name="index" />
+          <Stack.Screen name="(routes)/welcome-intro/index" />
+        </Stack>
+       )
   );
 }

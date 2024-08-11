@@ -3,9 +3,7 @@ import { StyleSheet, Text, View } from 'react-native'
 
 export default function OnBoarding() {
   return (
-    <OnBoardingScreen>
-        
-    </OnBoardingScreen>
+    <OnBoardingScreen/>
   )
 }
 
